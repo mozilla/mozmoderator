@@ -1,0 +1,11 @@
+Django
+django-browserid
+django-uuslug
+south
+# Templates
+-e git://github.com/jbalogh/jingo.git#egg=jingo
+# Security
+-e git://github.com/fwenzel/django-sha2.git#egg=django-sha2
+-e git://github.com/jsocol/bleach.git#egg=bleach
+-e git://github.com/mozilla/django-session-csrf.git#egg=django-session-csrf
+cef==0.3

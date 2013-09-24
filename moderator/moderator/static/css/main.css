@@ -1,0 +1,138 @@
+.persona-button-container {
+    float: right;
+    margin-top: 10px;
+}
+
+.persona-button span {
+    color: white;
+}
+
+.main-logo {
+    margin-top: 1%;
+}
+
+.event_listing {
+    padding: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.event_listing h1 {
+    font-size: 2rem;
+    padding: 0px;
+    margin: 0px;
+    float: left;
+}
+
+.questions_counter {
+    float: right;
+    color: #999;
+    margin-top: 5px;
+}
+
+.question {
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+.askedby {
+    display:inline-block;
+    width: 10%;
+    vertical-align: top;
+}
+
+.askedby img {
+    border-radius: 100%;
+    position: absolute;
+    border: 5px solid #FFF;
+    box-shadow: 0px 0px 2px rgba(0, 2, 2, 0.2);
+    width: 70px;
+    height: 70px;
+}
+
+.selfimage {
+    display:inline-block;
+    width: 5%;
+    vertical-align: top;
+}
+
+.selfimage img {
+    border-radius: 100%;
+    position: absolute;
+    border: 3px solid #FFF;
+    box-shadow: 0px 0px 1px rgba(0, 2, 2, 0.2);
+    width: 35px;
+    height: 35px;
+}
+
+.question_text {
+    display:inline-block;
+    width: 75%;
+    vertical-align: top;
+}
+
+.question_text input {
+    margin-top: 10px;
+    width: 100%;
+    border: none;
+    font-size: 1rem;
+}
+
+.vote_container {
+    float:right;
+    display:inline-block;
+    width: 12%;
+    vertical-align: top;
+    text-align: center;
+    padding: 10px;
+}
+
+.vote_count {
+    font-style: bold;
+    font-size: 2rem;
+}
+
+.button:hover {
+    box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.2), 0px -1px 0px 0px rgba(0, 0, 0, 0.3) inset, 0px 12px 24px 2px #38A9ED inset;
+    color: #FFF;
+    text-decoration: none;
+    transition: all 0.25s linear 0s;
+    cursor: pointer;
+}
+.button {
+    display: inline-block;
+    border-radius: 0.25em;
+    box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.2), 0px -1px 0px 0px rgba(0, 0, 0, 0.3) inset;
+    background-color: #277AC1;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(#43A6E2, #277AC1);
+    color: #FFF;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 10px;
+    line-height: 1.1;
+    text-decoration: none;
+    min-width: 80px;
+    border: 0px none;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.25);
+    font-family: 'Open Sans',sans-serif;
+    transition: all 0.25s linear 0s;
+ }
+
+ .button:active, .button:link:active, .button:visited:active, .button.active, .button.active:link, .button.active:visited {
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.2) inset, 0px 12px 24px 6px rgba(0, 0, 0, 0.2) inset, 0px 0px 2px 2px rgba(0, 0, 0, 0.2) inset;
+    color: #FFF;
+    text-decoration: none;
+    transition: all 0.25s linear 0s;
+}
+
+.button.insensitive, .button.insensitive:link, .button.insensitive:visited, .button.insensitive:hover, .button.insensitive:link:hover, .button.insensitive:visited:hover, .button.insensitive:focus, .button.insensitive:link:focus, .button.insensitive:visited:focus {
+    background-color: #9CA3AA;
+    background-repeat: repeat-x;
+    background-image: linear-gradient(#BFC7CD, #9CA3AA);
+    box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.2), 0px -1px 0px 0px rgba(0, 0, 0, 0.3) inset;
+    color: #EEE;
+}

@@ -1,0 +1,472 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+// General buttons
+
+
+.button,
+.button:link,
+.button:visited {
+    .inline-block;
+    .border-radius;
+    box-shadow: @buttonShadow;
+    background-color: @buttonBlue;
+    #gradient > .vertical(@buttonBlue, @buttonBlueDark);
+    color: @buttonTextColor;
+    text-align: center;
+    font-size: 14px;
+    padding: 0 @baseLine;
+    height: @baseLine * 2;
+    line-height: @baseLine * 2;
+    text-decoration: none;
+    min-width: 100px;
+    border: 0;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+    .open-sans;
+    .transition();
+
+    &:hover,
+    &.hover,
+    &:focus,
+    &.focus {
+        .box-shadow(@buttonShadowHover);
+        color: @buttonTextColor;
+        text-decoration: none;
+        .transition();
+    }
+
+    &:focus,
+    &.focus {
+        outline-color: @textColorSecondary;
+    }
+
+    &:active,
+    &.active {
+        .box-shadow(@buttonShadowActive);
+        color: @buttonTextColor;
+        text-decoration: none;
+        .transition();
+    }
+
+    &.insensitive,
+    &.insensitive:hover,
+    &.insensitive:focus {
+        background-color: #9ca3aa;
+        #gradient > .vertical(#bfc7cd, #9ca3aa);
+        .box-shadow(@buttonShadow);
+        color: #eee;
+    }
+}
+
+.button-green,
+.button-green:link,
+.button-green:visited {
+    .button;
+    background-color: @buttonGreen;
+    #gradient > .vertical(@buttonGreen, @buttonGreenDark);
+
+    &:hover,
+    &:focus {
+        .button-hover-box-shadow(@buttonGreen);
+    }
+}
+
+.button-negative,
+.button-negative:link,
+.button-negative:visited {
+    .button;
+    background-color: #a91300;
+    #gradient > .vertical(#da5132, #a91300);
+
+    &:hover,
+    &:focus {
+        .button-hover-box-shadow(#da5132);
+    }
+}
+
+.button-white,
+.button-white:link,
+.button-white:visited {
+    .button;
+    border: 1px solid #d0d0d0;
+    background: #fff;
+    padding: 0 @baseFontSize * 0.75;
+    color: @textColorSecondary;
+    font-size: @baseFontSize * 0.75;
+    height: @baseLine;
+    line-height: @baseLine;
+    text-shadow: none;
+    @shadow: 0 0 12px rgba(230,230,230,0.2) inset, 0 -2px #e8e8e8 inset;
+    .box-shadow(@shadow);
+    .border-radius(6px);
+    filter: ~"progid:DXImageTransform.Microsoft.gradient(enabled=false)";
+
+    &:hover,
+    &:focus {
+        color: @textColorSecondary;
+        .box-shadow(@shadow);
+    }
+}
+
+.button-white.selected {
+    background: #d7d5d5;
+    border-color: #bcb9b9;
+    text-shadow: 0 1px #fff;
+    @shadow: 0 1px 1px rgba(255,255,255,0.75), 0 1px 3px rgba(0,0,0,0.1) inset;
+    .box-shadow(@shadow);
+}
+
+.button,
+.button-white {
+    cursor: pointer;
+    small {
+        display: block;
+    }
+
+}
+
+.button.arrow span,
+.button-blue.arrow span,
+.button-white.arrow span {
+  display: block;
+  margin-right: -12px;
+  padding: 0 30px 0 0;
+  background: url(/media/img/sandstone/buttons/arrow-go-r.png) right center no-repeat;
+}
+
+.button-sand,
+.button-sand:link,
+.button-sand:visited {
+    .button;
+    #gradient > .vertical(rgba(255,255,255,0.1), rgba(0,0,0,0.1));
+    background-color: transparent;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.4) rgba(0,0,0,0.1);
+    @shadow:  0    1px 0 0 rgba(255,255,255,0.5) inset,
+              1px  0   0 0 rgba(255,255,255,0.5) inset,
+             -1px  0   0 0 rgba(255,255,255,0.5) inset,
+              0   -2px 0 0 rgba(0,0,0,0.1)       inset;
+    .box-shadow(@shadow);
+    .border-radius(8px);
+    color: @linkBlue;
+    text-shadow: none;
+    &:hover,
+    &:focus {
+        .button-hover-box-shadow();
+        color: @linkBlueHover;
+    }
+}
+
+.button-list {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    li {
+        margin: 0;
+        padding: 0;
+        list-style-style: none;
+        .inline-block;
+        .button-sand {
+            border-radius: 0;
+            border-left-width: 0;
+            @shadow:  0    1px 0 0 rgba(255,255,255,0.5) inset,
+                     -1px  0   0 0 rgba(255,255,255,0.5) inset,
+                      0   -2px 0 0 rgba(0,0,0,0.1)       inset;
+            .box-shadow(@shadow);
+            min-width: 0;
+        }
+        &:first-child {
+            .button-sand {
+                border-top-left-radius: 8px;
+                border-bottom-left-radius: 8px;
+                border-left-width: 1px;
+                @shadow:  0    1px 0 0 rgba(255,255,255,0.5) inset,
+                          1px  0   0 0 rgba(255,255,255,0.5) inset,
+                         -1px  0   0 0 rgba(255,255,255,0.5) inset,
+                          0   -2px 0 0 rgba(0,0,0,0.1)       inset;
+                .box-shadow(@shadow);
+                &:hover,
+                &:focus {
+                    .button-hover-box-shadow();
+                }
+            }
+        }
+        &:last-child {
+            .button-sand {
+                border-top-right-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }
+        }
+    }
+}
+
+.dark {
+    .button-sand,
+    .button-sand:link,
+    .button-sand:visited {
+        @shadow:  0    1px 0 0 rgba(255,255,255,0.2) inset,
+                  1px  0   0 0 rgba(255,255,255,0.2) inset,
+                 -1px  0   0 0 rgba(255,255,255,0.2) inset,
+                  0   -2px 0 0 rgba(0,0,0,0.1)       inset;
+        .box-shadow(@shadow);
+        &:hover,
+        &:focus {
+            .button-hover-box-shadow(rgba(255,255,255,0.2));
+            color: @linkBlue;
+        }
+    }
+    .button-list {
+        li {
+            .button-sand {
+                @shadow:  0    1px 0 0 rgba(255,255,255,0.2) inset,
+                         -1px  0   0 0 rgba(255,255,255,0.2) inset,
+                          0   -2px 0 0 rgba(0,0,0,0.1)       inset;
+                .box-shadow(@shadow);
+            }
+            &:first-child {
+                .button-sand {
+                    @shadow:  0    1px 0 0 rgba(255,255,255,0.2) inset,
+                              1px  0   0 0 rgba(255,255,255,0.2) inset,
+                             -1px  0   0 0 rgba(255,255,255,0.2) inset,
+                              0   -2px 0 0 rgba(0,0,0,0.1)       inset;
+                    .box-shadow(@shadow);
+                    &:hover,
+                    &:focus {
+                        .button-hover-box-shadow(rgba(255,255,255,0.2));
+                        color: @linkBlue;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+// Product download buttons
+
+.download-button .unrecognized-download,
+.download-button .unsupported-download {
+    display: none;
+}
+
+.download-button {
+    .inline-block;
+    ul {
+        margin: 0;
+        li {
+            list-style-type: none;
+            margin: 0;
+        }
+    }
+}
+
+.download-button .download-link {
+    .button-green;
+    cursor: pointer;
+    padding: 0;
+    height: 95px;
+    margin-left: 50px;
+    text-align: inherit;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    .download-content {
+        display: block;
+        position: relative;
+        color: #b5e786;
+        margin-left: -50px;
+        padding-left: 65px;
+        padding-right: 24px;
+        background: url(/media/img/sandstone/buttons/firefox-large.png) 0 0 no-repeat;
+        height: 93px;
+        padding: 12px 12px 0 112px;
+    }
+    .download-title {
+        display: block;
+        color: #fff;
+        font-family: georgia, "Bitstream Charter", serif;
+        font-size: 26px;
+        letter-spacing: -0.02em;
+        padding-right: 32px;
+        background: url(/media/img/sandstone/buttons/arrow-large.png) no-repeat 100% 0;
+        min-height: 28px;
+        margin-bottom: -2px;
+    }
+    .download-info {
+        display: block;
+        color: #346012;
+        padding-top: 2px;
+        font-size: 12px;
+        line-height: 100%;
+        text-shadow: 0 1px rgba(255,255,255,0.2);
+    }
+}
+
+.download-button-large .download-link {
+    line-height: @baseLine;
+    font-size: 16px;
+    .border-radius(6px);
+    min-width: 250px;
+}
+
+.download-button-small .download-link,
+.download-button-mobile-small .download-link {
+    white-space: nowrap;
+    height: 48px;
+    margin-left: 25px;
+    .download-title {
+        .inline-block;
+        height: 48px;
+        vertical-align: middle;
+        font-size: 24px;
+        background: url(/media/img/sandstone/buttons/arrow-small.png) no-repeat 100% 50%;
+        padding-right: 20px;
+        margin-right: 5px;
+        .border-radius(6px);
+    }
+    .download-content {
+        .inline-block;
+        margin-left: -25px;
+        _margin-left:0;
+        background-image: url(/media/img/sandstone/buttons/firefox-small.png);
+        height: 52px;
+        padding: 0 20px 0 65px;
+        overflow: visible;
+        .border-radius(6px);
+    }
+}
+
+.download-button-mobile-small .download-link {
+    .download-title {
+        display: block;
+        background: url(/media/img/sandstone/buttons/android-corner.png) no-repeat 100% 100%;
+        padding-right: 40px;
+        margin-right: 0;
+        .open-sans;
+        font-size: 16px;
+        letter-spacing: -0.5px;
+        text-shadow: 0 -1px rgba(0, 0, 0, 0.2);
+    }
+    .download-content {
+        padding-right: 0;
+    }
+}
+
+.download-button-large.beta .download-link .download-content {
+  background-image: url(/media/img/sandstone/buttons/beta-large.png);
+}
+
+.download-button-small.beta .download-link .download-content {
+  background-image: url(/media/img/sandstone/buttons/beta-small.png);
+}
+
+.download-button-large.aurora .download-link .download-content {
+  background-image: url(/media/img/sandstone/buttons/aurora-large.png);
+}
+
+.download-button-small.aurora .download-link .download-content {
+  background-image: url(/media/img/sandstone/buttons/aurora-small.png);
+}
+
+
+// OS detection
+
+li.os_linux,
+li.os_windows,
+li.os_osx,
+li.os_android,
+.no-js .windows li.os_windows { display: none; }
+
+.linux li.os_linux,
+.windows li.os_windows,
+.osx li.os_osx,
+.android li.os_android {
+    display: block;
+}
+
+
+// Small print
+
+.download-button small.download-other {
+    .open-sans;
+    display: block;
+    font-size: 11px;
+    text-align: right;
+    margin-top: 4px;
+    color: @textColorLight;
+
+    a:link,
+    a:visited {
+        color: #999;
+    }
+}
+
+.other .download-button .unrecognized-download {
+    display: block;
+}
+
+.oldmac .download-button .unsupported-download {
+    display: block;
+}
+
+.download-button noscript,
+.download-button .unrecognized-download {
+    text-align: right;
+    h4 {
+        text-shadow: none;
+        margin: 0 0 6px 0;
+        font-size: 18px;
+    }
+    ul li {
+        display: inline;
+    }
+
+    small {
+        font-size: 11px;
+        letter-spacing: normal;
+    }
+    .button-white {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+}
+
+// Mobile download buttons
+
+.download-button-mobile-large {
+    .download-link {
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+        line-height: 1.2;
+        height: auto;
+        margin-left: auto;
+        .download-content-wrapper {
+            display: block;
+            background-image: url(/media/img/sandstone/buttons/arrow-large.png);
+            background-position: 12px 50%;
+            background-repeat: no-repeat;
+        }
+        .download-content {
+            color: #b5e786;
+            margin-left: auto;
+            height: auto;
+            padding-left: 54px;
+            padding-bottom: 18px;
+            background-image: url(/media/img/sandstone/buttons/android-corner.png);
+            background-position: 100% 100%;
+            .border-radius(4px);
+            .download-title {
+                .open-sans;
+                color: #fff;
+                background: none;
+                padding-right: 0;
+            }
+            .download-info {
+                padding-top: 6px;
+                padding-right: 30px;
+                text-shadow: 0 1px rgba(255,255,255,0.2);
+            }
+        }
+    }
+}
