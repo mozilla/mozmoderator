@@ -9,9 +9,9 @@ from django.shortcuts import redirect, render
 from django.utils import simplejson
 from django.http import HttpResponse
 
-from moderator.moderator.mozillians import is_vouched, BadStatusCodeError
-from moderator.moderator.models import MozillianProfile, Event, Question, Vote
-from moderator.moderator.forms import QuestionForm
+from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
+from moderator.moderate.models import MozillianProfile, Event, Question, Vote
+from moderator.moderate.forms import QuestionForm
 
 
 class CustomVerify(Verify):

@@ -71,7 +71,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (os.path.join(PROJECT_DIR, 'moderator/static'),)
+STATICFILES_DIRS = (os.path.join(PROJECT_DIR, 'moderate/static'),)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -125,7 +125,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'south',
-    'moderator.moderator',
+    'moderator.moderate',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -139,7 +139,7 @@ AUTHENTICATION_BACKENDS = (
     'django_browserid.auth.BrowserIDBackend',
 )
 
-BROWSERID_VERIFY_VIEW = 'moderator.views.mozilla_browserid_verify'
+BROWSERID_VERIFY_VIEW = 'moderate.views.mozilla_browserid_verify'
 
 # Uncomment the following line for local development, or BrowserID
 # will fail to log you in.
@@ -186,7 +186,7 @@ LOGGING = {
     }
 }
 
-BROWSERID_VERIFY_CLASS = 'moderator.moderator.views.CustomVerify'
+BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.CustomVerify'
 
 MOZILLIANS_URL = "https://mozillians.org"
 MOZILLIANS_API_URL = "https://mozillians.org/api/v1/users/"
