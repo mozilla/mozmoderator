@@ -1,6 +1,6 @@
 from django import template
 
-from moderator.moderator.models import Vote
+from moderator.moderate.models import Vote
 
 
 register = template.Library()
