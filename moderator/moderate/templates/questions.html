@@ -37,7 +37,9 @@
   <div class="billboard question">
     <div class="row">
       <div class="askedby">
-        <img alt="" src="{{ q.asked_by.userprofile.avatar_url }}">
+        <a href="https://mozillians.org/search/?q={{ q.asked_by.userprofile.full_name }}" target="_blank">
+          <img alt="" src="{{ q.asked_by.userprofile.avatar_url }}">
+        </a>
       </div>
       <div class="question_text">
         <h3>{{ q.question }}</h3>
