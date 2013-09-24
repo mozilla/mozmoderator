@@ -71,12 +71,6 @@ def login_failed(request, msg=None):
     return render(request, 'index.html')
 
 
-def mozilla_browserid_verify(request):
-    """
-    Custom BrowserID verifier for vouched mozillians.
-    """
-
-
 def main(request):
     """Render main page."""
     if request.user.is_authenticated():
@@ -124,4 +118,5 @@ def upvote(request, q_id):
 
         return HttpResponse(simplejson.dumps(response_dict),
                             mimetype='application/javascript')
+
     return event(request, question.event.slug)
