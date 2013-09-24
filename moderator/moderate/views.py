@@ -51,9 +51,9 @@ class CustomVerify(Verify):
 
             except BadStatusCodeError:
                 message = ('Login failed.')
-                return login_failed(request, message)
+                return login_failed(self.request, message)
 
-        return login_failed(request)
+        return login_failed(self.request)
 
 
 def login_failed(request, msg=None):
