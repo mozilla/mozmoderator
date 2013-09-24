@@ -11,6 +11,10 @@
     margin-top: 1%;
 }
 
+#main-feature h2 {
+    margin: 30px;
+}
+
 .event_listing {
     padding: 20px;
     border-radius: 10px;

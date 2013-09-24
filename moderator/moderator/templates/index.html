@@ -6,7 +6,7 @@
 
 {% block content %}
 
-{% if request.user.is_authenticated %}
+{% if user.is_authenticated %}
   <hgroup id="main-feature" class="center">
     <h2>select event to view and ask questions</h2>
   </hgroup>
@@ -20,7 +20,10 @@
     </a>
   {% endfor %}
 {% else %}
-    <!-- TODO fix please login -->
-    Please login!
+  <hgroup id="main-feature" class="center">
+    <h2>let your voice be heard</h2>
+    <p>Mozilla Moderator is a panel moderation system for submitting and voting questions.</p>
+    <p>Please login using your vouched mozillians.org account.</p>
+  </hgroup>
 {% endif %}
 {% endblock %}

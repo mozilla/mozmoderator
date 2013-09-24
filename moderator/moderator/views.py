@@ -68,14 +68,19 @@ def login_failed(request, msg=None):
         msg = ('Login failed.')
     messages.warning(request, msg)
 
-    return render(request, 'index.html')
+    return render(request, 'index.html', {
+        'user': request.user
+        })
 
 
 def main(request):
     """Render main page."""
     if request.user.is_authenticated():
         events = Event.objects.all()
-        return render(request, 'index.html', {'events': events})
+        return render(request, 'index.html', {
+            'events': events,
+            'user': request.user
+            })
     else:
         return login_failed(request)
 

@@ -7,7 +7,9 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             success: function(json) {
                 $('#'+question_id).prev().html(json.current_vote_count);
+                $('#'+question_id).addClass('insensitive').html('supported');
             }
          })
     })
+    $('.insensitive').html('supported');
 })
