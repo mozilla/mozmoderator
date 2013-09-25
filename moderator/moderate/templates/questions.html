@@ -18,7 +18,11 @@
   <div class="row">
     <form method="post" action="{% url 'event' e_slug=event.slug %}">
       <div class="selfimage">
-        <img alt="" src="{{ user.userprofile.avatar_url }}">
+        {% if user.userprofile.avatar_url == "" %}
+          <img alt="" src="/static/img/unknown.png">
+        {% else %}
+          <img alt="" src="{{ user.userprofile.avatar_url }}">
+        {% endif %}
       </div>
       {% csrf_token %}
       {{ q_form.non_field_errors }}
@@ -38,7 +42,11 @@
     <div class="row">
       <div class="askedby">
         <a href="https://mozillians.org/search/?q={{ q.asked_by.userprofile.full_name }}" target="_blank">
-          <img alt="" src="{{ q.asked_by.userprofile.avatar_url }}">
+          {% if q.asked_by.userprofile.avatar_url == "" %}
+            <img alt="" src="/static/img/unknown.png">
+          {% else %}
+            <img alt="" src="{{ q.asked_by.userprofile.avatar_url }}">
+          {% endif %}
         </a>
       </div>
       <div class="question_text">
