@@ -43,8 +43,8 @@ class Question(models.Model):
     """Question relational model."""
     asked_by = models.ForeignKey(User)
     event = models.ForeignKey(Event, related_name='questions')
-    question = models.TextField(validators=[MaxLengthValidator(1000),
-                                            MinLengthValidator(20)])
+    question = models.TextField(validators=[MaxLengthValidator(140),
+                                            MinLengthValidator(10)])
 
     @property
     def get_vote_count(self):
