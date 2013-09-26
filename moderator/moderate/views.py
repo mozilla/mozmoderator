@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django_browserid import get_audience, verify
 from django_browserid.views import Verify
 from django_browserid.auth import default_username_algo
-from django_browserid.forms import BrowserIDForm
 from django.shortcuts import redirect, render
 from django.utils import simplejson
 from django.http import HttpResponse
@@ -35,12 +34,8 @@ class CustomVerify(Verify):
                             user.save()
                             mozillian = MozillianProfile(
                                 user=user,
-                                full_name=data['full_name'],
-                                city=data['city'],
-                                country=data['country'],
-                                ircname=data['ircname'],
-                                avatar_url=data['photo'],
-                                bio=data['bio'])
+                                username=data['username'],
+                                avatar_url=data['photo'])
                             mozillian.save()
 
                 if _is_valid_login:
@@ -68,9 +63,7 @@ def login_failed(request, msg=None):
         msg = ('Login failed.')
     messages.warning(request, msg)
 
-    return render(request, 'index.html', {
-        'user': request.user
-        })
+    return render(request, 'index.html', {'user': request.user})
 
 
 def main(request):
