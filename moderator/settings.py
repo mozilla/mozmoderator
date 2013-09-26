@@ -78,7 +78,7 @@ STATICFILES_DIRS = (os.path.join(PROJECT_DIR, 'moderate/static'),)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -86,10 +86,13 @@ SECRET_KEY = '%+sf5v)#v-s#j*(#!8h1wp=suyvj8j9q7&u)dnx6x+ij8!%&5='
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
+    'jingo.Loader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
+
+JINGO_EXCLUDE_APPS = ('admin', 'browserid',)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -130,32 +133,31 @@ INSTALLED_APPS = (
     'moderator.moderate',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django_browserid.context_processors.browserid',
-    'django.contrib.messages.context_processors.messages')
-
 # Django browserid authentication backend
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'django_browserid.auth.BrowserIDBackend',
 )
 
-BROWSERID_VERIFY_VIEW = 'moderate.views.mozilla_browserid_verify'
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django_browserid.context_processors.browserid',
+    'django.contrib.messages.context_processors.messages')
 
 # Uncomment the following line for local development, or BrowserID
 # will fail to log you in.
 SITE_URL = 'http://127.0.0.1:8000'
+LOGIN_URL = '/login/'
 
 # Do not create account for new users.
 BROWSERID_CREATE_USER = False
-
-LOGIN_URL = '/login/'
 
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = '/'
 # Path to redirect to on unsuccessful login attempt.
 LOGIN_REDIRECT_URL_FAILURE = '/login/failed/'
+LOGOUT_REDIRECT_URL = '/'
+BROWSERID_VERIFICATION_URL = '/browserid/mozilla/'
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
@@ -188,7 +190,8 @@ LOGGING = {
     }
 }
 
-BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.CustomVerify'
+#BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.CustomVerify'
+#BROWSERID_VERIFY_VIEW = 'moderate.views.mozilla_browserid_verify'
 
 MOZILLIANS_URL = "https://mozillians.org"
 MOZILLIANS_API_URL = "https://mozillians.org/api/v1/users/"
@@ -197,6 +200,7 @@ MOZILLIANS_API_URL = "https://mozillians.org/api/v1/users/"
 # MOZILLIANS_API_APPNAME =
 # MOZILLIANS_APP_KEY =
 
+JINJA_CONFIG = {'autoescape': False}
 # Override settings from local_settings.py
 try:
     from local_settings import *

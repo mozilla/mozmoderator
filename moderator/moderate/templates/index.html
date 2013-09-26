@@ -6,24 +6,18 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
+{% if user.is_authenticated() %}
   <hgroup id="main-feature" class="center">
     <h2>select event to view and ask questions</h2>
   </hgroup>
 
   {% for event in events %}
-    <a href="{% url 'event' e_slug=event.slug %}">
+    <a href="{{ url('event', e_slug=event.slug) }}">
       <div class="billboard event_listing">
         <h1>{{ event.name }}</h1>
-        <span class="questions_counter"> {{ event.questions.count }} questions asked</span>
+        <span class="questions_counter"> {{ event.questions.count() }} questions asked</span>
       </div>
     </a>
   {% endfor %}
-{% else %}
-  <hgroup id="main-feature" class="center">
-    <h2>let your voice be heard</h2>
-    <p>Mozilla Moderator is a panel moderation system for submitting and voting questions.</p>
-    <p>Please login using your vouched mozillians.org account.</p>
-  </hgroup>
 {% endif %}
 {% endblock %}

@@ -24,7 +24,7 @@
           <img alt="" src="{{ user.userprofile.avatar_url }}">
         {% endif %}
       </div>
-      {% csrf_token %}
+      {% csrf() %}
       {{ q_form.non_field_errors }}
       <div class="question_text">
         {{ q_form.question.errors }}
