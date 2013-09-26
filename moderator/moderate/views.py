@@ -34,12 +34,8 @@ class CustomVerify(Verify):
                             user.save()
                             mozillian = MozillianProfile(
                                 user=user,
-                                full_name=data['full_name'],
-                                city=data['city'],
-                                country=data['country'],
-                                ircname=data['ircname'],
-                                avatar_url=data['photo'],
-                                bio=data['bio'])
+                                username=data['username'],
+                                avatar_url=data['photo'])
                             mozillian.save()
 
                 if _is_valid_login:
@@ -67,9 +63,7 @@ def login_failed(request, msg=None):
         msg = ('Login failed.')
     messages.warning(request, msg)
 
-    return render(request, 'index.html', {
-        'user': request.user
-        })
+    return render(request, 'index.html', {'user': request.user})
 
 
 def main(request):
