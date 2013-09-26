@@ -20,22 +20,18 @@ class MozillianProfile(models.Model):
     """Mozillians User Profile"""
     user = models.OneToOneField(User, related_name='userprofile')
     slug = models.SlugField(blank=True, max_length=100)
-    full_name = models.CharField(max_length=255)
-    city = models.CharField(max_length=50, default='', blank=True)
-    country = models.CharField(max_length=50, default='')
-    ircname = models.CharField(max_length=50, default='')
+    username = models.CharField(max_length=40)
     avatar_url = models.URLField(max_length=400, default='')
-    bio = models.TextField(default='', blank=True)
 
     def __unicode__(self):
-        return self.full_name
+        return self.username
 
     class Meta:
-        ordering = ['full_name']
+        ordering = ['username']
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.slug = uuslug(self.full_name, instance=self)
+            self.slug = uuslug(self.username, instance=self)
         super(MozillianProfile, self).save(*args, **kwargs)
 
 
