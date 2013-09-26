@@ -10,10 +10,17 @@ class Event(models.Model):
     name = models.CharField(max_length=400)
     slug = models.SlugField(max_length=400)
 
+    def __unicode__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.slug = uuslug(self.name, instance=self)
         super(Event, self).save(*args, **kwargs)
+
+    @property
+    def questions_count(self):
+        return self.questions.all().count()
 
 
 class MozillianProfile(models.Model):
