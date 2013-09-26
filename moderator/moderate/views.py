@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django_browserid import get_audience, verify
 from django_browserid.views import Verify
 from django_browserid.auth import default_username_algo
-from django_browserid.forms import BrowserIDForm
 from django.shortcuts import redirect, render
 from django.utils import simplejson
 from django.http import HttpResponse
