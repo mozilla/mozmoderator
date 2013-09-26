@@ -7,30 +7,15 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 admin.autodiscover()
 
 urlpatterns = patterns('',
-
-    # BrowserId
-    url(r'^browserid/', include('django_browserid.urls'),
-        name='mozilla_browserid_verify'),
-
-    # Login/Logout
-    url(r'^login/failed/$', 'moderator.moderate.views.login_failed',
-        name='login_failed'),
-    url(r'^logout/$', 'django.contrib.auth.views.logout',
-        {'next_page': '/'}, name='logout'),
-
     # Admin
     url(r'^admin/', include(admin.site.urls)),
-
+    # BrowserId
+    url(r'', include('moderator.moderate.moderate_urls')),
+    # Login / Logout
+    url(r'^logout/$', 'django.contrib.auth.views.logout',
+        {'next_page': '/'}, name='logout'),
     # Main landing page
-    url(r'^$', 'moderator.moderate.views.main', name='main'),
-
-    # Events questions urls
-    url(r'^e/(?P<e_slug>[a-z0-9-]+)', 'moderator.moderate.views.event',
-        name='event'),
-
-    # Question upvote
-    url(r'^q/(?P<q_id>\d+)/upvote', 'moderator.moderate.views.upvote',
-        name='upvote'),
+    url(r'^$', include('moderator.moderate.moderate_urls')),
 )
 
 if settings.DEBUG:
