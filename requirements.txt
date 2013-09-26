@@ -9,3 +9,4 @@ south
 -e git://github.com/jsocol/bleach.git#egg=bleach
 -e git://github.com/mozilla/django-session-csrf.git#egg=django-session-csrf
 cef==0.3
+-e git+http://github.com/codekoala/django-axes.git#egg=django_axes-dev
