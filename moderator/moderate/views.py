@@ -1,12 +1,12 @@
+from django_browserid import get_audience, verify
+from django_browserid.auth import default_username_algo
+from django_browserid.views import Verify
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django_browserid import get_audience, verify
-from django_browserid.views import Verify
-from django_browserid.auth import default_username_algo
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import simplejson
-from django.http import HttpResponse
 
 from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
 from moderator.moderate.models import MozillianProfile, Event, Question, Vote
@@ -32,11 +32,9 @@ class CustomVerify(Verify):
                                 username=default_username_algo(data['email']),
                                 email=data['email'])
                             user.save()
-                            mozillian = MozillianProfile(
-                                user=user,
-                                username=data['username'],
+                            MozillianProfile.objects.create(
+                                user=user, username=data['username'],
                                 avatar_url=data['photo'])
-                            mozillian.save()
 
                 if _is_valid_login:
                     user = auth.authenticate(assertion=self.assertion,
@@ -45,25 +43,16 @@ class CustomVerify(Verify):
                     return redirect('main')
 
             except BadStatusCodeError:
-                message = ('Login failed.')
-                return login_failed(self.request, message)
+                msg = ('Email (%s) authenticated but unable to '
+                       'connect to Mozillians to see if you are vouched'
+                       % result['email'])
+                messages.warning(self.request, msg)
+                return self.login_failure()
 
-        return login_failed(self.request)
-
-
-def login_failed(request, msg=None):
-    """Login failed view.
-
-    This view acts like a segway between a failed login attempt and
-    'main' view. Adds messages in the messages framework queue, that
-    informs user login failed.
-
-    """
-    if not msg:
-        msg = ('Login failed.')
-    messages.warning(request, msg)
-
-    return render(request, 'index.html', {'user': request.user})
+        messages.error(self.request, ('Login failed. Make sure you are using '
+                                      'a valid email address and you are '
+                                      'a vouched Mozillian.'))
+        return self.login_failure()
 
 
 def main(request):
@@ -71,11 +60,10 @@ def main(request):
     if request.user.is_authenticated():
         events = Event.objects.all()
         return render(request, 'index.html', {
-            'events': events,
-            'user': request.user
-            })
+                               'events': events,
+                               'user': request.user})
     else:
-        return login_failed(request)
+        return render(request, 'base.html')
 
 
 @login_required
