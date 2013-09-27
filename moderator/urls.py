@@ -12,8 +12,6 @@ urlpatterns = patterns('',
     # BrowserId
     url(r'', include('moderator.moderate.moderate_urls')),
     # Login / Logout
-    url(r'^login/failed/$', 'moderator.moderate.views.login_failed',
-        name='login_failed'),
     url(r'^logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}, name='logout'),
     # Main landing page

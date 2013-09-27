@@ -24,7 +24,7 @@ def is_vouched(email):
         return False
 
     # /api/v1/users/?app_name=foobar&app_key=12345&email=test@example.com
-    url = settings.MOZILLIANS_API_BASE + '/api/v1/users/'
+    url = settings.MOZILLIANS_API_BASE
     data = {'app_name': settings.MOZILLIANS_API_APPNAME,
             'app_key': settings.MOZILLIANS_API_KEY,
             'email': email}

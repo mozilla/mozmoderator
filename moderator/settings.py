@@ -147,7 +147,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Uncomment the following line for local development, or BrowserID
 # will fail to log you in.
 SITE_URL = 'http://127.0.0.1:8000'
-LOGIN_URL = '/login/'
 
 # Do not create account for new users.
 BROWSERID_CREATE_USER = False
@@ -155,9 +154,8 @@ BROWSERID_CREATE_USER = False
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = '/'
 # Path to redirect to on unsuccessful login attempt.
-LOGIN_REDIRECT_URL_FAILURE = '/login/failed/'
+LOGIN_REDIRECT_URL_FAILURE = '/'
 LOGOUT_REDIRECT_URL = '/'
-BROWSERID_VERIFICATION_URL = '/browserid/mozilla/'
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
@@ -190,17 +188,10 @@ LOGGING = {
     }
 }
 
-#BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.CustomVerify'
-#BROWSERID_VERIFY_VIEW = 'moderate.views.mozilla_browserid_verify'
+BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.CustomVerify'
 
-MOZILLIANS_URL = "https://mozillians.org"
-MOZILLIANS_API_URL = "https://mozillians.org/api/v1/users/"
+MOZILLIANS_API_BASE = "https://mozillians.org/api/v1/users/"
 
-# Replace with your mozillians API credentials
-# MOZILLIANS_API_APPNAME =
-# MOZILLIANS_APP_KEY =
-
-JINJA_CONFIG = {'autoescape': False}
 # Override settings from local_settings.py
 try:
     from local_settings import *

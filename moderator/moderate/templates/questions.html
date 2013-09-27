@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load helpers %}
 
 {% block head %}
 <title>Mozilla Moderator - {{ event.name }}</title>
@@ -16,19 +15,19 @@
 
 <div class="billboard question">
   <div class="row">
-    <form method="post" action="{% url 'event' e_slug=event.slug %}">
+    <form method="post" action="{{ url('event', e_slug=event.slug) }}">
+      {{ q_form.non_field_errors|safe }}
       <div class="selfimage">
-        {% if user.userprofile.avatar_url == "" %}
+        {% if not user.userprofile.avatar_url %}
           <img alt="" src="/static/img/unknown.png">
         {% else %}
           <img alt="" src="{{ user.userprofile.avatar_url }}">
         {% endif %}
       </div>
-      {% csrf() %}
-      {{ q_form.non_field_errors }}
+      {{ csrf() }}
       <div class="question_text">
-        {{ q_form.question.errors }}
-        {{ q_form.question }}
+        {{ q_form.question.errors|safe }}
+        {{ q_form.question|safe }}
       </div>
       <div class="vote_container">
         <input type="submit" class="button" value="submit">
@@ -54,11 +53,11 @@
       </div>
       <div class="vote_container">
         <span class="vote_count" >{{ q.get_vote_count }}</span>
-	{% if user|get_user_voted:q %}
+        {% if user_voted(q, user) %}
           <span class="button vote insensitive" id="{{ q.id }}">support</span>
-	{% else %}
+        {% else %}
           <span class="button vote" id="{{ q.id }}">support</span>
-	{% endif %}
+        {% endif %} 
       </div>
     </div>
   </div>

@@ -10,7 +10,6 @@
   <hgroup id="main-feature" class="center">
     <h2>select event to view and ask questions</h2>
   </hgroup>
-
   {% for event in events %}
     <a href="{{ url('event', e_slug=event.slug) }}">
       <div class="billboard event_listing">

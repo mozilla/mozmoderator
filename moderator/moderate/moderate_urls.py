@@ -8,9 +8,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Browserid
-    url(r'^browserid/mozilla/$',
-        'moderator.moderate.views.mozilla_browserid_verify',
-        name='mozilla_browserid_verify'),
     url(r'^browserid/', include('django_browserid.urls')),
     # Events questions urls
     url(r'^e/(?P<e_slug>[a-z0-9-]+)', 'moderator.moderate.views.event',
