@@ -63,7 +63,7 @@ def main(request):
                                'events': events,
                                'user': request.user})
     else:
-        return render(request, 'base.html')
+        return render(request, 'index.html', {'user': request.user})
 
 
 @login_required
