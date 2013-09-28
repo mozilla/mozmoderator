@@ -40,7 +40,7 @@
   <div class="billboard question">
     <div class="row">
       <div class="askedby">
-        <a href="https://mozillians.org/search/?q={{ q.asked_by.userprofile.full_name }}" target="_blank">
+        <a href="https://mozillians.org/{{ q.asked_by.userprofile.username }}" target="_blank">
           {% if q.asked_by.userprofile.avatar_url == "" %}
             <img alt="" src="/static/img/unknown.png">
           {% else %}
