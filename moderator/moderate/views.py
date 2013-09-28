@@ -1,4 +1,4 @@
-from django_browserid import get_audience, verify
+from django_browserid import get_audience, verify, BrowserIDException
 from django_browserid.auth import default_username_algo
 from django_browserid.views import Verify
 from django.contrib import auth, messages
@@ -15,39 +15,46 @@ from moderator.moderate.forms import QuestionForm
 
 class CustomVerify(Verify):
     def form_valid(self, form):
-        if form.is_valid():
-            self.assertion = form.cleaned_data['assertion']
-            self.audience = get_audience(self.request)
-            result = verify(self.assertion, self.audience)
-            try:
-                _is_valid_login = False
-                if result:
-                    if User.objects.filter(email=result['email']).exists():
+        """Custom mozillians login form validation"""
+        self.assertion = form.cleaned_data['assertion']
+        self.audience = get_audience(self.request)
+        result = verify(self.assertion, self.audience)
+
+        try:
+            _is_valid_login = False
+            if result:
+                if User.objects.filter(email=result['email']).exists():
+                    _is_valid_login = True
+                else:
+                    data = is_vouched(result['email'])
+                    if data and data['is_vouched']:
                         _is_valid_login = True
-                    else:
-                        data = is_vouched(result['email'])
-                        if data and data['is_vouched']:
-                            _is_valid_login = True
-                            user = User.objects.create_user(
-                                username=default_username_algo(data['email']),
-                                email=data['email'])
-                            user.save()
-                            MozillianProfile.objects.create(
-                                user=user, username=data['username'],
-                                avatar_url=data['photo'])
+                        user = User.objects.create_user(
+                            username=default_username_algo(data['email']),
+                            email=data['email'])
+                        user.save()
+                        MozillianProfile.objects.create(
+                            user=user, username=data['username'],
+                            avatar_url=data['photo'])
 
-                if _is_valid_login:
-                    user = auth.authenticate(assertion=self.assertion,
-                                             audience=self.audience)
-                    auth.login(self.request, user)
-                    return redirect('main')
+            if _is_valid_login:
+                try:
+                    self.user = auth.authenticate(assertion=self.assertion,
+                                                  audience=self.audience)
+                    auth.login(self.request, self.user)
 
-            except BadStatusCodeError:
-                msg = ('Email (%s) authenticated but unable to '
-                       'connect to Mozillians to see if you are vouched'
-                       % result['email'])
-                messages.warning(self.request, msg)
-                return self.login_failure()
+                except BrowserIDException as e:
+                    return self.login_failure(e)
+
+                if self.user and self.user.is_active:
+                    return self.login_success()
+
+        except BadStatusCodeError:
+            msg = ('Email (%s) authenticated but unable to '
+                   'connect to Mozillians to see if you are vouched'
+                   % result['email'])
+            messages.warning(self.request, msg)
+            return self.login_failure()
 
         messages.error(self.request, ('Login failed. Make sure you are using '
                                       'a valid email address and you are '
