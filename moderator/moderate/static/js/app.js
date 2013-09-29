@@ -12,4 +12,12 @@ jQuery(document).ready(function ($) {
          })
     })
     $('.insensitive').html('supported');
+
+
+    $(document).on("click", ".alert-box a.close", function(event) {
+        event.preventDefault();
+        $(this).closest(".alert-box").fadeOut(function(event){
+            $(this).remove();
+        });
+    });
 })
