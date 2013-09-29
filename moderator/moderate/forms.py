@@ -11,5 +11,6 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ['question']
         widgets = {
-            'question': forms.TextInput(attrs={'placeholder': Q_PLACEHOLDER})
+            'question': forms.TextInput(attrs={'placeholder': Q_PLACEHOLDER,
+                                               'maxlength': '140'})
             }
