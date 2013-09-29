@@ -1,6 +1,7 @@
 from django_browserid import get_audience, verify, BrowserIDException
 from django_browserid.auth import default_username_algo
 from django_browserid.views import Verify
+from django.core.urlresolvers import reverse
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -78,15 +79,17 @@ def event(request, e_slug):
     """Render event questions."""
     event = Event.objects.get(slug=e_slug)
     questions = Question.objects.filter(event=event)
-    question_form = QuestionForm(request.POST or None)
 
-    if question_form.is_valid():
-        question = question_form.save(commit=False)
-        question.asked_by = request.user
-        question.event = event
-        question.save()
+    if request.POST:
+        question_form = QuestionForm(request.POST)
 
-        # After succesful save provide clean question form
+        if question_form.is_valid():
+            question = question_form.save(commit=False)
+            question.asked_by = request.user
+            question.event = event
+            question.save()
+            return redirect(reverse('event', kwargs={'e_slug': event.slug}))
+    else:
         question_form = QuestionForm()
 
     return render(request, 'questions.html',
