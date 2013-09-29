@@ -49,13 +49,9 @@ class Question(models.Model):
     question = models.TextField(validators=[MaxLengthValidator(140),
                                             MinLengthValidator(10)])
 
-    @property
-    def get_vote_count(self):
-        return self.vote_set.all().count()
-
 
 class Vote(models.Model):
     """Vote model."""
     user = models.ForeignKey(User)
-    question = models.ForeignKey(Question)
+    question = models.ForeignKey(Question, related_name='votes')
     date_voted = models.DateField(auto_now_add=True)

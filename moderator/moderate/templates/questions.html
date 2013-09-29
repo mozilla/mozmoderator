@@ -52,12 +52,12 @@
         <h3>{{ q.question }}</h3>
       </div>
       <div class="vote_container">
-        <span class="vote_count" >{{ q.get_vote_count }}</span>
+        <span class="vote_count" >{{ q.vote_count }}</span>
         {% if user_voted(q, user) %}
           <span class="button vote insensitive" id="{{ q.id }}">support</span>
         {% else %}
           <span class="button vote" id="{{ q.id }}">support</span>
-        {% endif %} 
+        {% endif %}
       </div>
     </div>
   </div>
