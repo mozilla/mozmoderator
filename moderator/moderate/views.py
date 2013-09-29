@@ -1,12 +1,14 @@
 from django_browserid import get_audience, verify, BrowserIDException
 from django_browserid.auth import default_username_algo
 from django_browserid.views import Verify
+
+from django.db.models import Count
 from django.core.urlresolvers import reverse
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render, redirect
 from django.utils import simplejson
 
 from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
@@ -78,7 +80,10 @@ def main(request):
 def event(request, e_slug):
     """Render event questions."""
     event = Event.objects.get(slug=e_slug)
-    questions = Question.objects.filter(event=event)
+
+    questions = (Question.objects.filter(event=event)
+                 .annotate(vote_count=Count('votes'))
+                 .order_by('-vote_count'))
 
     if request.POST:
         question_form = QuestionForm(request.POST)
@@ -108,9 +113,8 @@ def upvote(request, q_id):
     if request.is_ajax():
         vote, created = Vote.objects.get_or_create(user=request.user,
                                                    question=question)
-
         response_dict = {}
-        response_dict.update({'current_vote_count': question.get_vote_count})
+        response_dict.update({'current_vote_count': question.votes.count()})
 
         return HttpResponse(simplejson.dumps(response_dict),
                             mimetype='application/javascript')

@@ -12,6 +12,7 @@ class EventAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
     list_display = ('name', 'questions_count',)
 
+
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('id', 'asked_by', 'event')
 
