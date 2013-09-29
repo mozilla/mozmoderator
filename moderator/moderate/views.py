@@ -110,8 +110,14 @@ def upvote(request, q_id):
     question = Question.objects.get(pk=q_id)
 
     if request.is_ajax():
-        vote, created = Vote.objects.get_or_create(user=request.user,
-                                                   question=question)
+        try:
+            vote, created = Vote.objects.get_or_create(user=request.user,
+                                                       question=question)
+            if not created:
+                vote.delete()
+        except:
+            return False
+
         response_dict = {}
         response_dict.update({'current_vote_count': question.votes.count()})
 
