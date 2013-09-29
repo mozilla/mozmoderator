@@ -8,7 +8,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render, redirect
 from django.utils import simplejson
 
 from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
