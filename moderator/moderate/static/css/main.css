@@ -140,3 +140,50 @@
     box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.2), 0px -1px 0px 0px rgba(0, 0, 0, 0.3) inset;
     color: #EEE;
 }
+
+.alert-box {
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.25) inset, 0px 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 4px 4px;
+}
+
+.error {
+    color: rgb(185, 74, 72);
+    background-color: rgb(242, 222, 222);
+    border-color: rgb(238, 211, 215);
+}
+
+.warning {
+    color: rgb(192, 152, 83);
+    background-color: rgb(252, 248, 227);
+    border-color: rgb(251, 238, 213);
+}
+
+.success {
+    color: rgb(70, 136, 71);
+    background-color: rgb(223, 240, 216);
+    border-color: rgb(214, 233, 198);
+}
+
+.info {
+    color: rgb(58, 135, 173);
+    background-color: rgb(217, 237, 247);
+    border-color: rgb(188, 232, 241);
+}
+
+.alert-box .close {
+    font-size: 1.7em;
+    padding: 10px 4px;
+    line-height: 0;
+    float: right;
+    color: #333333;
+    opacity: 0.3;
+}
+
+.alert-box .close:hover, .alert-box .close:focus {
+    opacity: 0.5;
+    text-decoration: none;
+}
