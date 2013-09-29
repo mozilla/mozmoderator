@@ -35,7 +35,6 @@ class CustomVerify(Verify):
                         user = User.objects.create_user(
                             username=default_username_algo(data['email']),
                             email=data['email'])
-                        user.save()
                         MozillianProfile.objects.create(
                             user=user, username=data['username'],
                             avatar_url=data['photo'])
