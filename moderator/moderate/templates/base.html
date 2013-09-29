@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     {% block head %}
     {% endblock %}
 
@@ -42,6 +42,17 @@
               <img class="main-logo" src="/static/img/mozillamoderator.png" alt="mozillamoderator">
             </a>
           </h2>
+
+          {% if messages %}
+            <div class="row">
+              {% for message in messages %}
+                <div class="alert-box {{ message.tags }}">
+                  {{ message }}
+                  <a href="#" class="close">&times;</a>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
 
           {% block breadcrumb %}
           {% endblock %}
