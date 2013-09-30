@@ -10,5 +10,12 @@ jQuery(document).ready(function ($) {
                 $('#'+question_id).toggleClass('insensitive').text(json.status);
             }
          })
-    })
-})
+    });
+
+    $(document).on("click", ".alert-box a.close", function(event) {
+        event.preventDefault();
+        $(this).closest(".alert-box").fadeOut(function(event){
+            $(this).remove();
+        });
+    });
+});
