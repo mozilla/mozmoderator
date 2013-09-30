@@ -105,6 +105,7 @@
     transition: all 0.25s linear 0s;
     cursor: pointer;
 }
+
 .button {
     display: inline-block;
     border-radius: 0.25em;
@@ -187,3 +188,31 @@
     opacity: 0.5;
     text-decoration: none;
 }
+
+@media only screen and (max-width: 768px) {
+    .question_text {
+        display: block;
+        width: 95%;
+    }
+
+    .question_text input {
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .vote_container {
+        width: auto;
+    }
+
+    .askedby {
+        display: block;
+        width: 100%;
+    }
+
+    .askedby img {
+        width: 30px;
+        height: 30px;
+        position: relative;
+    }
+}
+
