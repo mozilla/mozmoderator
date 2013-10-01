@@ -19,9 +19,9 @@
       {{ q_form.non_field_errors()|safe }}
       <div class="selfimage">
         {% if not user.userprofile.avatar_url %}
-          <img alt="" src="/static/img/unknown.png">
+          <img alt="" src="/static/img/unknown.png" />
         {% else %}
-          <img alt="" src="{{ user.userprofile.avatar_url }}">
+          <img alt="" src="{{ user.userprofile.avatar_url }}" />
         {% endif %}
       </div>
       {{ csrf() }}
