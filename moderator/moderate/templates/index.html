@@ -8,7 +8,7 @@
 
 {% if user.is_authenticated() %}
   <hgroup id="main-feature" class="center">
-    <h2>select event to view and ask questions</h2>
+    <h2>Select event to view and ask questions.</h2>
   </hgroup>
   {% for event in events %}
     <a href="{{ url('event', e_slug=event.slug) }}">
@@ -21,7 +21,7 @@
 {% else %}
   <hgroup id="main-feature" class="center">
     <h2>Let your voice be heard.</h2>
-    <p>Mozilla Moderator is a panel moderation system for submitting and voting questions.</p>
+    <p>Mozilla Moderator is a panel moderation system for submitting and voting on questions.</p>
     <p>Please log in using your vouched mozillians.org account.</p>
   </hgroup>
 {% endif %}
