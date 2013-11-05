@@ -1,0 +1,60 @@
+import os
+
+# Enable debugging only in dev environment
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+SITE_URL = ['http://siteurl.paas.allizom.org', 'https://siteurl.paas.allizom.org']
+
+SECRET_KEY = 'reallylongandcomplicatedsecretkey'
+
+# Replace the following with your mozillians.org API credentials
+MOZILLIANS_API_KEY = None
+MOZILLIANS_API_APPNAME = None
+
+if os.getenv('MEMCACHE_URL'):
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': os.getenv('MEMCACHE_URL'),
+            }
+        }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+            },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+            },
+        },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+            },
+        },
+    'loggers': {
+        'django': {
+            'handlers':['console'],
+            'propagate': True,
+            'level':'DEBUG',
+            },
+        'moderator': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            },
+        'django_browserid': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            }
+        }
+    }
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
