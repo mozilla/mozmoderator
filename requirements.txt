@@ -1,4 +1,4 @@
-Django
+Django < 1.6
 django-browserid
 django-uuslug
 south
