@@ -75,7 +75,7 @@ def main(request):
         return render(request, 'index.html', {'user': request.user})
 
 
-@login_required
+@login_required(login_url='/')
 def event(request, e_slug):
     """Render event questions."""
     event = Event.objects.get(slug=e_slug)
