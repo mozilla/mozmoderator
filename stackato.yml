@@ -1,0 +1,35 @@
+name: moderator
+
+ignores:
+  - ".git"
+  - "*.pyc"
+  - "*.pyo"
+  - "*.swp"
+  - "*~"
+
+env:
+  DJANGO_SETTINGS_MODULE: moderator.settings
+  PIP_REQUIREMENTS_FILE: requirements.txt
+
+requirements:
+  pypm:
+   - mysql-python
+
+services:
+  ${name}-mysql: mysql
+  ${name}-memchaced: memcached
+
+mem: 128M
+
+processes:
+    web: $STACKATO_UWSGI --static-map /static=$HOME/moderator/static/
+
+hooks:
+  post-staging:
+    - python manage.py syncdb --noinput
+    - python manage.py collectstatic --noinput
+
+framework:
+  type: python
+  start-file: moderator/wsgi.py
+  runtime: python27
