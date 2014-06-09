@@ -8,6 +8,7 @@ from uuslug import uuslug
 class Event(models.Model):
     """Event model."""
     name = models.CharField(max_length=400)
+    archived = models.BooleanField(default=False)
     slug = models.SlugField(max_length=400)
 
     def __unicode__(self):
