@@ -7,6 +7,7 @@ from django_browserid.views import Verify
 from django.db import IntegrityError
 from django.db.models import Count
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -68,15 +69,35 @@ class CustomVerify(Verify):
         return self.login_failure()
 
 
+ITEMS_PER_PAGE = 10
+
+
 def main(request):
     """Render main page."""
     if request.user.is_authenticated():
-        events = Event.objects.all()
+        events = Event.objects.filter(archived=False)
         return render(request, 'index.html', {
                                'events': events,
                                'user': request.user})
     else:
         return render(request, 'index.html', {'user': request.user})
+
+
+@login_required(login_url='/')
+def archive(request):
+    """List of all archived events."""
+    events_list = Event.objects.all()
+    paginator = Paginator(events_list, ITEMS_PER_PAGE)
+    page = request.GET.get('page')
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        events = paginator.page(1)
+    except EmptyPage:
+        events = paginator.page(paginator.num_pages)
+
+    return render(request, 'archive.html', {'events': events})
 
 
 @login_required(login_url='/')

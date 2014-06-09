@@ -39,6 +39,7 @@ def create_user_profile(sender, instance, created, raw, **kwargs):
 class Event(models.Model):
     """Event model."""
     name = models.CharField(max_length=400)
+    archived = models.BooleanField(default=False)
     slug = models.SlugField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
