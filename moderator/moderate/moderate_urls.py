@@ -17,6 +17,8 @@ urlpatterns = patterns('',
         name='upvote'),
     # Main landing page
     url(r'^$', 'moderator.moderate.views.main', name='main'),
+    # Archive page
+    url(r'^archives$', 'moderator.moderate.views.archive', name='archive'),
 )
 
 if settings.DEBUG:

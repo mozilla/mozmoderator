@@ -20,4 +20,9 @@ jQuery(document).ready(function ($) {
             $(this).remove();
         });
     });
+
+    $("#page-select").on('change', function() {
+        window.location = $(this).val();
+    });
+
 })

@@ -50,7 +50,7 @@ class QuestionInline(admin.StackedInline):
 
 class EventAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
-    list_display = ('name', 'questions_count',)
+    list_display = ('name', 'questions_count', 'archived')
     actions = [export_questions_csv]
 
 
