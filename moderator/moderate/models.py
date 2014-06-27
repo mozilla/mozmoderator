@@ -9,6 +9,7 @@ class Event(models.Model):
     """Event model."""
     name = models.CharField(max_length=400)
     slug = models.SlugField(max_length=400)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.name
