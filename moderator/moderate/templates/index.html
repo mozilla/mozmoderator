@@ -10,7 +10,7 @@
   <hgroup id="main-feature" class="center">
     <h2>Select event to view and ask questions.</h2>
   </hgroup>
-  {% for event in events %}
+  {% for event in events.order_by('-created_at') %}
     <a href="{{ url('event', e_slug=event.slug) }}">
       <div class="billboard event_listing">
         <h1>{{ event.name }}</h1>
