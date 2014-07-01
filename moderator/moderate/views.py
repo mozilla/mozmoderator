@@ -92,6 +92,11 @@ def event(request, e_slug):
             question.asked_by = request.user
             question.event = event
             question.save()
+
+            # Automatically upvote new question with user's vote
+            vote = Vote(user=request.user, question=question)
+            vote.save()
+
             return redirect(reverse('event', kwargs={'e_slug': event.slug}))
     else:
         question_form = QuestionForm()
