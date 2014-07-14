@@ -7,12 +7,10 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             success: function(json) {
                 $('#'+question_id).prev().html(json.current_vote_count);
-                $('#'+question_id).addClass('insensitive').text('supported');
+                $('#'+question_id).toggleClass('insensitive').text(json.status);
             }
          })
-    })
-    $('.insensitive').html('supported');
-
+    });
 
     $(document).on("click", ".alert-box a.close", function(event) {
         event.preventDefault();
@@ -20,4 +18,4 @@ jQuery(document).ready(function ($) {
             $(this).remove();
         });
     });
-})
+});

@@ -54,7 +54,7 @@
       <div class="vote_container">
         <span class="vote_count" >{{ q.vote_count }}</span>
         {% if user_voted(q, user) %}
-          <span class="button vote insensitive" id="{{ q.id }}">support</span>
+          <span class="button vote insensitive" id="{{ q.id }}">unsupport</span>
         {% else %}
           <span class="button vote" id="{{ q.id }}">support</span>
         {% endif %}
