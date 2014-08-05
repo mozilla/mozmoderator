@@ -4,6 +4,7 @@ from django_browserid import get_audience, verify, BrowserIDException
 from django_browserid.auth import default_username_algo
 from django_browserid.views import Verify
 
+from django.db import IntegrityError
 from django.db.models import Count
 from django.core.urlresolvers import reverse
 from django.contrib import auth, messages
@@ -115,11 +116,14 @@ def upvote(request, q_id):
     if request.is_ajax():
         try:
             Vote.objects.create(user=request.user, question=question)
-        except Vote.IntegrityError:
-            pass
+            status = 'unsupport'
+        except IntegrityError:
+            Vote.objects.filter(user=request.user, question=question).delete()
+            status = 'support'
 
         response_dict = {
             'current_vote_count': question.votes.count(),
+            'status': status,
         }
 
         return HttpResponse(json.dumps(response_dict),
