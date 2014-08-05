@@ -4,6 +4,7 @@ from django_browserid import get_audience, verify, BrowserIDException
 from django_browserid.auth import default_username_algo
 from django_browserid.views import Verify
 
+from django.conf import settings
 from django.db import IntegrityError
 from django.db.models import Count
 from django.core.urlresolvers import reverse
@@ -69,7 +70,6 @@ class CustomVerify(Verify):
         return self.login_failure()
 
 
-ITEMS_PER_PAGE = 10
 
 
 def main(request):
@@ -87,7 +87,7 @@ def main(request):
 def archive(request):
     """List of all archived events."""
     events_list = Event.objects.all()
-    paginator = Paginator(events_list, ITEMS_PER_PAGE)
+    paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
     page = request.GET.get('page')
 
     try:
@@ -109,9 +109,11 @@ def event(request, e_slug):
                  .annotate(vote_count=Count('votes'))
                  .order_by('-vote_count'))
 
-    question_form = QuestionForm(request.POST or None)
+    question_form = None
+    if not event.archived:
+        question_form = QuestionForm(request.POST or None)
 
-    if question_form.is_valid():
+    if question_form and question_form.is_valid():
         question = question_form.save(commit=False)
         question.asked_by = request.user
         question.event = event
@@ -123,6 +125,7 @@ def event(request, e_slug):
 
     return render(request, 'questions.html',
                   {'user': request.user,
+                   'open': not event.archived,
                    'event': event,
                    'questions': questions,
                    'q_form': question_form})
@@ -134,7 +137,7 @@ def upvote(request, q_id):
 
     question = Question.objects.get(pk=q_id)
 
-    if request.is_ajax():
+    if request.is_ajax() and not question.event.archived:
         try:
             Vote.objects.create(user=request.user, question=question)
             status = 'unsupport'

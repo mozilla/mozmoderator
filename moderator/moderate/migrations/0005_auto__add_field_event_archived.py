@@ -59,9 +59,10 @@ class Migration(SchemaMigration):
         u'moderate.event': {
             'Meta': {'object_name': 'Event'},
             'archived': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '400'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '400'})
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '400', 'blank': 'True'})
         },
         u'moderate.mozillianprofile': {
             'Meta': {'ordering': "['username']", 'object_name': 'MozillianProfile'},
@@ -79,7 +80,7 @@ class Migration(SchemaMigration):
             'question': ('django.db.models.fields.TextField', [], {})
         },
         u'moderate.vote': {
-            'Meta': {'object_name': 'Vote'},
+            'Meta': {'unique_together': "(('user', 'question'),)", 'object_name': 'Vote'},
             'date_voted': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'question': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'votes'", 'to': u"orm['moderate.Question']"}),

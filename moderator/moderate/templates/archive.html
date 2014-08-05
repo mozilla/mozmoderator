@@ -7,7 +7,7 @@
 {% block content %}
 
 <hgroup id="main-feature" class="center">
-  <h2>Select event to view and ask questions.</h2>
+  <h2>Events Archive</h2>
 </hgroup>
 {% for event in events %}
   <a href="{{ url('event', e_slug=event.slug) }}">
