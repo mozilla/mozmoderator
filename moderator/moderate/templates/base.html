@@ -29,6 +29,7 @@
           <a href="https://www.mozilla.org/" id="tabzilla">Mozilla</a>
             {% if user.is_authenticated() %}
               <nav id="nav-main" role="navigation">
+                <a href="{{ url('archive') }}">Event archive</a>
                 {{ browserid_logout(text='Logout')|safe }}
               </nav>
             {% else %}

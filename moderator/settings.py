@@ -192,6 +192,8 @@ BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.CustomVerify'
 
 MOZILLIANS_API_BASE = "https://mozillians.org/api/v1/users/"
 
+ITEMS_PER_PAGE = 10
+
 # Override settings from local_settings.py
 try:
     from local_settings import *

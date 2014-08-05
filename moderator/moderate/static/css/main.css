@@ -82,6 +82,7 @@
     width: 100%;
     border: none;
     font-size: 1rem;
+    box-shadow: 0px 0px 0px 2px rgba(200, 173, 227, 0.4);
 }
 
 .vote_container {

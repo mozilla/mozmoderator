@@ -1,18 +1,23 @@
+import json
+
 from django_browserid import get_audience, verify, BrowserIDException
 from django_browserid.auth import default_username_algo
 from django_browserid.views import Verify
 
+from django.conf import settings
+from django.db import IntegrityError
 from django.db.models import Count
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.utils import simplejson
+
 
 from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
-from moderator.moderate.models import MozillianProfile, Event, Question, Vote
+from moderator.moderate.models import Event, Question, Vote
 from moderator.moderate.forms import QuestionForm
 
 
@@ -35,9 +40,10 @@ class CustomVerify(Verify):
                         user = User.objects.create_user(
                             username=default_username_algo(data['email']),
                             email=data['email'])
-                        MozillianProfile.objects.create(
-                            user=user, username=data['username'],
-                            avatar_url=data['photo'])
+                        profile = user.userprofile
+                        profile.username = data['username']
+                        profile.avatar_url = data['photo']
+                        profile.save()
 
             if _is_valid_login:
                 try:
@@ -64,15 +70,34 @@ class CustomVerify(Verify):
         return self.login_failure()
 
 
+
+
 def main(request):
     """Render main page."""
     if request.user.is_authenticated():
-        events = Event.objects.all()
+        events = Event.objects.filter(archived=False)
         return render(request, 'index.html', {
                                'events': events,
                                'user': request.user})
     else:
         return render(request, 'index.html', {'user': request.user})
+
+
+@login_required(login_url='/')
+def archive(request):
+    """List of all archived events."""
+    events_list = Event.objects.all()
+    paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
+    page = request.GET.get('page')
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        events = paginator.page(1)
+    except EmptyPage:
+        events = paginator.page(paginator.num_pages)
+
+    return render(request, 'archive.html', {'events': events})
 
 
 @login_required(login_url='/')
@@ -84,20 +109,23 @@ def event(request, e_slug):
                  .annotate(vote_count=Count('votes'))
                  .order_by('-vote_count'))
 
-    if request.POST:
-        question_form = QuestionForm(request.POST)
+    question_form = None
+    if not event.archived:
+        question_form = QuestionForm(request.POST or None)
 
-        if question_form.is_valid():
-            question = question_form.save(commit=False)
-            question.asked_by = request.user
-            question.event = event
-            question.save()
-            return redirect(reverse('event', kwargs={'e_slug': event.slug}))
-    else:
-        question_form = QuestionForm()
+    if question_form and question_form.is_valid():
+        question = question_form.save(commit=False)
+        question.asked_by = request.user
+        question.event = event
+        question.save()
+
+        Vote.objects.create(user=request.user, question=question)
+
+        return redirect(reverse('event', kwargs={'e_slug': event.slug}))
 
     return render(request, 'questions.html',
                   {'user': request.user,
+                   'open': not event.archived,
                    'event': event,
                    'questions': questions,
                    'q_form': question_form})
@@ -109,13 +137,20 @@ def upvote(request, q_id):
 
     question = Question.objects.get(pk=q_id)
 
-    if request.is_ajax():
-        vote, created = Vote.objects.get_or_create(user=request.user,
-                                                   question=question)
-        response_dict = {}
-        response_dict.update({'current_vote_count': question.votes.count()})
+    if request.is_ajax() and not question.event.archived:
+        try:
+            Vote.objects.create(user=request.user, question=question)
+            status = 'unsupport'
+        except IntegrityError:
+            Vote.objects.filter(user=request.user, question=question).delete()
+            status = 'support'
 
-        return HttpResponse(simplejson.dumps(response_dict),
-                            mimetype='application/javascript')
+        response_dict = {
+            'current_vote_count': question.votes.count(),
+            'status': status,
+        }
+
+        return HttpResponse(json.dumps(response_dict),
+                            mimetype='application/json')
 
     return event(request, question.event.slug)

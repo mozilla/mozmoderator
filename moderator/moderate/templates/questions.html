@@ -13,28 +13,30 @@
 
 {% block content %}
 
-<div class="billboard question">
-  <div class="row">
-    <form method="post" action="{{ url('event', e_slug=event.slug) }}">
-      {{ q_form.non_field_errors()|safe }}
-      <div class="selfimage">
-        {% if not user.userprofile.avatar_url %}
-          <img alt="" src="/static/img/unknown.png" />
-        {% else %}
-          <img alt="" src="{{ user.userprofile.avatar_url }}" />
-        {% endif %}
-      </div>
-      {{ csrf() }}
-      <div class="question_text">
-        {{ q_form.question.errors|safe }}
-        {{ q_form.question|safe }}
-      </div>
-      <div class="vote_container">
-        <input type="submit" class="button" value="submit">
-      </div>
-    </form>
+{% if open %}
+  <div class="billboard question">
+    <div class="row">
+      <form method="post" action="{{ url('event', e_slug=event.slug) }}">
+        {{ q_form.non_field_errors()|safe }}
+        <div class="selfimage">
+          {% if not user.userprofile.avatar_url %}
+            <img alt="" src="/static/img/unknown.png" />
+          {% else %}
+            <img alt="" src="{{ user.userprofile.avatar_url }}" />
+          {% endif %}
+        </div>
+        {{ csrf() }}
+        <div class="question_text" id="question-input">
+          {{ q_form.question.errors|safe }}
+          {{ q_form.question|safe }}
+        </div>
+        <div class="vote_container">
+          <input type="submit" class="button" value="submit">
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+{% endif %}
 
 {% for q in questions %}
   <div class="billboard question">
@@ -53,12 +55,14 @@
       </div>
       <div class="vote_container">
         <span class="vote_count" >{{ q.vote_count }}</span>
-        {% if user_voted(q, user) %}
-          <span class="button vote insensitive" id="{{ q.id }}">support</span>
-        {% else %}
-          <span class="button vote" id="{{ q.id }}">support</span>
+        {% if open %}
+          {% if user_voted(q, user) %}
+            <span class="button vote insensitive" id="{{ q.id }}">unsupport</span>
+          {% else %}
+            <span class="button vote" id="{{ q.id }}">support</span>
+          {% endif %}
         {% endif %}
-      </div>
+    </div>
     </div>
   </div>
 {% endfor %}
