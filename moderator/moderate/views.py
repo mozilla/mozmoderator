@@ -88,17 +88,17 @@ def event(request, e_slug):
                  .annotate(vote_count=Count('votes'))
                  .order_by('-vote_count'))
 
-    if request.POST:
-        question_form = QuestionForm(request.POST)
+    question_form = QuestionForm(request.POST or None)
 
-        if question_form.is_valid():
-            question = question_form.save(commit=False)
-            question.asked_by = request.user
-            question.event = event
-            question.save()
-            return redirect(reverse('event', kwargs={'e_slug': event.slug}))
-    else:
-        question_form = QuestionForm()
+    if question_form.is_valid():
+        question = question_form.save(commit=False)
+        question.asked_by = request.user
+        question.event = event
+        question.save()
+
+        Vote.objects.create(user=request.user, question=question)
+
+        return redirect(reverse('event', kwargs={'e_slug': event.slug}))
 
     return render(request, 'questions.html',
                   {'user': request.user,
