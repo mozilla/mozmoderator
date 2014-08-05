@@ -68,3 +68,6 @@ class Vote(models.Model):
     user = models.ForeignKey(User)
     question = models.ForeignKey(Question, related_name='votes')
     date_voted = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'question')
