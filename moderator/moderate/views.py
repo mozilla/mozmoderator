@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 from django.utils import simplejson
 
 from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
-from moderator.moderate.models import MozillianProfile, Event, Question, Vote
+from moderator.moderate.models import Event, Question, Vote
 from moderator.moderate.forms import QuestionForm
 
 
@@ -35,9 +35,10 @@ class CustomVerify(Verify):
                         user = User.objects.create_user(
                             username=default_username_algo(data['email']),
                             email=data['email'])
-                        MozillianProfile.objects.create(
-                            user=user, username=data['username'],
-                            avatar_url=data['photo'])
+                        profile = user.userprofile
+                        profile.username = data['username']
+                        profile.avatar_url = data['photo']
+                        profile.save()
 
             if _is_valid_login:
                 try:

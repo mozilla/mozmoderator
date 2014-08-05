@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.db.models import signals as dbsignals
+from django.dispatch import receiver
 
 from uuslug import uuslug
 
@@ -41,6 +43,16 @@ class MozillianProfile(models.Model):
         if not self.pk:
             self.slug = uuslug(self.username, instance=self)
         super(MozillianProfile, self).save(*args, **kwargs)
+
+
+@receiver(dbsignals.post_save, sender=User,
+          dispatch_uid='create_user_profile_sig')
+def create_user_profile(sender, instance, created, raw, **kwargs):
+    if not raw:
+        up, created = MozillianProfile.objects.get_or_create(user=instance)
+        if not created:
+            dbsignals.post_save.send(sender=MozillianProfile, instance=up,
+                                     created=created, raw=raw)
 
 
 class Question(models.Model):
