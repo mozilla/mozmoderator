@@ -1,3 +1,5 @@
+import json
+
 from django_browserid import get_audience, verify, BrowserIDException
 from django_browserid.auth import default_username_algo
 from django_browserid.views import Verify
@@ -9,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.utils import simplejson
+
 
 from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
 from moderator.moderate.models import Event, Question, Vote
@@ -111,12 +113,16 @@ def upvote(request, q_id):
     question = Question.objects.get(pk=q_id)
 
     if request.is_ajax():
-        vote, created = Vote.objects.get_or_create(user=request.user,
-                                                   question=question)
-        response_dict = {}
-        response_dict.update({'current_vote_count': question.votes.count()})
+        try:
+            Vote.objects.create(user=request.user, question=question)
+        except Vote.IntegrityError:
+            pass
 
-        return HttpResponse(simplejson.dumps(response_dict),
-                            mimetype='application/javascript')
+        response_dict = {
+            'current_vote_count': question.votes.count(),
+        }
+
+        return HttpResponse(json.dumps(response_dict),
+                            mimetype='application/json')
 
     return event(request, question.event.slug)
