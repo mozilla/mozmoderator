@@ -25,7 +25,7 @@
         {% endif %}
       </div>
       {{ csrf() }}
-      <div class="question_text">
+      <div class="question_text" id="question-input">
         {{ q_form.question.errors|safe }}
         {{ q_form.question|safe }}
       </div>
