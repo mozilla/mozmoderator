@@ -8,7 +8,7 @@ from uuslug import uuslug
 class Event(models.Model):
     """Event model."""
     name = models.CharField(max_length=400)
-    slug = models.SlugField(max_length=400)
+    slug = models.SlugField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
