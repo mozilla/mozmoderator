@@ -7,25 +7,6 @@ from django.dispatch import receiver
 from uuslug import uuslug
 
 
-class Event(models.Model):
-    """Event model."""
-    name = models.CharField(max_length=400)
-    slug = models.SlugField(max_length=400, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __unicode__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.slug = uuslug(self.name, instance=self)
-        super(Event, self).save(*args, **kwargs)
-
-    @property
-    def questions_count(self):
-        return self.questions.all().count()
-
-
 class MozillianProfile(models.Model):
     """Mozillians User Profile"""
     user = models.OneToOneField(User, related_name='userprofile')
@@ -55,12 +36,34 @@ def create_user_profile(sender, instance, created, raw, **kwargs):
                                      created=created, raw=raw)
 
 
+class Event(models.Model):
+    """Event model."""
+    name = models.CharField(max_length=400)
+    slug = models.SlugField(max_length=400, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.slug = uuslug(self.name, instance=self)
+        super(Event, self).save(*args, **kwargs)
+
+    @property
+    def questions_count(self):
+        return self.questions.all().count()
+
+
 class Question(models.Model):
     """Question relational model."""
     asked_by = models.ForeignKey(User)
     event = models.ForeignKey(Event, related_name='questions')
     question = models.TextField(validators=[MaxLengthValidator(140),
                                             MinLengthValidator(10)])
+
+    def __unicode__(self):
+        return u'Question {pk} from {user}'.format(pk=self.id, user=self.asked_by)
 
 
 class Vote(models.Model):
@@ -71,3 +74,6 @@ class Vote(models.Model):
 
     class Meta:
         unique_together = ('user', 'question')
+
+    def __unicode__(self):
+        return u'Vote of {user} for {question}'.format(user=self.user, question=self.question)
