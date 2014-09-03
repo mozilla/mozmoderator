@@ -1,5 +1,9 @@
 name: moderator
 
+url:
+  - moderator.paas.mozilla.org
+  - moderator.mozilla.org
+
 ignores:
   - ".git"
   - "*.pyc"
