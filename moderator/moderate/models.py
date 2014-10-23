@@ -64,7 +64,8 @@ class Question(models.Model):
                                             MinLengthValidator(10)])
 
     def __unicode__(self):
-        return u'Question {pk} from {user}'.format(pk=self.id, user=self.asked_by)
+        return u'Question {pk} from {user}'.format(pk=self.id,
+                                                   user=self.asked_by)
 
 
 class Vote(models.Model):
@@ -77,4 +78,5 @@ class Vote(models.Model):
         unique_together = ('user', 'question')
 
     def __unicode__(self):
-        return u'Vote of {user} for {question}'.format(user=self.user, question=self.question)
+        return u'Vote of {user} for {question}'.format(user=self.user,
+                                                       question=self.question)

@@ -70,8 +70,6 @@ class CustomVerify(Verify):
         return self.login_failure()
 
 
-
-
 def main(request):
     """Render main page."""
     if request.user.is_authenticated():
