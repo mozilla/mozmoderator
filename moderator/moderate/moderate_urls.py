@@ -6,7 +6,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     # Browserid
     url(r'^browserid/', include('django_browserid.urls')),
     # Events questions urls
