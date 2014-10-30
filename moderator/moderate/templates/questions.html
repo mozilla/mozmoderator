@@ -2,6 +2,8 @@
 
 {% block head %}
 <title>Mozilla Moderator - {{ event.name }}</title>
+
+<link rel="stylesheet" href="/static/css/reveal.css">
 {% endblock %}
 
 {% block breadcrumb %}
@@ -30,7 +32,7 @@
           {{ q_form.question.errors|safe }}
           {{ q_form.question|safe }}
         </div>
-        <div class="vote_container">
+        <div class="ask_container">
           <input type="submit" class="button" value="submit">
         </div>
       </form>
@@ -39,7 +41,8 @@
 {% endif %}
 
 {% for q in questions %}
-  <div class="billboard question">
+<div class="container questions-container">
+  <div class="billboard question asked">
     <div class="row">
       <div class="askedby">
         <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
@@ -61,10 +64,38 @@
           {% else %}
             <span class="button vote" id="{{ q.id }}">support</span>
           {% endif %}
+          {% if user.userprofile.is_admin and not q.reply %}
+            <a class="button reply-button"
+                  id="{{ q.id }}"
+                  data-reveal-id="question-reply">
+              reply
+            </a>
+          {% endif %}
         {% endif %}
-    </div>
+      </div>
     </div>
   </div>
+  {% if q.reply %}
+    <div class="row reply-row">
+      {{ q.reply }}
+    </div>
+  {% endif %}
+</div>
 {% endfor %}
 
+<!-- Modal for Question Reply -->
+<div id="question-reply" class="reveal-modal">
+  <div id="reply_form">
+    <form method="post" action="">
+      {{ csrf() }}
+      {{ r_form.reply|safe }}
+      <input type="submit" class="button" value="submit">
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/libs/jquery.reveal.js"></script>
+    <script src="/static/js/questions.js"></script>
 {% endblock %}
