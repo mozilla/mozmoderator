@@ -44,6 +44,7 @@ class UserAdmin(UserAdmin):
 
 class QuestionInline(admin.StackedInline):
     model = Question
+    fields = ('addressed', 'question', 'asked_by',)
     readonly_fields = ('question', 'asked_by',)
     extra = 0
 
