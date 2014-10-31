@@ -84,7 +84,7 @@ def main(request):
 @login_required(login_url='/')
 def archive(request):
     """List of all archived events."""
-    events_list = Event.objects.all()
+    events_list = Event.objects.filter(archived=True)
     paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
     page = request.GET.get('page')
 

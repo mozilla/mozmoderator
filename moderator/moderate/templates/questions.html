@@ -31,8 +31,8 @@
         </div>
         {{ csrf() }}
         <div class="question-text" id="question-input">
-          {{ q_form.question.errors|safe }}
-          {{ q_form.question|safe }}
+          {{ q_form.question.errors }}
+          {{ q_form.question }}
         </div>
         <div class="ask-container">
           <input type="submit" class="button" value="submit">
