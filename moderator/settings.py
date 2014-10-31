@@ -12,13 +12,18 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'moderator-db',                      # Or path to database file if using sqlite3.
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'moderator-db',
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        # Empty for localhost through domain sockets or
+        # '127.0.0.1' for localhost through TCP.
+        'HOST': '',
+        # Set to empty string for default.
+        'PORT': '',
     }
 }
 
@@ -111,7 +116,8 @@ ROOT_URLCONF = 'moderator.urls'
 WSGI_APPLICATION = 'moderator.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates"
+    # or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     'templates',
@@ -141,15 +147,12 @@ AUTHENTICATION_BACKENDS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
-    'django_browserid.context_processors.browserid',
     'django.contrib.messages.context_processors.messages')
 
 # Uncomment the following line for local development, or BrowserID
 # will fail to log you in.
 SITE_URL = 'http://127.0.0.1:8000'
 
-# Do not create account for new users.
-BROWSERID_CREATE_USER = False
 
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = '/'
@@ -188,7 +191,10 @@ LOGGING = {
     }
 }
 
-BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.CustomVerify'
+# BroserID
+BROWSERID_AUDIENCES = ['http://127.0.0.1:8000']
+BROWSERID_CREATE_USER = False
+BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.BrowserIDVerify'
 
 MOZILLIANS_API_BASE = "https://mozillians.org/api/v1/users/"
 
@@ -196,6 +202,6 @@ ITEMS_PER_PAGE = 10
 
 # Override settings from local_settings.py
 try:
-    from local_settings import *
+    from local_settings import * #noqa
 except:
     pass

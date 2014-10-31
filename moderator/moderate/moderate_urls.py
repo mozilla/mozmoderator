@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -8,8 +8,6 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    # Browserid
-    url(r'^browserid/', include('django_browserid.urls')),
     # Events questions urls
     url(r'^e/(?P<e_slug>[a-z0-9-]+)', 'moderator.moderate.views.event',
         name='event'),
