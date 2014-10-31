@@ -8,7 +8,7 @@
 
 {% block breadcrumb %}
 <nav class="breadcrumbs">
-  <a href="/">Events</a> >
+  <a href="/">Events</a>
   <span>{{ event.name }}</span>
 </nav>
 {% if q_form.errors %}
@@ -24,17 +24,17 @@
         {{ q_form.non_field_errors() }}
         <div class="selfimage">
           {% if not user.userprofile.avatar_url %}
-            <img alt="" src="/static/img/unknown.png" />
+            <img alt="Unknown profile image" src="/static/img/unknown.png" />
           {% else %}
-            <img alt="" src="{{ user.userprofile.avatar_url }}" />
+            <img alt="User profile image" src="{{ user.userprofile.avatar_url }}" />
           {% endif %}
         </div>
         {{ csrf() }}
-        <div class="question_text" id="question-input">
-          {{ q_form.question.errors }}
-          {{ q_form.question }}
+        <div class="question-text" id="question-input">
+          {{ q_form.question.errors|safe }}
+          {{ q_form.question|safe }}
         </div>
-        <div class="ask_container">
+        <div class="ask-container">
           <input type="submit" class="button" value="submit">
         </div>
       </form>
@@ -52,17 +52,17 @@
       <div class="askedby">
         <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
           {% if q.asked_by.userprofile.avatar_url == "" %}
-            <img alt="" src="/static/img/unknown.png">
+            <img alt="Unknown profile image" src="/static/img/unknown.png">
           {% else %}
-            <img alt="" src="{{ q.asked_by.userprofile.avatar_url }}">
+            <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}">
           {% endif %}
         </a>
       </div>
-      <div class="question_text">
+      <div class="question-text">
         <h3>{{ q.question }}</h3>
       </div>
-      <div class="vote_container">
-        <span class="vote_count" >{{ q.vote_count }}</span>
+      <div class="vote-container">
+        <span class="vote-count" >{{ q.vote_count }}</span>
         {% if open %}
           {% if user_voted(q, user) %}
             <span class="button vote insensitive" id="{{ q.id }}">unsupport</span>
@@ -93,7 +93,7 @@
 
 <!-- Modal for Question Reply -->
 <div id="question-reply" class="reveal-modal">
-  <div id="reply_form">
+  <div id="reply-form">
     <form method="post" action="">
       {{ csrf() }}
       {{ q_form.answer }}
