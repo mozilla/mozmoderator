@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/static/css/main.css" media="all">
     <link rel="shortcut icon" href="/static/img/favicon.ico">
 
-    {{ browserid_css()|safe }}
+    {{ browserid_css() }}
 
     <!--[if lte IE 8]>
     <script src="/static/js/libs/html5shiv.js"></script>
@@ -21,7 +21,7 @@
   </head>
 
   <body class="sand">
-    {{ browserid_info()|safe }}
+    {{ browserid_info() }}
     <div id="outer-wrapper">
       <div id="wrapper">
 
@@ -30,11 +30,11 @@
             {% if user.is_authenticated() %}
               <nav id="nav-main" role="navigation">
                 <a href="{{ url('archive') }}">Event archive</a>
-                {{ browserid_logout(text='Logout')|safe }}
+                {{ browserid_logout(text='Logout') }}
               </nav>
             {% else %}
               <div class="persona-button-container">
-                {{ browserid_login(text='Login', color='dark')|safe }}
+                {{ browserid_login(text='Login', color='dark') }}
               </div>
             {% endif %}
 
@@ -96,6 +96,6 @@
     <script src="/static/js/nav-main-resp.js"></script>
     <script src="//mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
     <script src="/static/js/app.js"></script>
-    {{ browserid_js()|safe }}
+    {{ browserid_js() }}
   </body>
 </html>
