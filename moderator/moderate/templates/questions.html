@@ -41,6 +41,9 @@
 {% for q in questions %}
   <div class="billboard question">
     <div class="row">
+      {% if q.addressed %}
+        <div class="ribbon-wrapper-green"><div class="ribbon-green">answered</div></div>
+      {% endif %}
       <div class="askedby">
         <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
           {% if q.asked_by.userprofile.avatar_url == "" %}
