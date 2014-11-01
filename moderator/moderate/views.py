@@ -1,7 +1,8 @@
 import json
 
-from django_browserid import get_audience, verify, BrowserIDException
 from django_browserid.auth import default_username_algo
+from django_browserid.base import (BrowserIDException, RemoteVerifier,
+                                   get_audience)
 from django_browserid.views import Verify
 
 from django.conf import settings
@@ -21,53 +22,61 @@ from moderator.moderate.models import Event, Question, Vote
 from moderator.moderate.forms import QuestionForm
 
 
-class CustomVerify(Verify):
-    def form_valid(self, form):
-        """Custom mozillians login form validation"""
-        self.assertion = form.cleaned_data['assertion']
-        self.audience = get_audience(self.request)
-        result = verify(self.assertion, self.audience)
+class BrowserIDVerify(Verify):
 
-        try:
-            _is_valid_login = False
-            if result:
-                if User.objects.filter(email=result['email']).exists():
-                    _is_valid_login = True
-                else:
-                    data = is_vouched(result['email'])
-                    if data and data['is_vouched']:
-                        _is_valid_login = True
-                        user = User.objects.create_user(
-                            username=default_username_algo(data['email']),
-                            email=data['email'])
-                        profile = user.userprofile
-                        profile.username = data['username']
-                        profile.avatar_url = data['photo']
-                        profile.save()
-
-            if _is_valid_login:
-                try:
-                    self.user = auth.authenticate(assertion=self.assertion,
-                                                  audience=self.audience)
-                    auth.login(self.request, self.user)
-
-                except BrowserIDException as e:
-                    return self.login_failure(e)
-
-                if self.user and self.user.is_active:
-                    return self.login_success()
-
-        except BadStatusCodeError:
-            msg = ('Email (%s) authenticated but unable to '
-                   'connect to Mozillians to see if you are vouched'
-                   % result['email'])
+    def login_failure(self, msg=''):
+        if msg:
             messages.warning(self.request, msg)
-            return self.login_failure()
+        return super(BrowserIDVerify, self).login_failure()
 
-        messages.error(self.request, ('Login failed. Make sure you are using '
-                                      'a valid email address and you are '
-                                      'a vouched Mozillian.'))
-        return self.login_failure()
+    def post(self, *args, **kwargs):
+        """Custom mozillians login form validation"""
+        msg = ('Login failed. Please make sure you are using a valid email '
+               'address and you are a vouched Mozillian.')
+        assertion = self.request.POST.get('assertion')
+
+        if not assertion:
+            return self.login_failure(msg)
+        audience = get_audience(self.request)
+        result = RemoteVerifier().verify(assertion, audience)
+
+        if not result:
+            return self.login_failure(msg)
+
+        email = result.email
+        _is_valid_login = False
+        if User.objects.filter(email=email).exists():
+            _is_valid_login = True
+        else:
+            try:
+                data = is_vouched(email)
+            except BadStatusCodeError:
+                msg = ('Email (%s) authenticated but was unable to connect to '
+                       'Mozillians to see if you are vouched')
+                return self.login_failure(msg)
+
+            if data and data['is_vouched']:
+                _is_valid_login = True
+                user = User.objects.create_user(
+                    username=default_username_algo(data['email']),
+                    email=data['email'])
+                profile = user.userprofile
+                profile.username = data['username']
+                profile.avatar_url = data['photo']
+                profile.save()
+
+        if _is_valid_login:
+            try:
+                self.user = auth.authenticate(assertion=assertion,
+                                              audience=audience)
+                auth.login(self.request, self.user)
+
+            except BrowserIDException:
+                return self.login_failure(msg)
+
+            if self.user and self.user.is_active:
+                return super(BrowserIDVerify, self).login_success()
+        return self.login_failure(msg)
 
 
 def main(request):
@@ -77,8 +86,7 @@ def main(request):
         return render(request, 'index.html', {
                                'events': events,
                                'user': request.user})
-    else:
-        return render(request, 'index.html', {'user': request.user})
+    return render(request, 'index.html', {'user': request.user})
 
 
 @login_required(login_url='/')

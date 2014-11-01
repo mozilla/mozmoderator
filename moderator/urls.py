@@ -13,12 +13,12 @@ urlpatterns = patterns(
     # Admin
     url(r'^admin/', include(admin.site.urls)),
     # BrowserId
-    url(r'', include('moderator.moderate.moderate_urls')),
+    url(r'', include('django_browserid.urls')),
     # Login / Logout
     url(r'^logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}, name='logout'),
     # Main landing page
-    url(r'^$', include('moderator.moderate.moderate_urls')),
+    url(r'^', include('moderator.moderate.moderate_urls')),
 )
 
 if settings.DEBUG:
