@@ -1,3 +1,11 @@
+.sky a {
+  color: white;
+}
+
+.sky a:hover {
+  color: white;
+}
+
 .persona-button-container {
     float: right;
     margin-top: 10px;
@@ -15,20 +23,20 @@
     margin: 30px;
 }
 
-.event_listing {
+.event-listing {
     padding: 20px;
     border-radius: 10px;
     cursor: pointer;
 }
 
-.event_listing h1 {
+.event-listing h1 {
     font-size: 2rem;
     padding: 0px;
     margin: 0px;
     float: left;
 }
 
-.questions_counter {
+.questions-counter {
     float: right;
     color: #999;
     margin-top: 5px;
@@ -49,7 +57,7 @@
 
 .askedby img {
     border-radius: 100%;
-    position: absolute;
+    position: relative;
     border: 5px solid #FFF;
     box-shadow: 0px 0px 2px rgba(0, 2, 2, 0.2);
     width: 70px;
@@ -71,13 +79,13 @@
     height: 35px;
 }
 
-.question_text {
-    display:inline-block;
+.question-text {
+    display: inline-block;
     width: 75%;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
-.question_text input {
+.question-text input {
     margin-top: 10px;
     width: 100%;
     border: none;
@@ -85,7 +93,17 @@
     box-shadow: 0px 0px 0px 2px rgba(200, 173, 227, 0.4);
 }
 
-.vote_container {
+.vote-container {
+    float:right;
+    display:inline-block;
+    width: 12%;
+    vertical-align: top;
+    text-align: center;
+    padding: 10px;
+    margin-top: -15px;
+}
+
+.ask-container {
     float:right;
     display:inline-block;
     width: 12%;
@@ -94,7 +112,7 @@
     padding: 10px;
 }
 
-.vote_count {
+.vote-count {
     font-style: bold;
     font-size: 2rem;
 }
@@ -195,17 +213,17 @@
         display: none;
     }
 
-    .question_text {
+    .question-text {
         display: block;
         width: 95%;
     }
 
-    .question_text input {
+    .question-text input {
         width: 100%;
         margin-top: 30px;
     }
 
-    .vote_container {
+    .vote-container {
         display: block;
         width: 95%;
     }
@@ -222,13 +240,12 @@
         position: relative;
     }
 
-    .vote_count {
+    .vote-count {
         display: block;
     }
 }
 
 /* Ribbon rules */
-
 .ribbon-wrapper-green {
   width: 85px;
   height: 88px;
@@ -278,4 +295,42 @@
 }
 .ribbon-green:after {
   right: 0;
-}​
+}
+
+.vote-container .button {
+  margin-top: 3px;
+}
+
+.reply-row {
+    color: #777;
+    margin-top: -30px;
+    padding: 15px;
+    padding-top: 27px;
+    float: right;
+    box-shadow: 0 0 0 1px #ccc inset;
+    background: #ddd;
+    border-bottom: 1px solid #bbb;
+    border-radius: 10px;
+}
+
+.questions-container {
+    padding: 0px;
+}
+
+#reply-form form {
+  text-align: center;
+}
+
+#reply-form textarea {
+  font-size: 1rem;
+  height: 50px;
+  width: 95%;
+  margin: 0 auto;
+  display: block;
+}
+
+#reply-form input {
+  margin-right: 5px;
+  margin-top: 10px;
+  float: right;
+}

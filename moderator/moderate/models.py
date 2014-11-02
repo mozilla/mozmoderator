@@ -25,6 +25,10 @@ class MozillianProfile(models.Model):
             self.slug = uuslug(self.username, instance=self)
         super(MozillianProfile, self).save(*args, **kwargs)
 
+    @property
+    def is_admin(self):
+        return self.user.groups.filter(name='Admin').exists()
+
 
 @receiver(dbsignals.post_save, sender=User,
           dispatch_uid='create_user_profile_sig')
@@ -62,6 +66,8 @@ class Question(models.Model):
     event = models.ForeignKey(Event, related_name='questions')
     question = models.TextField(validators=[MaxLengthValidator(140),
                                             MinLengthValidator(10)])
+    answer = models.TextField(validators=[MaxLengthValidator(140)],
+                              default='', blank=True)
     addressed = models.BooleanField(default=False)
 
     def __unicode__(self):
