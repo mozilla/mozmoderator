@@ -136,20 +136,20 @@ INSTALLED_APPS = (
 # Django browserid authentication backend
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'django_browserid.auth.BrowserIDBackend',
+    'moderator.moderate.backend.ModeratorBrowserIDBackend',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
-    'django_browserid.context_processors.browserid',
     'django.contrib.messages.context_processors.messages')
 
 # Uncomment the following line for local development, or BrowserID
 # will fail to log you in.
 SITE_URL = 'http://127.0.0.1:8000'
 
+BROWSERID_AUDIENCES = [SITE_URL]
 # Do not create account for new users.
-BROWSERID_CREATE_USER = False
+BROWSERID_CREATE_USER = True
 
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = '/'
@@ -188,13 +188,14 @@ LOGGING = {
     }
 }
 
-BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.CustomVerify'
+BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.BrowserIDVerify'
 
 MOZILLIANS_API_BASE = "https://mozillians.org/api/v1/users/"
 
 ITEMS_PER_PAGE = 10
 
 # Override settings from local_settings.py
+DEBUG = True
 try:
     from local_settings import *
 except:

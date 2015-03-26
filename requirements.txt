@@ -1,5 +1,5 @@
 Django==1.4.20
-django-browserid==0.9
+django-browserid==0.11.1
 django-uuslug
 south
 dj-database-url

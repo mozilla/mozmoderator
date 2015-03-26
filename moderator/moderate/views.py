@@ -1,7 +1,6 @@
 import json
 
-from django_browserid import get_audience, verify, BrowserIDException
-from django_browserid.auth import default_username_algo
+from django_browserid.http import JSONResponse
 from django_browserid.views import Verify
 
 from django.conf import settings
@@ -9,65 +8,24 @@ from django.db import IntegrityError
 from django.db.models import Count
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib import auth, messages
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 
 
-from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
 from moderator.moderate.models import Event, Question, Vote
 from moderator.moderate.forms import QuestionForm
 
 
-class CustomVerify(Verify):
-    def form_valid(self, form):
-        """Custom mozillians login form validation"""
-        self.assertion = form.cleaned_data['assertion']
-        self.audience = get_audience(self.request)
-        result = verify(self.assertion, self.audience)
+class BrowserIDVerify(Verify):
 
-        try:
-            _is_valid_login = False
-            if result:
-                if User.objects.filter(email=result['email']).exists():
-                    _is_valid_login = True
-                else:
-                    data = is_vouched(result['email'])
-                    if data and data['is_vouched']:
-                        _is_valid_login = True
-                        user = User.objects.create_user(
-                            username=default_username_algo(data['email']),
-                            email=data['email'])
-                        profile = user.userprofile
-                        profile.username = data['username']
-                        profile.avatar_url = data['photo']
-                        profile.save()
-
-            if _is_valid_login:
-                try:
-                    self.user = auth.authenticate(assertion=self.assertion,
-                                                  audience=self.audience)
-                    auth.login(self.request, self.user)
-
-                except BrowserIDException as e:
-                    return self.login_failure(e)
-
-                if self.user and self.user.is_active:
-                    return self.login_success()
-
-        except BadStatusCodeError:
-            msg = ('Email (%s) authenticated but unable to '
-                   'connect to Mozillians to see if you are vouched'
-                   % result['email'])
-            messages.warning(self.request, msg)
-            return self.login_failure()
-
-        messages.error(self.request, ('Login failed. Make sure you are using '
-                                      'a valid email address and you are '
-                                      'a vouched Mozillian.'))
-        return self.login_failure()
+    def login_failure(self, msg=''):
+        if not msg:
+            msg = ('Login failed. Make sure you are using a valid email '
+                   'address and you are a vouched Mozillian.')
+        messages.error(self.request, msg)
+        return JSONResponse({'redirect': self.failure_url})
 
 
 def main(request):
