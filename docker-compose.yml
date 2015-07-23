@@ -1,0 +1,26 @@
+db:
+  image: mysql:5.6
+  environment:
+    - MYSQL_DATABASE=moderator
+    - MYSQL_USER=moderator
+    - MYSQL_PASSWORD=moderator
+    - MYSQL_ROOT_PASSWORD=root
+web:
+  build: .
+  ports:
+    - "8000:8000"
+  volumes:
+    - .:/app
+  links:
+    - db
+  environment:
+    - PYTHONDONTWRITEBYTECODE=1
+    - DATABASE_URL=mysql://moderator:moderator@db/moderator
+    - DEBUG=True
+    - ALLOWED_HOSTS=localhost,127.0.0.1
+    - SITE_URL=http://127.0.0.1:8000
+    - SECRET_KEY=2c6f4562-7a12-4fc0-9e07-24760dd881ba
+    - MOZILLIANS_API_KEY=""
+    - MOZILLIANS_API_APPNAME=""
+  command:
+    ./bin/run-docker-compose.sh

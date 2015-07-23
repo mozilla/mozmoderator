@@ -4,16 +4,12 @@ django-uuslug
 south
 dj-database-url
 MySQL-python
-
-# Templates
+python-decouple
 jingo
-
-# Security
 django-sha2
 bleach
 django-session-csrf
-
 cef==0.3
-
 django-axes
 python-memcached
+gunicorn
