@@ -1,78 +1,36 @@
+import dj_database_url
 import os
 
+from decouple import Csv, config
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
-
-MANAGERS = ADMINS
+DEBUG = config('DEBUG', cast=bool)
+TEMPLATE_DEBUG = config('TEMPLATE_DEBUG', default=DEBUG, cast=bool)
 
 DATABASES = {
+    'default': config('DATABASE_URL', cast=dj_database_url.parse)
+}
+
+CACHES = {
     'default': {
-        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.sqlite3',
-        # Or path to database file if using sqlite3.
-        'NAME': 'moderator-db',
-        # The following settings are not used with sqlite3:
-        'USER': '',
-        'PASSWORD': '',
-        # Empty for localhost through domain sockets or
-        # '127.0.0.1' for localhost through TCP.
-        'HOST': '',
-        'PORT': '',  # Set to empty string for default.
+        'BACKEND': config('CACHE_BACKEND', default='django.core.cache.backends.locmem.LocMemCache'),  # noqa
+        'LOCATION': config('CACHE_LOCATION', default='unique-snowflake')
     }
 }
 
-# Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
-
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
-
-SITE_ID = 1
-
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
-USE_I18N = True
-
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale.
-USE_L10N = True
-
-# If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+TIME_ZONE = config('TIME_ZONE', default='UTC')
+LANGUAGE_CODE = config('LANGUAGE_CODE', default='en-us')
+USE_I18N = config('USE_I18N', default=True, cast=bool)
+USE_L10N = config('USE_L10N', default=True, cast=bool)
+USE_TZ = config('USE_TZ', default=True, cast=bool)
 
 PROJECT_DIR = os.path.dirname(__file__)
+MEDIA_ROOT = config('MEDIA_ROOT', default=os.path.join(PROJECT_DIR, 'media'))
+MEDIA_URL = config('MEDIA_URL', default='/media/')
 
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
-
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = '/media/'
-
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
-
-# URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/static/'
+STATIC_ROOT = config('STATIC_ROOT', default=os.path.join(PROJECT_DIR, 'static'))  # noqa
+STATIC_URL = config('STATIC_URL', default='/static/')
 
 # Additional locations of static files
 STATICFILES_DIRS = (os.path.join(PROJECT_DIR, 'moderate/static'),)
@@ -82,18 +40,16 @@ STATICFILES_DIRS = (os.path.join(PROJECT_DIR, 'moderate/static'),)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '%+sf5v)#v-s#j*(#!8h1wp=suyvj8j9q7&u)dnx6x+ij8!%&5='
+SECRET_KEY = config('SECRET_KEY')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'jingo.Loader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    # 'django.template.loaders.eggs.Loader',
 )
 
 JINGO_EXCLUDE_APPS = ('admin', 'browserid',)
@@ -105,8 +61,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'axes.middleware.FailedLoginMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'moderator.urls'
@@ -115,10 +69,6 @@ ROOT_URLCONF = 'moderator.urls'
 WSGI_APPLICATION = 'moderator.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates"
-    # or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
     'templates',
 )
 
@@ -148,27 +98,17 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages')
 
-# Uncomment the following line for local development, or BrowserID
-# will fail to log you in.
-SITE_URL = 'http://127.0.0.1:8000'
+SITE_URL = config('SITE_URL')
 
 BROWSERID_AUDIENCES = [SITE_URL]
-# Do not create account for new users.
 BROWSERID_CREATE_USER = True
 
-# Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = '/'
-# Path to redirect to on unsuccessful login attempt.
 LOGIN_REDIRECT_URL_FAILURE = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -194,14 +134,7 @@ LOGGING = {
 }
 
 BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.BrowserIDVerify'
-
 MOZILLIANS_API_BASE = "https://mozillians.org/api/v1/users/"
-
+MOZILLIANS_API_KEY = config('MOZILLIANS_API_KEY')
+MOZILLIANS_API_APPNAME = config('MOZILLIANS_API_APPNAME')
 ITEMS_PER_PAGE = 10
-
-# Override settings from local_settings.py
-DEBUG = True
-try:
-    from local_settings import *  # noqa
-except:
-    pass
