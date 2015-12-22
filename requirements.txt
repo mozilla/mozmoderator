@@ -6,7 +6,7 @@ dj-database-url
 MySQL-python
 
 # Templates
-jingo
+jingo==0.7.1
 
 # Security
 django-sha2
