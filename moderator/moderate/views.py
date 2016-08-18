@@ -85,8 +85,7 @@ def event(request, e_slug, q_id=None):
         question_obj.event = event
         question_obj.save()
 
-        if (not Vote.objects.filter(user=user, question=question_obj).exists()
-                and not is_reply):
+        if not Vote.objects.filter(user=user, question=question_obj).exists() and not is_reply:
             Vote.objects.create(user=user, question=question_obj)
 
         return redirect(reverse('event', kwargs={'e_slug': event.slug}))
