@@ -76,6 +76,8 @@ USE_L10N = False
 # Instruct session-csrf to always produce tokens for anonymous users
 ANON_ALWAYS = True
 
+SITE_ID = 1
+
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
