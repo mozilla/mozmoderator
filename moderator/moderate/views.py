@@ -32,11 +32,11 @@ def main(request):
     """Render main page."""
     if request.user.is_authenticated():
         events = Event.objects.filter(archived=False)
-        return render(request, 'index.html', {
+        return render(request, 'index.jinja', {
                                'events': events,
                                'user': request.user})
     else:
-        return render(request, 'index.html', {'user': request.user})
+        return render(request, 'index.jinja', {'user': request.user})
 
 
 @login_required(login_url='/')
@@ -53,7 +53,7 @@ def archive(request):
     except EmptyPage:
         events = paginator.page(paginator.num_pages)
 
-    return render(request, 'archive.html', {'events': events})
+    return render(request, 'archive.jinja', {'events': events})
 
 
 @login_required(login_url='/')
@@ -91,7 +91,7 @@ def event(request, e_slug, q_id=None):
 
         return redirect(reverse('event', kwargs={'e_slug': event.slug}))
 
-    return render(request, 'questions.html',
+    return render(request, 'questions.jinja',
                   {'user': user,
                    'open': not event.archived,
                    'event': event,

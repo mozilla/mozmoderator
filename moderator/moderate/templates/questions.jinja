@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.jinja" %}
 
 {% block head %}
 <title>Mozilla Moderator - {{ event.name }}</title>
@@ -29,7 +29,7 @@
             <img alt="User profile image" src="{{ user.userprofile.avatar_url }}" />
           {% endif %}
         </div>
-        {{ csrf() }}
+        {% csrf_token %}
         <div class="question-text" id="question-input">
           {{ q_form.question.errors }}
           {{ q_form.question }}
@@ -95,7 +95,7 @@
 <div id="question-reply" class="reveal-modal">
   <div id="reply-form">
     <form method="post" action="">
-      {{ csrf() }}
+      {% csrf_token %}
       {{ q_form.answer }}
       <input type="submit" class="button" value="submit">
     </form>

@@ -1,0 +1,57 @@
+import os
+
+from . import base
+
+DATABASES = {
+    'default': {
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.sqlite3',
+        # Or path to database file if using sqlite3.
+        'NAME': 'moderator-db',
+        # The following settings are not used with sqlite3:
+        'USER': '',
+        'PASSWORD': '',
+        # Empty for localhost through domain sockets or
+        # '127.0.0.1' for localhost through TCP.
+        'HOST': '',
+        'PORT': '',  # Set to empty string for default.
+    }
+}
+
+# Enable debugging only in dev environment
+DEBUG = True
+from .base import TEMPLATES
+for backend in TEMPLATES:
+    backend['OPTIONS']['debug'] = DEBUG
+
+# Recipients of traceback emails and other notifications.
+ADMINS = (
+    # ('Your Name', 'your_email@domain.com'),
+)
+MANAGERS = ADMINS
+
+# Uncomment the following two lines for local development, or BrowserID
+# will fail to log you in.
+# SITE_URL = 'http://127.0.0.1:8000'
+# BROWSERID_AUDIENCES = [SITE_URL]
+# Auto-login for offline development
+# BROWSERID_AUTOLOGIN_EMAIL = 'your_email@example.com'
+# BROWSERID_AUTOLOGIN_ENABLED = True
+
+# To use bcrypt, fill in a secret HMAC key. It cannot be blank.
+HMAC_KEYS = {
+    #'2012-06-06': 'some secret',
+}
+
+from django_sha2 import get_password_hashers
+PASSWORD_HASHERS = get_password_hashers(base.BASE_PASSWORD_HASHERS, HMAC_KEYS)
+
+# Make this unique, and don't share it with anybody.  It cannot be blank.
+SECRET_KEY = 'some secret'
+
+SESSION_COOKIE_SECURE=False
+
+# Mozillians API
+MOZILLIANS_API_BASE = "https://mozillians.org/api/v1/users/"
+MOZILLIANS_API_KEY = None
+MOZILLIANS_API_APPNAME = None
