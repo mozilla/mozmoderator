@@ -1,6 +1,5 @@
 # This is your project's main settings file that can be committed to your
 # repo. If you need to override a setting locally, use settings_local.py
-import logging
 import os
 
 from django_jinja.builtins import DEFAULT_EXTENSIONS
@@ -8,7 +7,7 @@ from django_sha2 import get_password_hashers
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 path = lambda *a: os.path.abspath(os.path.join(ROOT, *a))  # noqa
-PROJECT_DIR = os.path.dirname(__file__)
+
 # Defines the views served for root URLs.
 ROOT_URLCONF = 'moderator.urls'
 DEBUG = False
@@ -38,7 +37,6 @@ MIDDLEWARE_CLASSES = (
     'session_csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
@@ -128,6 +126,7 @@ TEMPLATES = [
     },
 ]
 
+
 def COMPRESS_JINJA2_GET_ENVIRONMENT():
     from django.template import engines
     return engines['jinja2'].env
@@ -158,19 +157,19 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-# Uncomment the following line for local development, or BrowserID
-# will fail to log you in.
 SITE_URL = 'https://moderator.mozilla.org'
-
 BROWSERID_AUDIENCES = [SITE_URL]
-# Do not create account for new users.
+
+# Create account for new users.
 BROWSERID_CREATE_USER = True
 BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.BrowserIDVerify'
+
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = '/'
 # Path to redirect to on unsuccessful login attempt.
 LOGIN_REDIRECT_URL_FAILURE = '/'
 LOGOUT_REDIRECT_URL = '/'
+
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # Mozillians API
