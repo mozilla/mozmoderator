@@ -1,5 +1,5 @@
 # This is your project's main settings file that can be committed to your
-# repo. If you need to override a setting locally, use settings_local.py
+# repo. If you need to override a setting locally, use local.py
 import os
 
 from django_jinja.builtins import DEFAULT_EXTENSIONS
@@ -158,6 +158,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SITE_URL = 'https://moderator.mozilla.org'
+ALLOWED_HOSTS = [SITE_URL]
 BROWSERID_AUDIENCES = [SITE_URL]
 
 # Create account for new users.
