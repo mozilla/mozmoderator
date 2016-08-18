@@ -42,6 +42,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
 )
 
 # List of finder classes that know how to find static files in
@@ -189,3 +190,12 @@ if DEBUG:
 
 # Sentry support
 RAVEN_CONFIG = config('RAVEN_CONFIG', cast=json.loads, default='{}')
+
+# # Django-CSP
+CSP_DEFAULT_SRC = (
+    "'self'",
+    'https://*.mozilla.org',
+    'https://*.persona.org',
+    'https://*.mozilla.net',
+    'https://mozillians.org',
+)
