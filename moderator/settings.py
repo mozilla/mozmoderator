@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'axes',
     'django_browserid',
     'session_csrf',
+    'raven.contrib.django.raven_compat',
     # Project specific apps
     'moderator.moderate'
 ]
@@ -185,3 +186,6 @@ DATABASES = {
 if DEBUG:
     for backend in TEMPLATES:
         backend['OPTIONS']['debug'] = DEBUG
+
+# Sentry support
+RAVEN_CONFIG = config('RAVEN_CONFIG', cast=json.loads, default='{}')
