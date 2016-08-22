@@ -1,14 +1,10 @@
 import json
 
-from django_browserid.http import JSONResponse
-from django_browserid.views import Verify
-
 from django.conf import settings
 from django.db import IntegrityError
 from django.db.models import Count
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
@@ -16,16 +12,6 @@ from django.shortcuts import render, redirect
 
 from moderator.moderate.models import Event, Question, Vote
 from moderator.moderate.forms import QuestionForm
-
-
-class BrowserIDVerify(Verify):
-
-    def login_failure(self, msg=''):
-        if not msg:
-            msg = ('Login failed. Make sure you are using a valid email '
-                   'address and you are a vouched Mozillian.')
-        messages.error(self.request, msg)
-        return JSONResponse({'redirect': self.failure_url})
 
 
 def main(request):

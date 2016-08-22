@@ -9,9 +9,6 @@ django-jinja==2.2.1 \
 MySQL-python==1.2.5 \
     --hash=sha256:ab22d1322099098730a57fd59d610f60738f95a1cb68dacca2d1c47cb0cbe8ee \
     --hash=sha256:811040b647e5d5686f84db415efd697e6250008b112b6909ba77ac059e140c74
-django-browserid==2.0.2 \
-    --hash=sha256:25642be39a7e89f1defe7f1e3fd43b91e33e41c49cc7e6623ce5ab42e3acc6a0 \
-    --hash=sha256:48f31d43b7cb3368725955dc8976833fc4bcefc5968331470ca1ac7c663cf37d
 dj-database-url==0.4.1 \
     --hash=sha256:7f4c78d2a090df8dfaf56d5d3ff7bbee17360436e4879558317e2314424864cd
 django-axes==2.2.0 \

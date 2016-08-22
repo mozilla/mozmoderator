@@ -1,7 +1,7 @@
 Mozilla Moderator
 ============
 
-Mozilla Moderator is a panel moderation webapp, that enables users to login using persona, view, vote and ask questions on different events.
+Mozilla Moderator is a panel moderation webapp that enables users to view, vote and ask questions on different events.
 
 Then panel moderators can export the questions and use them during panel discussions and Q&A.
 

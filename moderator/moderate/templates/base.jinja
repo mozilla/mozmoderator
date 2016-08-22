@@ -19,7 +19,6 @@
   </head>
 
   <body class="sky">
-    {{ browserid_info() }}
     <div id="outer-wrapper">
       <div id="wrapper">
 
@@ -28,11 +27,10 @@
             {% if user.is_authenticated() %}
               <nav id="nav-main" role="navigation">
                 <a href="{{ url('archive') }}">Event archive</a>
-                {{ browserid_logout(text='Logout') }}
               </nav>
             {% else %}
-              <div class="persona-button-container">
-                {{ browserid_login(text='Login', color='dark') }}
+              <div class="login">
+                Login
               </div>
             {% endif %}
 
@@ -96,7 +94,6 @@
     <script src="/static/js/nav-main-resp.js"></script>
     <script src="https://mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
     <script src="/static/js/app.js"></script>
-    {{ browserid_js() }}
     {% block js %}{% endblock %}
   </body>
 </html>

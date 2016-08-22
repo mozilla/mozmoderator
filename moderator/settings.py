@@ -25,7 +25,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     # Third party apps
     'axes',
-    'django_browserid',
     'django_sha2',
     'session_csrf',
     'raven.contrib.django.raven_compat',
@@ -78,13 +77,7 @@ TEMPLATES = [
             'newstyle_gettext': True,
             'context_processors': CONTEXT_PROCESSORS,
             'undefined': 'jinja2.Undefined',
-            'extensions': DEFAULT_EXTENSIONS,
-            'globals': {
-                'browserid_info': 'django_browserid.helpers.browserid_info',
-                'browserid_login': 'django_browserid.helpers.browserid_login',
-                'browserid_logout': 'django_browserid.helpers.browserid_logout',
-                'browserid_js': 'django_browserid.helpers.browserid_js'
-            }
+            'extensions': DEFAULT_EXTENSIONS
         }
     },
     {
@@ -116,9 +109,7 @@ PASSWORD_HASHERS = [
     'django_sha2.hashers.SHA256PasswordHasher',
 ]
 
-# Django browserid authentication backend
 AUTHENTICATION_BACKENDS = (
-    'moderator.moderate.backend.ModeratorBrowserIDBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -157,11 +148,6 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 # Instruct session-csrf to always produce tokens for anonymous users
 ANON_ALWAYS = config('ANON_ALWAYS', default=True, cast=bool)
 
-# Create account for new users.
-BROWSERID_CREATE_USER = config('BROWSERID_CREATE_USER', default=True, cast=bool)
-BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.BrowserIDVerify'
-BROWSERID_AUDIENCES = config('BROWSERID_AUDIENCES', cast=Csv())
-
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = config('LOGIN_REDIRECT_URL', default='/')
 # Path to redirect to on unsuccessful login attempt.
@@ -196,7 +182,6 @@ RAVEN_CONFIG = config('RAVEN_CONFIG', cast=json.loads, default='{}')
 CSP_DEFAULT_SRC = (
     "'self'",
     'https://*.mozilla.org',
-    'https://*.persona.org',
     'https://*.mozilla.net',
     'https://mozillians.org',
 )
