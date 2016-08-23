@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     # Third party apps
     'axes',
     'django_browserid',
+    'django_sha2',
     'session_csrf',
     'raven.contrib.django.raven_compat',
     # Project specific apps
@@ -105,15 +106,15 @@ SITE_ID = 1
 # Auth
 # The first hasher in this list will be used for new passwords.
 # Any other hasher in the list can be used for existing passwords.
-# To use bcrypt, fill in a secret HMAC key in your local settings.
-BASE_PASSWORD_HASHERS = (
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
     'django_sha2.hashers.BcryptHMACCombinedPasswordVerifier',
     'django_sha2.hashers.SHA512PasswordHasher',
     'django_sha2.hashers.SHA256PasswordHasher',
-    'django.contrib.auth.hashers.SHA1PasswordHasher',
-    'django.contrib.auth.hashers.MD5PasswordHasher',
-    'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
-)
+]
 
 # Django browserid authentication backend
 AUTHENTICATION_BACKENDS = (
@@ -121,12 +122,12 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+PWD_ALGORITHM = 'bcrypt'
 HMAC_KEYS = config('HMAC_KEYS', cast=json.loads)
 
-PASSWORD_HASHERS = get_password_hashers(BASE_PASSWORD_HASHERS, HMAC_KEYS)
+PASSWORD_HASHERS = get_password_hashers(PASSWORD_HASHERS, HMAC_KEYS)
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
-
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
