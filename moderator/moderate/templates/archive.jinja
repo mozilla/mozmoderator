@@ -20,22 +20,24 @@
   </a>
 {% endfor %}
 
-<div class="pagination">
-  <span class="step-links">
-    {% if events.has_previous() %}
-      <a href="?page={{ events.previous_page_number()  }}">&laquo;</a>
-    {% endif %}
-    <select id="page-select">
-      {% for i in range(1, events.paginator.num_pages + 1) %}
-        <option {% if i == events.number %} selected {% endif %}
-                value="?page={{ i }}">
-          {{ i }}
-        </option>
-      {% endfor %}
-    </select>
-    {% if events.has_next() %}
-      <a href="?page={{ events.next_page_number() }}">&raquo;</a>
-    {% endif %}
-  </span>
-</div>
+{% if events %}
+  <div class="pagination">
+    <span class="step-links">
+      {% if events.has_previous() %}
+        <a href="?page={{ events.previous_page_number()  }}">&laquo;</a>
+      {% endif %}
+      <select id="page-select">
+        {% for i in range(1, events.paginator.num_pages + 1) %}
+          <option {% if i == events.number %} selected {% endif %}
+                  value="?page={{ i }}">
+            {{ i }}
+          </option>
+        {% endfor %}
+      </select>
+      {% if events.has_next() %}
+        <a href="?page={{ events.next_page_number() }}">&raquo;</a>
+      {% endif %}
+    </span>
+  </div>
+{% endif %}
 {% endblock %}
