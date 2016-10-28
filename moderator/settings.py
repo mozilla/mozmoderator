@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django_sha2',
     'session_csrf',
     'raven.contrib.django.raven_compat',
+    'mozilla_django_oidc',
     # Project specific apps
     'moderator.moderate'
 ]
@@ -110,6 +111,7 @@ PASSWORD_HASHERS = [
 ]
 
 AUTHENTICATION_BACKENDS = (
+    'moderator.moderate.auth.ModeratorAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -178,10 +180,35 @@ if DEBUG:
 # Sentry support
 RAVEN_CONFIG = config('RAVEN_CONFIG', cast=json.loads, default='{}')
 
-# # Django-CSP
+# Django-CSP
 CSP_DEFAULT_SRC = (
     "'self'",
     'https://*.mozilla.org',
     'https://*.mozilla.net',
     'https://mozillians.org',
 )
+
+# Django OIDC
+
+
+def _username_algo(email):
+    import base64
+    import hashlib
+
+    try:
+        from django.utils.encoding import smart_bytes
+    except ImportError:
+        from django.utils.encoding import smart_str as smart_bytes
+
+    return base64.urlsafe_b64encode(
+        hashlib.sha1(smart_bytes(email)).digest()
+    ).rstrip(b'=')
+
+OIDC_OP_AUTHORIZATION_ENDPOINT = config('OIDC_OP_AUTHORIZATION_ENDPOINT')
+OIDC_OP_TOKEN_ENDPOINT = config('OIDC_OP_TOKEN_ENDPOINT')
+OIDC_OP_USER_ENDPOINT = config('OIDC_OP_USER_ENDPOINT')
+OIDC_RP_CLIENT_ID = config('OIDC_RP_CLIENT_ID')
+OIDC_RP_CLIENT_SECRET = config('OIDC_RP_CLIENT_SECRET')
+OIDC_RP_CLIENT_SECRET_ENCODED = config('OIDC_RP_CLIENT_SECRET_ENCODED', cast=bool)
+OIDC_CALLBACK_CLASS = 'moderator.moderate.views.OIDCCallbackView'
+OIDC_USERNAME_ALGO = _username_algo
