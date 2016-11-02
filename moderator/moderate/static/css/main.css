@@ -6,13 +6,9 @@
   color: white;
 }
 
-.persona-button-container {
+.login {
     float: right;
     margin-top: 10px;
-}
-
-.persona-button span {
-    color: white;
 }
 
 .main-logo {

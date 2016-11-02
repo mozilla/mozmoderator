@@ -1,8 +1,5 @@
 import json
 
-from django_browserid.http import JSONResponse
-from django_browserid.views import Verify
-
 from django.conf import settings
 from django.db import IntegrityError
 from django.db.models import Count
@@ -13,19 +10,19 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 
+from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
 from moderator.moderate.models import Event, Question, Vote
 from moderator.moderate.forms import QuestionForm
 
 
-class BrowserIDVerify(Verify):
-
+class OIDCCallbackView(OIDCAuthenticationCallbackView):
     def login_failure(self, msg=''):
         if not msg:
             msg = ('Login failed. Make sure you are using a valid email '
                    'address and you are a vouched Mozillian.')
         messages.error(self.request, msg)
-        return JSONResponse({'redirect': self.failure_url})
+        return super(OIDCCallbackView, self).login_failure()
 
 
 def main(request):

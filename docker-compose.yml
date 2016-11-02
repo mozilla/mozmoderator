@@ -23,8 +23,7 @@ services:
       ANON_ALWAYS: 'True'
       SESSION_COOKIE_SECURE: 'False'
       DATABASE_URL: 'mysql://mozillians:mozillians@db:3306/mozillians'
-      SITE_URL: '127.0.0.1:8000'
+      SITE_URL: 'http://127.0.0.1:8000'
       ALLOWED_HOSTS: '127.0.0.1:8000'
-      BROWSERID_AUDIENCES: 'http://127.0.0.1:8000'
       HMAC_KEYS: >-
         {"2015-08-17": "pancakes"}

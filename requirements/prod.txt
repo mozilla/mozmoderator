@@ -9,9 +9,6 @@ django-jinja==2.2.1 \
 MySQL-python==1.2.5 \
     --hash=sha256:ab22d1322099098730a57fd59d610f60738f95a1cb68dacca2d1c47cb0cbe8ee \
     --hash=sha256:811040b647e5d5686f84db415efd697e6250008b112b6909ba77ac059e140c74
-django-browserid==2.0.2 \
-    --hash=sha256:25642be39a7e89f1defe7f1e3fd43b91e33e41c49cc7e6623ce5ab42e3acc6a0 \
-    --hash=sha256:48f31d43b7cb3368725955dc8976833fc4bcefc5968331470ca1ac7c663cf37d
 dj-database-url==0.4.1 \
     --hash=sha256:7f4c78d2a090df8dfaf56d5d3ff7bbee17360436e4879558317e2314424864cd
 django-axes==2.2.0 \
@@ -120,3 +117,8 @@ contextlib2==0.5.4 \
 raven==5.24.3 \
     --hash=sha256:aa1e103e43ad72defa57940e5507e14e2d97c705b5b6ea05a76fa4fc0f85e203 \
     --hash=sha256:0eeaefe0ca72405f934c0abb86d78f6e622d631f55b20c6c67bb293adb059af5
+PyJWT==1.4.2 \
+    --hash=sha256:99fe612dbe5f41e07124d9002c118c14f3ee703574ffa9779fee78135b8b94b6 \
+    --hash=sha256:87a831b7a3bfa8351511961469ed0462a769724d4da48a501cb8c96d1e17f570
+https://github.com/mozilla/mozilla-django-oidc/archive/0.1.zip#egg=mozilla_django_oidc \
+    --hash=sha256:d15fcde9d2868581f85955f83cad87a66e5e4ce4089a2ce0dcc059878956f9da

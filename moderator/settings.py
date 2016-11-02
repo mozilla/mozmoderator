@@ -25,10 +25,10 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     # Third party apps
     'axes',
-    'django_browserid',
     'django_sha2',
     'session_csrf',
     'raven.contrib.django.raven_compat',
+    'mozilla_django_oidc',
     # Project specific apps
     'moderator.moderate'
 ]
@@ -78,13 +78,7 @@ TEMPLATES = [
             'newstyle_gettext': True,
             'context_processors': CONTEXT_PROCESSORS,
             'undefined': 'jinja2.Undefined',
-            'extensions': DEFAULT_EXTENSIONS,
-            'globals': {
-                'browserid_info': 'django_browserid.helpers.browserid_info',
-                'browserid_login': 'django_browserid.helpers.browserid_login',
-                'browserid_logout': 'django_browserid.helpers.browserid_logout',
-                'browserid_js': 'django_browserid.helpers.browserid_js'
-            }
+            'extensions': DEFAULT_EXTENSIONS
         }
     },
     {
@@ -116,9 +110,8 @@ PASSWORD_HASHERS = [
     'django_sha2.hashers.SHA256PasswordHasher',
 ]
 
-# Django browserid authentication backend
 AUTHENTICATION_BACKENDS = (
-    'moderator.moderate.backend.ModeratorBrowserIDBackend',
+    'moderator.moderate.auth.ModeratorAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -157,11 +150,6 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 # Instruct session-csrf to always produce tokens for anonymous users
 ANON_ALWAYS = config('ANON_ALWAYS', default=True, cast=bool)
 
-# Create account for new users.
-BROWSERID_CREATE_USER = config('BROWSERID_CREATE_USER', default=True, cast=bool)
-BROWSERID_VERIFY_CLASS = 'moderator.moderate.views.BrowserIDVerify'
-BROWSERID_AUDIENCES = config('BROWSERID_AUDIENCES', cast=Csv())
-
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = config('LOGIN_REDIRECT_URL', default='/')
 # Path to redirect to on unsuccessful login attempt.
@@ -192,11 +180,35 @@ if DEBUG:
 # Sentry support
 RAVEN_CONFIG = config('RAVEN_CONFIG', cast=json.loads, default='{}')
 
-# # Django-CSP
+# Django-CSP
 CSP_DEFAULT_SRC = (
     "'self'",
     'https://*.mozilla.org',
-    'https://*.persona.org',
     'https://*.mozilla.net',
     'https://mozillians.org',
 )
+
+# Django OIDC
+
+
+def _username_algo(email):
+    import base64
+    import hashlib
+
+    try:
+        from django.utils.encoding import smart_bytes
+    except ImportError:
+        from django.utils.encoding import smart_str as smart_bytes
+
+    return base64.urlsafe_b64encode(
+        hashlib.sha1(smart_bytes(email)).digest()
+    ).rstrip(b'=')
+
+OIDC_OP_AUTHORIZATION_ENDPOINT = config('OIDC_OP_AUTHORIZATION_ENDPOINT')
+OIDC_OP_TOKEN_ENDPOINT = config('OIDC_OP_TOKEN_ENDPOINT')
+OIDC_OP_USER_ENDPOINT = config('OIDC_OP_USER_ENDPOINT')
+OIDC_RP_CLIENT_ID = config('OIDC_RP_CLIENT_ID')
+OIDC_RP_CLIENT_SECRET = config('OIDC_RP_CLIENT_SECRET')
+OIDC_RP_CLIENT_SECRET_ENCODED = config('OIDC_RP_CLIENT_SECRET_ENCODED', cast=bool)
+OIDC_CALLBACK_CLASS = 'moderator.moderate.views.OIDCCallbackView'
+OIDC_USERNAME_ALGO = _username_algo
