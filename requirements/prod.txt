@@ -122,3 +122,6 @@ PyJWT==1.4.2 \
     --hash=sha256:87a831b7a3bfa8351511961469ed0462a769724d4da48a501cb8c96d1e17f570
 https://github.com/mozilla/mozilla-django-oidc/archive/0.1.zip#egg=mozilla_django_oidc \
     --hash=sha256:d15fcde9d2868581f85955f83cad87a66e5e4ce4089a2ce0dcc059878956f9da
+whitenoise==3.2.2 \
+    --hash=sha256:90a576ecb938cfef3fd1dba0c82d10e8e9ff0acb6079d7edba64822db0e4384d \
+    --hash=sha256:e4c77cdde3f7a1cd2c1d985d6a3d7dc8aff5f3d18c2f331e7171933aacaeb440
