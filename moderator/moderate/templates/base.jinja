@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ static('css/sandstone/sandstone.css') }}" media="all">
     <link rel="stylesheet" href="{{ static('css/main.css') }}" media="all">
     <link rel="shortcut icon" href="{{ static('img/favicon.ico') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static('/static/css/tabzilla.css') }}" media="screen">
 
     <!--[if lte IE 8]>
     <script src="{{ static('js/libs/html5shiv.js') }}"></script>
@@ -23,7 +24,9 @@
       <div id="wrapper">
 
         <header id="masthead">
-          <a href="https://www.mozilla.org/" id="tabzilla">Mozilla</a>
+          <div id="tabzilla">
+            <a href="https://mozilla.org">Mozilla</a>
+          </div>
             {% if user.is_authenticated() %}
               <nav id="nav-main" role="navigation">
                 <a href="{{ url('archive') }}">Event archive</a>
