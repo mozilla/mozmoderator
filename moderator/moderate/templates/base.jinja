@@ -18,7 +18,7 @@
 
   </head>
 
-  <body class="sky">
+  <body class="sky" data-auth0-settings="{{ auth0_js_settings() }}">
     <div id="outer-wrapper">
       <div id="wrapper">
 
@@ -29,9 +29,7 @@
                 <a href="{{ url('archive') }}">Event archive</a>
               </nav>
             {% else %}
-              <div class="login">
-                <a href="{{ url('oidc_authentication_init') }}">Login</a>
-              </div>
+              <div class="button login">Login</div>
             {% endif %}
 
           <h2>
@@ -90,6 +88,7 @@
     </div>
 
     <script src="/static/js/libs/jquery-1.11.2.min.js"></script>
+    <script src="/static/js/libs/lock-passwordless-2.2.min.js"></script>
     <script src="/static/js/site.js"></script>
     <script src="/static/js/nav-main-resp.js"></script>
     <script src="https://mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
