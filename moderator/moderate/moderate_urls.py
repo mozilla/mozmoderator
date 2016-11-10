@@ -10,7 +10,6 @@ urlpatterns = [
     url(r'^q/(?P<q_id>\d+)/upvote', moderate_views.upvote, name='upvote'),
     url(r'^$', moderate_views.main, name='main'),
     url(r'^archives$', moderate_views.archive, name='archive'),
-    url(r'^set_oidc_state$', moderate_views.set_oidc_state, name='set_oidc_state')
 ]
 
 if settings.DEBUG:

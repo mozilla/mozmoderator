@@ -188,23 +188,6 @@ CSP_DEFAULT_SRC = (
     'https://*.mozilla.org',
     'https://*.mozilla.net',
     'https://mozillians.org',
-    'https://*.auth0.com',
-    'https://secure.gravatar.com',
-)
-
-CSP_IMG_SRC = (
-    "'self'",
-    'data:',
-    'https://mozorg.cdn.mozilla.net',
-    'http://*.auth0.com',
-    'https://*.auth0.com',
-    'https://secure.gravatar.com',
-)
-
-CSP_STYLE_SRC = (
-    "'self'",
-    "'unsafe-inline'",
-    'https://mozorg.cdn.mozilla.net',
 )
 
 # Django OIDC
@@ -223,8 +206,6 @@ def _username_algo(email):
         hashlib.sha1(smart_bytes(email)).digest()
     ).rstrip(b'=')
 
-
-AUTH0_DOMAIN = config('AUTH0_DOMAIN')
 OIDC_OP_AUTHORIZATION_ENDPOINT = config('OIDC_OP_AUTHORIZATION_ENDPOINT')
 OIDC_OP_TOKEN_ENDPOINT = config('OIDC_OP_TOKEN_ENDPOINT')
 OIDC_OP_USER_ENDPOINT = config('OIDC_OP_USER_ENDPOINT')
