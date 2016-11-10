@@ -7,10 +7,8 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
-from django.utils.crypto import get_random_string
-from django.views.decorators.http import require_GET
 
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
@@ -120,10 +118,3 @@ def upvote(request, q_id):
                             mimetype='application/json')
 
     return event(request, question.event.slug)
-
-
-@require_GET
-def set_oidc_state(request):
-    oidc_state = get_random_string(32)
-    request.session['oidc_state'] = oidc_state
-    return JsonResponse({'oidc_state': oidc_state})
