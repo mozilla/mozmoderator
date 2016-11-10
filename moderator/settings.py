@@ -8,7 +8,7 @@ from decouple import Csv, config
 from django_jinja.builtins import DEFAULT_EXTENSIONS
 from django_sha2 import get_password_hashers
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+ROOT = os.path.dirname(os.path.dirname(__file__))
 path = lambda *a: os.path.abspath(os.path.join(ROOT, *a))  # noqa
 
 # Defines the views served for root URLs.
@@ -35,6 +35,8 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -42,12 +44,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
     'csp.middleware.CSPMiddleware',
 )
 
 # List of finder classes that know how to find static files in
 # various locations.
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
