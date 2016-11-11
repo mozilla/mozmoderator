@@ -2,3 +2,4 @@
 moderator-db
 /moderator/static
 .env
+/static
