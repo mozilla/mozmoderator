@@ -17,6 +17,9 @@ urlpatterns = [
     url(r'oidc/', include(django_oidc_urls)),
     # Main landing page
     url(r'^', include('moderator.moderate.moderate_urls')),
+    # contribute.json url
+    url(r'^(?P<path>contribute\.json)$', 'django.views.static.serve',
+        {'document_root': settings.ROOT})
 ]
 
 if settings.DEBUG:
