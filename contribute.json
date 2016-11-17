@@ -1,0 +1,33 @@
+{
+    "name": "Mozilla Moderator",
+    "description": "Mozilla Moderator is a panel moderation webapp that enables users to view, vote and ask questions on different events.",
+    "repository": {
+        "url": "https://github.com/mozilla/mozmoderator/",
+        "license": "BSD 3-Clause"
+    },
+    "participate": {
+        "home": "https://wiki.mozilla.org/Moderator",
+        "irc": "irc://irc.mozilla.org/#parsys",
+        "irc-contacts": [
+            "nemo-yiannis",
+            "tasos",
+            "pierros",
+            "hmitsch"
+        ]
+    },
+    "bugs": {
+        "list": "https://github.com/mozilla/mozmoderator/issues",
+        "report": "https://github.com/mozilla/mozmoderator/issues/new"
+    },
+    "urls": {
+        "prod": "https://moderator.mozilla.org",
+        "stage": "https://moderator.staging.paas.mozilla.community"
+    },
+    "keywords": [
+        "python",
+        "django",
+        "html",
+        "javascript",
+        "css"
+    ]
+}
