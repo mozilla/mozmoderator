@@ -29,6 +29,7 @@
             {% if user.is_authenticated() %}
               <nav id="nav-main" role="navigation">
                 <a href="{{ url('archive') }}">Event archive</a>
+                <a href="{{ url('oidc_logout') }}">Logout</a>
               </nav>
             {% else %}
               <a class="login button" href="{{ url('oidc_authentication_init') }}">
