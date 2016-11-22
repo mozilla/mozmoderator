@@ -6,7 +6,6 @@ import os
 import dj_database_url
 from decouple import Csv, config
 from django_jinja.builtins import DEFAULT_EXTENSIONS
-from django_sha2 import get_password_hashers
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 path = lambda *a: os.path.abspath(os.path.join(ROOT, *a))  # noqa
@@ -25,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     # Third party apps
     'axes',
-    'django_sha2',
     'session_csrf',
     'raven.contrib.django.raven_compat',
     'mozilla_django_oidc',
@@ -107,20 +105,12 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher',
-    'django_sha2.hashers.BcryptHMACCombinedPasswordVerifier',
-    'django_sha2.hashers.SHA512PasswordHasher',
-    'django_sha2.hashers.SHA256PasswordHasher',
 ]
 
 AUTHENTICATION_BACKENDS = (
     'moderator.moderate.auth.ModeratorAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
-
-PWD_ALGORITHM = 'bcrypt'
-HMAC_KEYS = config('HMAC_KEYS', cast=json.loads)
-
-PASSWORD_HASHERS = get_password_hashers(PASSWORD_HASHERS, HMAC_KEYS)
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
