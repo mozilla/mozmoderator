@@ -1,5 +1,3 @@
-import json
-
 from django.conf import settings
 from django.db import IntegrityError
 from django.db.models import Count
@@ -7,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect
 
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
@@ -73,7 +71,7 @@ def event(request, e_slug, q_id=None):
     is_replied = False
     if question_form.is_valid() and not event.archived:
         question_obj = question_form.save(commit=False)
-        # Do not change the user if posting an reply
+        # Do not change the user if posting a reply
         if not question_obj.id:
             question_obj.asked_by = user
         elif not user.userprofile.is_admin:
@@ -105,16 +103,13 @@ def upvote(request, q_id):
     if request.is_ajax() and not question.event.archived:
         if not Vote.objects.filter(user=request.user, question=question).exists():
             Vote.objects.create(user=request.user, question=question)
-            status = 'unsupport'
         else:
             Vote.objects.filter(user=request.user, question=question).delete()
-            status = 'support'
 
         response_dict = {
-            'current_vote_count': question.votes.count(),
-            'status': status,
+            'current_vote_count': question.votes.count()
         }
 
-        return HttpResponse(json.dumps(response_dict), mimetype='application/json')
+        return JsonResponse(response_dict)
 
     return event(request, question.event.slug)

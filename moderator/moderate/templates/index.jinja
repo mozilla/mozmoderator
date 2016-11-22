@@ -1,29 +1,38 @@
 {% extends "base.jinja" %}
 
 {% block head %}
-<title>Mozilla Moderator - Events</title>
+  <title>Mozilla Moderator - Events</title>
 {% endblock %}
 
 {% block content %}
 
 {% if user.is_authenticated() %}
-  <hgroup id="main-feature" class="center">
-    <h2>Select event to view and ask questions.</h2>
-  </hgroup>
+  <h3 class="text-center">Select event to view and ask questions.</h3>
+
   {% for event in events.order_by('-created_at') %}
-    <a href="{{ url('event', e_slug=event.slug) }}">
-      <div class="billboard event-listing">
-        <h1>{{ event.name }}</h1>
-        <span class="questions-counter"> {{ event.questions.count() }} questions asked</span>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <a href="{{ url('event', e_slug=event.slug) }}" class="event-listing">
+          <h1>{{ event.name }}</h1>
+          <span class="questions-counter"> {{ event.questions.count() }} questions asked</span>
+        </a>
       </div>
-    </a>
+    </div>
   {% endfor %}
+
 {% else %}
-  <hgroup id="main-feature" class="center">
-    <h2>Let your voice be heard.</h2>
-    <p>Mozilla Moderator is a panel moderation system for submitting and voting on questions.</p>
-    <p>Please log in using your vouched mozillians.org account.</p>
-  </hgroup>
+  <h3 class="text-center">Let your voice be heard.</h3>
+  <p class="text-center">
+    Mozilla Moderator is a panel moderation system for submitting and voting
+    on questions.
+  </p>
+  <p class="text-center">
+    Please log in using your vouched mozillians.org account.
+  </p>
+  <p class="text-center">
+    <a class="login btn btn-primary"
+       href="{{ url('oidc_authentication_init') }}">Login</a>
+  </p>
 {% endif %}
 
 {% endblock %}
