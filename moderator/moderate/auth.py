@@ -4,12 +4,12 @@ from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
 
 
 class ModeratorAuthBackend(OIDCAuthenticationBackend):
-    def create_user(self, email, **kwargs):
+    def create_user(self, claims, **kwargs):
         try:
-            data = is_vouched(email)
+            data = is_vouched(claims.get('email'))
         except BadStatusCodeError:
             data = None
 
         if data and data['is_vouched']:
-            return super(ModeratorAuthBackend, self).create_user(email, **kwargs)
+            return super(ModeratorAuthBackend, self).create_user(claims, **kwargs)
         return None
