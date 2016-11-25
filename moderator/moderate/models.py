@@ -3,10 +3,12 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db.models import signals as dbsignals
 from django.dispatch import receiver
+from django.utils.encoding import python_2_unicode_compatible
 
 from uuslug import uuslug
 
 
+@python_2_unicode_compatible
 class MozillianProfile(models.Model):
     """Mozillians User Profile"""
     user = models.OneToOneField(User, related_name='userprofile')
@@ -14,7 +16,7 @@ class MozillianProfile(models.Model):
     username = models.CharField(max_length=40)
     avatar_url = models.URLField(max_length=400, default='')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username
 
     class Meta:
@@ -40,6 +42,7 @@ def create_user_profile(sender, instance, created, raw, **kwargs):
                                      created=created, raw=raw)
 
 
+@python_2_unicode_compatible
 class Event(models.Model):
     """Event model."""
     name = models.CharField(max_length=400)
@@ -47,7 +50,7 @@ class Event(models.Model):
     slug = models.SlugField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
@@ -60,6 +63,7 @@ class Event(models.Model):
         return self.questions.all().count()
 
 
+@python_2_unicode_compatible
 class Question(models.Model):
     """Question relational model."""
     asked_by = models.ForeignKey(User)
@@ -70,11 +74,11 @@ class Question(models.Model):
                               default='', blank=True)
     addressed = models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return u'Question {pk} from {user}'.format(pk=self.id,
-                                                   user=self.asked_by)
+    def __str__(self):
+        return u'Question {pk} from {user}'.format(pk=self.id, user=self.asked_by)
 
 
+@python_2_unicode_compatible
 class Vote(models.Model):
     """Vote model."""
     user = models.ForeignKey(User)
@@ -84,6 +88,5 @@ class Vote(models.Model):
     class Meta:
         unique_together = ('user', 'question')
 
-    def __unicode__(self):
-        return u'Vote of {user} for {question}'.format(user=self.user,
-                                                       question=self.question)
+    def __str__(self):
+        return u'Vote of {user} for {question}'.format(user=self.user, question=self.question)
