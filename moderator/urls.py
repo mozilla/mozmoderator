@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.static import serve
 
 from mozilla_django_oidc import urls as django_oidc_urls
 
@@ -18,8 +19,7 @@ urlpatterns = [
     # Main landing page
     url(r'^', include('moderator.moderate.moderate_urls')),
     # contribute.json url
-    url(r'^(?P<path>contribute\.json)$', 'django.views.static.serve',
-        {'document_root': settings.ROOT})
+    url(r'^(?P<path>contribute\.json)$', serve, {'document_root': settings.ROOT})
 ]
 
 if settings.DEBUG:
