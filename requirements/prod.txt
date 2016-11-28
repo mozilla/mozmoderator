@@ -115,11 +115,17 @@ contextlib2==0.5.4 \
 raven==5.24.3 \
     --hash=sha256:aa1e103e43ad72defa57940e5507e14e2d97c705b5b6ea05a76fa4fc0f85e203 \
     --hash=sha256:0eeaefe0ca72405f934c0abb86d78f6e622d631f55b20c6c67bb293adb059af5
-PyJWT==1.4.2 \
-    --hash=sha256:99fe612dbe5f41e07124d9002c118c14f3ee703574ffa9779fee78135b8b94b6 \
-    --hash=sha256:87a831b7a3bfa8351511961469ed0462a769724d4da48a501cb8c96d1e17f570
-https://github.com/mozilla/mozilla-django-oidc/archive/0.1.2.zip#egg=mozilla_django_oidc \
-    --hash=sha256:021561a7e998ee1f06fd76980690f3bd827f9b65222009079612286ca06667d7
+https://github.com/mozilla/mozilla-django-oidc/archive/0.1.5.zip#egg=mozilla-django-oidc==0.1.5 \
+    --hash=sha256:ece31b922a098946516daecfae227fd40bc2258a87a042eb509c9c1badddd877
 whitenoise==3.2.2 \
     --hash=sha256:90a576ecb938cfef3fd1dba0c82d10e8e9ff0acb6079d7edba64822db0e4384d \
     --hash=sha256:e4c77cdde3f7a1cd2c1d985d6a3d7dc8aff5f3d18c2f331e7171933aacaeb440
+python-jose==1.3.2 \
+    --hash=sha256:35eca894ab91db1774251296949679396c46d6bc506ea03804b8f7a7d0204392
+ecdsa==0.13 \
+    --hash=sha256:40d002cf360d0e035cf2cb985e1308d41aaa087cbfc135b2dc2d844296ea546c \
+    --hash=sha256:64cf1ee26d1cde3c73c6d7d107f835fed7c6a2904aef9eac223d57ad800c43fa
+future==0.16.0 \
+    --hash=sha256:e39ced1ab767b5936646cedba8bcce582398233d6a627067d4c6a454c90cfedb
+pycrypto==2.6.1 \
+    --hash=sha256:f2ce1e989b272cfcb677616763e0a2e7ec659effa67a88aa92b3a65528f60a3c

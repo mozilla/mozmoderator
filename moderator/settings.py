@@ -43,6 +43,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'csp.middleware.CSPMiddleware',
+    'mozilla_django_oidc.contrib.auth0.middleware.RefreshIDToken',
 )
 
 # List of finder classes that know how to find static files in
