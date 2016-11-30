@@ -11,7 +11,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY . /app
-RUN pip install --no-cache-dir --require-hashes --no-deps -r requirements/dev.txt
+RUN pip install --no-cache-dir --require-hashes --no-deps -r requirements/prod.txt
 
 RUN chown webdev.webdev -R .
 USER webdev
