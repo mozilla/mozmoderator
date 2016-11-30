@@ -12,9 +12,14 @@ class QuestionForm(forms.ModelForm):
     """Question Form."""
     question = forms.CharField(
         validators=[MaxLengthValidator(140), MinLengthValidator(10)],
-        max_length=140, widget=forms.TextInput(attrs={'placeholder': QUESTION}))
+        max_length=140, widget=forms.TextInput(attrs={'placeholder': QUESTION,
+                                                      'class': 'form-control',
+                                                      'required': 'required'}))
     answer = forms.CharField(
-        widget=forms.Textarea(attrs={'placeholder': ANSWER}), required=False)
+        validators=[MaxLengthValidator(140)],
+        required=False,
+        max_length=140, widget=forms.TextInput(attrs={'placeholder': ANSWER,
+                                                      'class': 'form-control'}))
 
     class Meta:
         model = Question

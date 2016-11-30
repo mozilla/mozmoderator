@@ -1,109 +1,133 @@
 {% extends "base.jinja" %}
 
 {% block head %}
-<title>Mozilla Moderator - {{ event.name }}</title>
-
-<link rel="stylesheet" href="{{ static('css/reveal.css') }}">
+  <title>Mozilla Moderator - {{ event.name }}</title>
+  <link rel="stylesheet" href="{{ static('css/reveal.css') }}">
 {% endblock %}
 
 {% block breadcrumb %}
-<nav class="breadcrumbs">
-  <a href="/">Events</a>
-  <span>{{ event.name }}</span>
-</nav>
-{% if q_form.errors %}
-  <small class="error">Please correct the errors below</small>
-{% endif %}
+  <ol class="breadcrumb">
+    <li><a href="/">Events</a></li>
+    <li class="active">{{ event.name }}</li>
+  </ol>
+
+  {% if q_form.errors %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      Please correct the errors below.
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-{% if open %}
-  <div class="billboard question">
-    <div class="row">
-      <form method="post" action="{{ url('event', e_slug=event.slug) }}">
-        {{ q_form.non_field_errors() }}
-        <div class="selfimage">
-          {% if not user.userprofile.avatar_url %}
-            <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}" />
-          {% else %}
-            <img alt="User profile image" src="{{ user.userprofile.avatar_url }}" />
-          {% endif %}
-        </div>
-        {% csrf_token %}
-        <div class="question-text" id="question-input">
-          {{ q_form.question.errors }}
-          {{ q_form.question }}
-        </div>
-        <div class="ask-container">
-          <input type="submit" class="button" value="submit">
-        </div>
-      </form>
+  {% if open %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <form method="post" action="{{ url('event', e_slug=event.slug) }}"
+              id="question-form">
+          {{ q_form.non_field_errors() }}
+          <div class="selfimage">
+            {% if not user.userprofile.avatar_url %}
+              <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}" />
+            {% else %}
+              <img alt="User profile image" src="{{ user.userprofile.avatar_url }}" />
+            {% endif %}
+          </div>
+          {% csrf_token %}
+          <div class="form-group question-text {% if q_form.question.errors %}has-error{% endif %}"
+               id="question-input">
+            {{ q_form.question }}
+            {{ q_form.question.errors }}
+          </div>
+          <div class="ask-container">
+            <input type="submit" class="btn btn-default" value="submit">
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-{% endif %}
+  {% endif %}
 
-{% for q in questions %}
-<div class="container questions-container">
-  <div class="billboard question asked">
-    <div class="row">
-      {% if q.addressed %}
-        <div class="ribbon-wrapper-green"><div class="ribbon-green">answered</div></div>
-      {% endif %}
-      <div class="askedby">
-        <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
-          {% if q.asked_by.userprofile.avatar_url == "" %}
-            <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}">
-          {% else %}
-            <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}">
-          {% endif %}
-        </a>
-      </div>
-      <div class="question-text">
-        <h3>{{ q.question }}</h3>
-      </div>
-      <div class="vote-container">
-        <span class="vote-count" >{{ q.vote_count }}</span>
-        {% if open %}
-          {% if user_voted(q, user) %}
-            <span class="button vote insensitive" id="{{ q.id }}">unsupport</span>
-          {% else %}
-            <span class="button vote" id="{{ q.id }}">support</span>
-          {% endif %}
-          {% if user.userprofile.is_admin and not q.answer %}
-            <a class="button reply-button"
-                  id="{{ q.id }}"
-                  data-reveal-id="question-reply">
-              reply
-            </a>
-          {% endif %}
+  {% for q in questions %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+        {% if q.addressed %}
+          <div class="ribbon-wrapper"><div class="ribbon">answered</div></div>
         {% endif %}
+
+        <div class="askedby">
+          <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}"
+             target="_blank">
+            {% if q.asked_by.userprofile.avatar_url == "" %}
+              <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}">
+            {% else %}
+              <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}">
+            {% endif %}
+          </a>
+        </div>
+
+        <div class="question-text">
+          <h3>{{ q.question }}</h3>
+        </div>
+
+        <div class="vote-container">
+          <span class="vote-count" >{{ q.vote_count }}</span>
+          {% if open %}
+            {% if user_voted(q, user) %}
+              <button class="btn btn-primary btn-sm vote" id="{{ q.id }}">
+                <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+              </button>
+            {% else %}
+              <button class="btn btn-primary btn-sm vote" id="{{ q.id }}">
+                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+              </button>
+            {% endif %}
+            {% if user.userprofile.is_admin and not q.answer %}
+              <button class="btn btn-default btn-sm reply-button"
+                 id="{{ q.id }}"
+                 data-toggle="modal" data-target="#AnswerModal">
+                reply
+              </button>
+            {% endif %}
+          {% endif %}
+        </div>
+
+        {% if q.answer %}
+          <div class="reply-row">
+            Answer: {{ q.answer }}
+          </div>
+        {% endif %}
+        {% if q_form.instance.id == q.id %}
+          {{ q_form.answer.errors }}
+        {% endif %}
+
+      </div>
+    </div>
+  {% endfor %}
+
+  <!-- Modal for Question Reply -->
+  <div class="modal fade" tabindex="-1" role="dialog"
+       aria-labelledby="AnswerModalLabel" id="AnswerModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form method="post" action="" id="answer-form">
+          {% csrf_token %}
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Answer</h4>
+          </div>
+          <div class="modal-body">
+            {{ q_form.answer }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-primary" value="Submit">
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  {% if q.answer %}
-    <div class="row reply-row">
-      {{ q.answer }}
-    </div>
-  {% endif %}
-  {% if q_form.instance.id == q.id %}
-    {{ q_form.answer.errors }}
-  {% endif %}
-</div>
-{% endfor %}
-
-<!-- Modal for Question Reply -->
-<div id="question-reply" class="reveal-modal">
-  <div id="reply-form">
-    <form method="post" action="">
-      {% csrf_token %}
-      {{ q_form.answer }}
-      <input type="submit" class="button" value="submit">
-    </form>
-  </div>
-</div>
-{% endblock %}
-
-{% block js %}
-    <script src="{{ static('js/libs/jquery.reveal.js') }}"></script>
-    <script src="{{ static('js/questions.js') }}"></script>
 {% endblock %}
