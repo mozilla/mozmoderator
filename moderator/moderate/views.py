@@ -17,7 +17,11 @@ from moderator.moderate.forms import QuestionForm
 
 
 class OIDCCallbackView(OIDCAuthenticationCallbackView):
+    """Override OIDC callback view."""
+
     def login_failure(self, msg=''):
+        """Returns a custom message in case of login failure."""
+
         if not msg:
             msg = ('Login failed. Make sure you are using a valid email '
                    'address and you are a vouched Mozillian.')
@@ -29,9 +33,8 @@ def main(request):
     """Render main page."""
     if request.user.is_authenticated():
         events = Event.objects.filter(archived=False)
-        return render(request, 'index.jinja', {
-                               'events': events,
-                               'user': request.user})
+        return render(request, 'index.jinja', {'events': events,
+                                               'user': request.user})
     else:
         return render(request, 'index.jinja', {'user': request.user})
 
@@ -62,14 +65,12 @@ def event(request, e_slug, q_id=None):
     if q_id:
         question = Question.objects.get(id=q_id)
 
-    questions = (Question.objects.filter(event=event)
-                 .annotate(vote_count=Count('votes'))
-                 .order_by('-vote_count'))
+    questions_q = Question.objects.filter(event=event).annotate(vote_count=Count('votes'))
+    questions = questions_q.order_by('-vote_count')
 
-    question_form = QuestionForm(request.POST or None,
-                                 instance=question)
+    question_form = QuestionForm(request.POST or None, instance=question)
 
-    is_reply = False
+    is_replied = False
     if question_form.is_valid() and not event.archived:
         question_obj = question_form.save(commit=False)
         # Do not change the user if posting an reply
@@ -78,11 +79,11 @@ def event(request, e_slug, q_id=None):
         elif not user.userprofile.is_admin:
             raise Http404
         else:
-            is_reply = True
+            is_replied = True
         question_obj.event = event
         question_obj.save()
 
-        if not Vote.objects.filter(user=user, question=question_obj).exists() and not is_reply:
+        if not Vote.objects.filter(user=user, question=question_obj).exists() and not is_replied:
             Vote.objects.create(user=user, question=question_obj)
 
         return redirect(reverse('event', kwargs={'e_slug': event.slug}))
@@ -102,10 +103,10 @@ def upvote(request, q_id):
     question = Question.objects.get(pk=q_id)
 
     if request.is_ajax() and not question.event.archived:
-        try:
+        if not Vote.objects.filter(user=request.user, question=question).exists():
             Vote.objects.create(user=request.user, question=question)
             status = 'unsupport'
-        except IntegrityError:
+        else:
             Vote.objects.filter(user=request.user, question=question).delete()
             status = 'support'
 
@@ -114,7 +115,6 @@ def upvote(request, q_id):
             'status': status,
         }
 
-        return HttpResponse(json.dumps(response_dict),
-                            mimetype='application/json')
+        return HttpResponse(json.dumps(response_dict), mimetype='application/json')
 
     return event(request, question.event.slug)
