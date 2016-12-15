@@ -96,6 +96,7 @@ def COMPRESS_JINJA2_GET_ENVIRONMENT():
     from django.template import engines
     return engines['jinja2'].env
 
+
 SITE_ID = 1
 
 # Auth
@@ -150,9 +151,8 @@ LOGIN_REDIRECT_URL_FAILURE = config('LOGIN_REDIRECT_URL_FAILURE', default='/')
 LOGOUT_REDIRECT_URL = config('LOGOUT_REDIRECT_URL', default='/')
 
 # Mozillians API
-MOZILLIANS_API_BASE = config('MOZILLIANS_API_BASE')
+MOZILLIANS_API_URL = config('MOZILLIANS_API_URL')
 MOZILLIANS_API_KEY = config('MOZILLIANS_API_KEY', default='')
-MOZILLIANS_API_APPNAME = config('MOZILLIANS_API_APPNAME', default='')
 
 # Paginator items per page
 ITEMS_PER_PAGE = config('ITEMS_PER_PAGE', default=10, cast=int)
@@ -190,9 +190,8 @@ CSP_DEFAULT_SRC = (
     'https://mozillians.org',
 )
 
+
 # Django OIDC
-
-
 def _username_algo(email):
     import base64
     import hashlib
@@ -202,9 +201,8 @@ def _username_algo(email):
     except ImportError:
         from django.utils.encoding import smart_str as smart_bytes
 
-    return base64.urlsafe_b64encode(
-        hashlib.sha1(smart_bytes(email)).digest()
-    ).rstrip(b'=')
+    return base64.urlsafe_b64encode(hashlib.sha1(smart_bytes(email)).digest()).rstrip(b'=')
+
 
 OIDC_OP_AUTHORIZATION_ENDPOINT = config('OIDC_OP_AUTHORIZATION_ENDPOINT')
 OIDC_OP_TOKEN_ENDPOINT = config('OIDC_OP_TOKEN_ENDPOINT')
