@@ -189,6 +189,14 @@ CSP_DEFAULT_SRC = (
     'https://*.mozilla.net',
     'https://mozillians.org',
 )
+CSP_IMG_SRC = (
+    "'self'",
+    'https://*.google-analytics.com',
+)
+CSP_SCRIPT_SRC = (
+    "'self'",
+    'https://*.google-analytics.com',
+)
 
 # Django OIDC
 

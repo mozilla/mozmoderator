@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="{{ static('css/main.css') }}" media="all">
     <link rel="shortcut icon" href="{{ static('img/favicon.ico') }}">
 
+    {% block google_analytics %}
+      <script src="{{ static('js/libs/dnt-helper.js') }}"></script>
+      <script src="{{ static('js/google-analytics.js') }}"></script>
+    {% endblock %}
+
   </head>
 
   <body>
