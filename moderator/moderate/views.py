@@ -1,4 +1,4 @@
-from django.conf import settings
+from django.conf import settings, settings
 from django.db.models import Count
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
