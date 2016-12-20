@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.db import IntegrityError
 from django.db.models import Count
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
