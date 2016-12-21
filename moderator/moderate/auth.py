@@ -1,15 +1,26 @@
+from django.conf import settings
+
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
-from moderator.moderate.mozillians import is_vouched, BadStatusCodeError
+from moderator.moderate.mozillians import BadStatusCode, MozilliansClient, ResourceDoesNotExist
 
 
 class ModeratorAuthBackend(OIDCAuthenticationBackend):
-    def create_user(self, claims, **kwargs):
-        try:
-            data = is_vouched(claims.get('email'))
-        except BadStatusCodeError:
-            data = None
+    """Override base authentication class."""
 
-        if data and data['is_vouched']:
+    def create_user(self, claims, **kwargs):
+        """Create a new user only if there is a vouched mozillians.org account."""
+
+        mozillians_client = MozilliansClient(settings.MOZILLIANS_API_URL,
+                                             settings.MOZILLIANS_API_KEY)
+
+        is_vouched = False
+        email = claims.get('email')
+        try:
+            _, is_vouched = mozillians_client.is_vouched(email)
+        except (BadStatusCode, ResourceDoesNotExist):
+            return None
+
+        if is_vouched:
             return super(ModeratorAuthBackend, self).create_user(claims, **kwargs)
         return None
