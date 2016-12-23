@@ -159,6 +159,7 @@ ul.errorlist {
     box-shadow: 0px 0px 2px rgba(0, 2, 2, 0.2);
     width: 70px;
     height: 70px;
+    object-fit: cover;
 }
 
 .selfimage {
@@ -175,6 +176,7 @@ ul.errorlist {
     box-shadow: 0px 0px 1px rgba(0, 2, 2, 0.2);
     width: 70px;
     height: 70px;
+    object-fit: cover;
 }
 
 .question-text {
