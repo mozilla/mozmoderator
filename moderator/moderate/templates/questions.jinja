@@ -56,8 +56,7 @@
         {% endif %}
 
         <div class="askedby">
-          <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}"
-             target="_blank">
+          <a href="https://mozillians.org/u/{{ q.asked_by.username }}" target="_blank">
             {% if q.asked_by.userprofile.avatar_url == "" %}
               <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}">
             {% else %}
