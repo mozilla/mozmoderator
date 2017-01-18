@@ -192,6 +192,7 @@ CSP_DEFAULT_SRC = (
 CSP_IMG_SRC = (
     "'self'",
     'https://*.google-analytics.com',
+    'https://*.gravatar.com',
 )
 CSP_SCRIPT_SRC = (
     "'self'",
