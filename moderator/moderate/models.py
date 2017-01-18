@@ -14,7 +14,7 @@ class MozillianProfile(models.Model):
     user = models.OneToOneField(User, related_name='userprofile')
     slug = models.SlugField(blank=True, max_length=100)
     username = models.CharField(max_length=40)
-    avatar_url = models.URLField(max_length=400, default='')
+    avatar_url = models.URLField(max_length=400, default='', blank=True)
 
     def __str__(self):
         return self.username
