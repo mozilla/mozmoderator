@@ -223,4 +223,3 @@ OIDC_RP_CLIENT_SECRET_ENCODED = config('OIDC_RP_CLIENT_SECRET_ENCODED', cast=boo
 OIDC_CALLBACK_CLASS = 'moderator.moderate.views.OIDCCallbackView'
 OIDC_USERNAME_ALGO = _username_algo
 OIDC_STORE_ACCESS_TOKEN = config('OIDC_STORE_ACCESS_TOKEN', default=True, cast=bool)
-OIDC_OP_LOGOUT_URL_METHOD = 'mozilla_django_oidc.contrib.auth0.utils.logout_url'
