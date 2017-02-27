@@ -193,6 +193,7 @@ CSP_IMG_SRC = (
     "'self'",
     'https://*.google-analytics.com',
     'https://*.gravatar.com',
+    'https://*.wp.com',
     'https://mozillians.org',
 )
 CSP_SCRIPT_SRC = (
