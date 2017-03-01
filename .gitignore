@@ -3,3 +3,5 @@ moderator-db
 /moderator/static
 .env
 /static
+bower_components
+node_modules

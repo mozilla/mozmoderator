@@ -1,0 +1,34 @@
+{
+  "name": "mozmoderator",
+  "description": "Mozilla Moderator App",
+  "version": "0.1.0",
+  "homepage": "https://github.com/mozilla/mozmoderator",
+  "license": "AGPL",
+  "dependencies": {
+    "jquery": "3.1.1",
+    "bootstrap": "3.3.7",
+    "mozilla-tabzilla": "0.5.1",
+    "dnt-helper": "schalkneethling/dnt-helper"
+  },
+  "overrides": {
+    "jquery": {
+      "main": "dist/jquery.js"
+    },
+    "bootstrap": {
+      "main": [
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js",
+        "dist/fonts/*"
+      ]
+    },
+    "mozilla-tabzilla": {
+      "main": [
+        "css/tabzilla.css",
+        "media/img/*.png"
+      ]
+    },
+    "dnt-helper": {
+      "main": "js/dnt-helper.js"
+    }
+  }
+}
