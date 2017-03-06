@@ -7,8 +7,10 @@ CMD ["./bin/run-prod.sh"]
 RUN adduser --uid 431 --disabled-password --disabled-login --gecos 'webdev' --no-create-home webdev
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends build-essential libmysqlclient-dev mysql-client && \
+    apt-get install -y --no-install-recommends build-essential libmysqlclient-dev mysql-client npm && \
     rm -rf /var/lib/apt/lists/*
+RUN ln -s /usr/bin/nodejs /usr/bin/node
+RUN npm install -g bower gulp-cli
 
 COPY . /app
 RUN pip install --no-cache-dir --require-hashes --no-deps -r requirements/prod.txt

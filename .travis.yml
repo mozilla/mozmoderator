@@ -1,5 +1,9 @@
 language: python
+dist: trusty
 before_install:
   - pip install flake8
+  - npm install -g eslint stylelint
 script:
   - flake8 moderator
+  - eslint 'moderator/moderate/static/js/*.js'
+  - stylelint 'moderator/moderate/static/css/*.css'

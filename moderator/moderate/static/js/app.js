@@ -13,7 +13,7 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $("#page-select").on('change', function () {
+    $('#page-select').on('change', function () {
         window.location = $(this).val();
     });
 
