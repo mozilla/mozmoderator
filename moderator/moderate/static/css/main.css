@@ -4,9 +4,9 @@
     font-family: 'Open Sans';
     src: url('/static/fonts/OpenSans-Regular.eot');
     src: url('/static/fonts/OpenSans-Regular.eot?#iefix') format('embedded-opentype'),
-         url('/static/fonts/OpenSans-Regular.woff') format('woff'),
-         url('/static/fonts/OpenSans-Regular.ttf') format('truetype'),
-         url('/static/fonts/OpenSans-Regular.svg#open_sans') format('svg');
+        url('/static/fonts/OpenSans-Regular.woff') format('woff'),
+        url('/static/fonts/OpenSans-Regular.ttf') format('truetype'),
+        url('/static/fonts/OpenSans-Regular.svg#open_sans') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -15,9 +15,9 @@
     font-family: 'Open Sans';
     src: url('/static/fonts/OpenSans-Bold.eot');
     src: url('/static/fonts/OpenSans-Bold.eot?#iefix') format('embedded-opentype'),
-         url('/static/fonts/OpenSans-Bold.woff') format('woff'),
-         url('/static/fonts/OpenSans-Bold.ttf') format('truetype'),
-         url('/static/fonts/OpenSans-Bold.svg#open_sansbold') format('svg');
+        url('/static/fonts/OpenSans-Bold.woff') format('woff'),
+        url('/static/fonts/OpenSans-Bold.ttf') format('truetype'),
+        url('/static/fonts/OpenSans-Bold.svg#open_sansbold') format('svg');
     font-weight: bold;
     font-style: normal;
 }
@@ -26,9 +26,9 @@
     font-family: 'Open Sans';
     src: url('/static/fonts/OpenSans-BoldItalic.eot');
     src: url('/static/fonts/OpenSans-BoldItalic.eot?#iefix') format('embedded-opentype'),
-         url('/static/fonts/OpenSans-BoldItalic.woff') format('woff'),
-         url('/static/fonts/OpenSans-BoldItalic.ttf') format('truetype'),
-         url('/static/fonts/OpenSans-BoldItalic.svg#open_sansbold_italic') format('svg');
+        url('/static/fonts/OpenSans-BoldItalic.woff') format('woff'),
+        url('/static/fonts/OpenSans-BoldItalic.ttf') format('truetype'),
+        url('/static/fonts/OpenSans-BoldItalic.svg#open_sansbold_italic') format('svg');
     font-weight: bold;
     font-style: italic;
 }
@@ -37,13 +37,12 @@
     font-family: 'Open Sans';
     src: url('/static/fonts/OpenSans-Italic.eot');
     src: url('/static/fonts/OpenSans-Italic.eot?#iefix') format('embedded-opentype'),
-         url('/static/fonts/OpenSans-Italic.woff') format('woff'),
-         url('/static/fonts/OpenSans-Italic.ttf') format('truetype'),
-         url('/static/fonts/OpenSans-Italic.svg#open_sansitalic') format('svg');
+        url('/static/fonts/OpenSans-Italic.woff') format('woff'),
+        url('/static/fonts/OpenSans-Italic.ttf') format('truetype'),
+        url('/static/fonts/OpenSans-Italic.svg#open_sansitalic') format('svg');
     font-weight: normal;
     font-style: italic;
 }
-
 
 /* General
 ==================== */
@@ -80,7 +79,7 @@ h3 {
 }
 
 #wrapper:after {
-    content: "";
+    content: '';
     display: block;
     height: 190px;
 }
@@ -91,7 +90,7 @@ h3 {
 }
 
 #tabzilla:before {
-    background-color: #0C99D5;
+    background-color: #0c99d5;
 }
 
 .navbar-default {
@@ -117,7 +116,6 @@ ul.errorlist {
     padding: 5px 0 0 0;
 }
 
-
 /* Events
 ==================== */
 
@@ -134,10 +132,9 @@ ul.errorlist {
 
 .event-listing h1 {
     font-size: 1.8em;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: -15px 0 0 0;
     float: left;
-    margin-top: -15px
 }
 
 .questions-counter {
@@ -147,7 +144,7 @@ ul.errorlist {
 }
 
 .askedby {
-    display:inline-block;
+    display: inline-block;
     width: 10%;
     vertical-align: top;
 }
@@ -155,15 +152,15 @@ ul.errorlist {
 .askedby img {
     border-radius: 100%;
     position: relative;
-    border: 5px solid #FFF;
-    box-shadow: 0px 0px 2px rgba(0, 2, 2, 0.2);
+    border: 5px solid #fff;
+    box-shadow: 0 0 2px rgba(0, 2, 2, 0.2);
     width: 70px;
     height: 70px;
     object-fit: cover;
 }
 
 .selfimage {
-    display:inline-block;
+    display: inline-block;
     width: 10%;
     vertical-align: top;
     margin-top: -5px;
@@ -172,8 +169,8 @@ ul.errorlist {
 .selfimage img {
     border-radius: 100%;
     position: absolute;
-    border: 3px solid #FFF;
-    box-shadow: 0px 0px 1px rgba(0, 2, 2, 0.2);
+    border: 3px solid #fff;
+    box-shadow: 0 0 1px rgba(0, 2, 2, 0.2);
     width: 70px;
     height: 70px;
     object-fit: cover;
@@ -188,11 +185,11 @@ ul.errorlist {
 .question-text input {
     margin-top: 10px;
     width: 100%;
-    box-shadow: 0px 0px 0px 2px rgba(200, 173, 227, 0.4);
+    box-shadow: 0 0 0 2px rgba(200, 173, 227, 0.4);
 }
 
 .vote-container {
-    display:inline-block;
+    display: inline-block;
     width: 12%;
     vertical-align: middle;
     text-align: center;
@@ -201,7 +198,7 @@ ul.errorlist {
 }
 
 .ask-container {
-    display:inline-block;
+    display: inline-block;
     width: 12%;
     vertical-align: top;
     text-align: center;
@@ -237,18 +234,21 @@ ul.errorlist {
 }
 
 @media only screen and (max-width: 1200px) {
+
     .reply-button {
         margin-top: 5px;
     }
 }
 
 @media only screen and (max-width: 992px) {
+
     .question-text {
         width: 70%;
     }
 }
 
 @media only screen and (max-width: 768px) {
+
     .selfimage {
         display: none;
     }
@@ -294,10 +294,9 @@ ul.errorlist {
     }
 
     .reply-row {
-        margin-top: 0px;
+        margin-top: 0;
     }
 }
-
 
 /* Ribbon
 ==================== */
@@ -307,19 +306,19 @@ ul.errorlist {
     height: 88px;
     overflow: hidden;
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
 }
 
 .ribbon {
     text-align: center;
     transform: rotate(45deg);
     position: relative;
-    padding: 5px 0px;
+    padding: 5px 0;
     right: -2px;
     top: 10px;
     width: 120px;
-    box-shadow: 0px 0px 3px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.3);
     color: white;
     background-color: green;
     font-size: .7em;
@@ -327,26 +326,22 @@ ul.errorlist {
 
 .ribbon:before,
 .ribbon:after {
-    content: "";
+    content: '';
     border-top: 3px solid #ccc;
     border-left: 3px solid transparent;
     border-right: 3px solid transparent;
-    position:absolute;
-    bottom: -3px
+    position: absolute;
+    bottom: -3px;
 }
 
 .ribbon:before { left: 0; }
 .ribbon::after { right: 0; }
 
-
 /* Footer
 ==================== */
 
 .site-footer {
-     height: 190px;
- }
-
-.site-footer {
+    height: 190px;
     color: #a6a7a9;
     background-color: #4d4f53;
     padding: 40px 0;
@@ -413,14 +408,15 @@ ul.errorlist {
 }
 
 @media only screen and (max-width: 768px) {
-    .site-footer,
-     #wrapper:after {
-         height: 490px;
-     }
 
-     #wrapper {
-         margin-bottom: -490px;
-     }
+    .site-footer,
+    #wrapper:after {
+        height: 490px;
+    }
+
+    #wrapper {
+        margin-bottom: -490px;
+    }
 
     .site-footer .icon-container {
         min-width: 100px;
