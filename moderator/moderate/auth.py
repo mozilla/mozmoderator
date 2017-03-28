@@ -43,15 +43,36 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
         if not user:
             return None
         profile = user.userprofile
+        nda_group = None
 
         try:
             self.mozillian_user = self.mozillians_client.lookup_user({'email': user.email})
         except (BadStatusCode, ResourceDoesNotExist):
             return None
 
+        # Get alternate emails
+        user_email_domains = [user.email.split('@')[1]]
+        for email_resource in self.mozillian_user['alternate_emails']:
+            user_email_domains.append(email_resource['email'].split('@')[1])
+
+        # Check if the user is member of the NDA group on each login.
+        # Automatically add users with @mozilla* email in the nda group.
+        if not [email_domain for email_domain in user_email_domains
+                if email_domain in settings.TRUSTED_MOZILLA_DOMAINS]:
+            try:
+                nda_group = self.mozillians_client.lookup_group({'name': 'nda'})
+            except (BadStatusCode, ResourceDoesNotExist):
+                profile.is_nda_member = False
+
+            if (nda_group and any(profile.username in member['username']
+                                  for member in nda_group['members'])):
+                profile.is_nda_member = True
+        else:
+            profile.is_nda_member = True
+
         if profile.username != self.mozillian_user['username']:
             profile.username = self.mozillian_user['username']
             if self.mozillian_user['photo']['privacy'] == 'Public':
                 profile.avatar_url = self.mozillian_user['photo']['value']
-            profile.save()
+        profile.save()
         return user

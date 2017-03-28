@@ -28,12 +28,14 @@ class OIDCCallbackView(OIDCAuthenticationCallbackView):
 
 def main(request):
     """Render main page."""
-    if request.user.is_authenticated():
+    user = request.user
+    if user.is_authenticated():
+
         events = Event.objects.filter(archived=False)
-        return render(request, 'index.jinja', {'events': events,
-                                               'user': request.user})
-    else:
-        return render(request, 'index.jinja', {'user': request.user})
+        if not user.userprofile.is_nda_member:
+            events = events.exclude(is_nda=True)
+        return render(request, 'index.jinja', {'events': events, 'user': user})
+    return render(request, 'index.jinja', {'user': user})
 
 
 @login_required(login_url='/')
@@ -59,6 +61,11 @@ def event(request, e_slug, q_id=None):
     event = Event.objects.get(slug=e_slug)
     question = None
     user = request.user
+
+    # Do not display NDA events to non NDA members or non employees.
+    if event.is_nda and not user.userprofile.is_nda_member:
+        raise Http404
+
     if q_id:
         question = Question.objects.get(id=q_id)
 
@@ -98,8 +105,11 @@ def upvote(request, q_id):
     """Upvote question"""
 
     question = Question.objects.get(pk=q_id)
+    user_can_vote = True
+    if question.event.is_nda and not request.user.userprofile.is_nda_member:
+        user_can_vote = False
 
-    if request.is_ajax() and not question.event.archived:
+    if request.is_ajax() and not question.event.archived and user_can_vote:
         if not Vote.objects.filter(user=request.user, question=question).exists():
             Vote.objects.create(user=request.user, question=question)
         else:

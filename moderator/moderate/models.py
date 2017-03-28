@@ -15,6 +15,7 @@ class MozillianProfile(models.Model):
     slug = models.SlugField(blank=True, max_length=100)
     username = models.CharField(max_length=40)
     avatar_url = models.URLField(max_length=400, default='', blank=True)
+    is_nda_member = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -49,6 +50,7 @@ class Event(models.Model):
     archived = models.BooleanField(default=False)
     slug = models.SlugField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_nda = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

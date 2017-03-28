@@ -17,8 +17,7 @@ def export_questions_csv(modeladmin, request, queryset):
     """Export questions csv."""
     filename = 'questions.csv'
     response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = ('attachment; filename="%s"' %
-                                       filename)
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
     writer = csv.writer(response)
 
@@ -51,7 +50,7 @@ class QuestionInline(admin.StackedInline):
 
 class EventAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
-    list_display = ('name', 'questions_count', 'created_at', 'archived')
+    list_display = ('name', 'questions_count', 'created_at', 'archived', 'is_nda',)
     actions = [export_questions_csv]
     list_filter = ['archived']
 
