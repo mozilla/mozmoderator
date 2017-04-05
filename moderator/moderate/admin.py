@@ -39,6 +39,11 @@ class MozillianProfileInline(admin.StackedInline):
 
 class UserAdmin(UserAdmin):
     inlines = [MozillianProfileInline]
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_nda_member', 'is_staff',)
+
+    def is_nda_member(self, obj):
+        return obj.userprofile.is_nda_member
+    is_nda_member.boolean = True
 
 
 class QuestionInline(admin.StackedInline):
