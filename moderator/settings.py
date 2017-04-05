@@ -175,7 +175,7 @@ DATABASES = {
 }
 
 # Allow access to users with the follow domain to NDA group.
-TRUSTED_MOZILLA_DOMAINS = ['mozilla.com', 'mozilla.org', 'mozillafoundation.org']
+TRUSTED_MOZILLA_DOMAINS = ['mozilla.com', 'mozilla.org', 'mozillafoundation.org', 'getpocket.com']
 
 # Enable debugging only if in dev env
 if DEBUG:
