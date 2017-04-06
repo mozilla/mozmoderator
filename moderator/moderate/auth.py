@@ -50,10 +50,14 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
         except (BadStatusCode, ResourceDoesNotExist):
             return None
 
-        # Get alternate emails
+        # The email the user used to log in
         user_email_domains = [user.email.split('@')[1]]
+        # Get alternate emails
         for email_resource in self.mozillian_user['alternate_emails']:
             user_email_domains.append(email_resource['email'].split('@')[1])
+        user_email_domains.append(self.mozillian_user['email']['value'].split('@')[1])
+        # Remove duplicate domains
+        user_email_domains = list(set(user_email_domains))
 
         user_groups = [group['name'] for group in self.mozillian_user['groups']['value']]
 
