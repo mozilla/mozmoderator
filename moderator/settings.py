@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     # Third party apps
     'axes',
-    'session_csrf',
     'raven.contrib.django.raven_compat',
     'mozilla_django_oidc',
     # Project specific apps
@@ -38,7 +37,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'session_csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -62,7 +60,6 @@ CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.template.context_processors.debug',
     'django.template.context_processors.request',
-    'session_csrf.context_processor',
     'django.template.context_processors.media',
     'django.template.context_processors.static',
     'django.template.context_processors.tz',
@@ -141,9 +138,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 SITE_URL = config('SITE_URL')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
-# Instruct session-csrf to always produce tokens for anonymous users
-ANON_ALWAYS = config('ANON_ALWAYS', default=True, cast=bool)
-
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = config('LOGIN_REDIRECT_URL', default='/')
 # Path to redirect to on unsuccessful login attempt.
@@ -160,6 +154,7 @@ ITEMS_PER_PAGE = config('ITEMS_PER_PAGE', default=10, cast=int)
 # Sessions
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=True, cast=bool)
 SESSION_COOKIE_HTTPONLY = config('SESSION_COOKIE_HTTPONLY', default=True, cast=bool)
+CSRF_USE_SESSIONS = True
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=True, cast=bool)
 
 # Security Middleware
