@@ -11,7 +11,7 @@ RUN apt-get update && \
     curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g bower gulp-cli
+RUN npm install -g yarn gulp-cli
 
 COPY . /app
 RUN pip install --no-cache-dir --require-hashes --no-deps -r requirements/prod.txt
