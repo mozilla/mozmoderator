@@ -12,16 +12,16 @@ All mozmoderator source files are made available under the terms of the GNU Affe
 
 Use [npm](https://www.npmjs.com/) to install the necessary tools. If you use [docker](https://docker.com/) for development this step is not necessary.
 
-    npm -g install bower gulp-cli
+    npm -g install yarn gulp-cli
 
-Use [bower](https://bower.io/) to download all Frontend libraries.
+Use [yarn](https://yarnpkg.com/) to download all required packages and frontend libraries.
 
-    bower install
+    yarn
 
-Install all required packages.
-
-    npm install
-
-Finally use [gulp](http://gulpjs.com/) to check in all main static files and run the tests.
+Use [gulp](http://gulpjs.com/) to check in all used assets and run the tests.
 
     gulp
+
+Or run just the tests.
+
+    gulp test

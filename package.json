@@ -1,23 +1,39 @@
 {
-  "name": "mozmoderator",
-  "version": "0.1.0",
-  "description": "Mozilla Moderator App",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mozilla/mozmoderator.git"
-  },
-  "author": "Mozilla",
-  "license": "AGPL",
-  "bugs": {
-    "url": "https://github.com/mozilla/mozmoderator/issues"
-  },
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-clean-css": "^3.0.3",
-    "gulp-eslint": "^3.0.1",
-    "gulp-filter": "^5.0.0",
-    "gulp-main-bower-files": "^1.6.1",
-    "gulp-stylelint": "^3.9.0",
-    "gulp-uglify": "^2.0.1"
-  }
+    "name": "mozmoderator",
+    "version": "0.1.0",
+    "description": "Mozilla Moderator App",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mozilla/mozmoderator.git"
+    },
+    "author": "Mozilla",
+    "private": true,
+    "license": "AGPL-3.0",
+    "bugs": {
+        "url": "https://github.com/mozilla/mozmoderator/issues"
+    },
+    "homepage": "https://moderator.mozilla.org/",
+    "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-clean-css": "^3.7.0",
+        "gulp-eslint": "^4.0.0",
+        "gulp-filter": "^5.0.0",
+        "gulp-stylelint": "^3.9.0",
+        "gulp-uglify": "^3.0.0"
+    },
+    "dependencies": {
+        "bootstrap": "^3.3.7",
+        "dnt-helper": "git://github.com/schalkneethling/dnt-helper.git",
+        "jquery": "^3.1.1",
+        "mozilla-tabzilla": "^0.5.1"
+    },
+    "assets": [
+        "jquery/dist/jquery.js",
+        "bootstrap/dist/css/bootstrap.css",
+        "bootstrap/dist/js/bootstrap.js",
+        "bootstrap/dist/fonts/*",
+        "mozilla-tabzilla/media/img/*.png",
+        "mozilla-tabzilla/css/tabzilla.css",
+        "dnt-helper/js/dnt-helper.js"
+    ]
 }
