@@ -21,18 +21,14 @@ class QuestionForm(forms.ModelForm):
         max_length=140, widget=forms.TextInput(attrs={'placeholder': ANSWER,
                                                       'class': 'form-control'}))
 
-    class Meta:
-        model = Question
-        fields = ['question', 'answer']
-
     def __init__(self, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
         if self.instance.id:
             self.fields['question'].required = False
 
     def clean(self):
-        super(QuestionForm, self).clean()
-        cdata = self.cleaned_data
+        cdata = super(QuestionForm, self).clean()
+
         if self.instance.id:
             cdata['question'] = self.instance.question
             # Raise an error if there is no answer
@@ -43,3 +39,10 @@ class QuestionForm(forms.ModelForm):
         # Force an empty answer when saving a new form
         cdata['answer'] = ''
         return cdata
+
+    class Meta:
+        model = Question
+        fields = ['question', 'answer', 'is_anonymous']
+        widgets = {
+            'is_anonymous': forms.CheckboxInput()
+        }

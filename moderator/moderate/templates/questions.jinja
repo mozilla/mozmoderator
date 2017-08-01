@@ -26,6 +26,7 @@
       <div class="panel-body">
         <form method="post" action="{{ url('event', e_slug=event.slug) }}"
               id="question-form">
+          {% csrf_token %}
           {{ q_form.non_field_errors() }}
           <div class="selfimage">
             {% if not user.userprofile.avatar_url %}
@@ -34,11 +35,18 @@
               <img src="{{ user.userprofile.avatar_url }}"  alt="User profile image" />
             {% endif %}
           </div>
-          {% csrf_token %}
-          <div class="form-group question-text {% if q_form.question.errors %}has-error{% endif %}"
-               id="question-input">
+          <div class="form-group question-text id="question-input"
+            {% if q_form.question.errors %}
+              has-error
+            {% endif %}">
             {{ q_form.question }}
             {{ q_form.question.errors }}
+          </div>
+          <div class="checkbox-anonymous">
+            {{ q_form.is_anonymous }}
+            <label for="{{ q_form.is_anonymous.id_for_label }}">
+              Post as anonymous.
+            </label>
           </div>
           <div class="ask-container">
             <input type="submit" class="btn btn-default" value="submit">
@@ -55,15 +63,17 @@
           <div class="ribbon-wrapper"><div class="ribbon">answered</div></div>
         {% endif %}
 
-        <div class="askedby">
-          <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
-            {% if q.asked_by.userprofile.avatar_url == "" %}
-              <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}">
-            {% else %}
-              <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}">
-            {% endif %}
-          </a>
-        </div>
+        {% if not q.is_anonymous %}
+          <div class="askedby">
+            <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
+              {% if q.asked_by.userprofile.avatar_url == "" %}
+                <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}">
+              {% else %}
+                <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}">
+              {% endif %}
+            </a>
+          </div>
+        {% endif %}
 
         <div class="question-text">
           <h3>{{ q.question }}</h3>

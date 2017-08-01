@@ -79,7 +79,8 @@ def event(request, e_slug, q_id=None):
         question_obj = question_form.save(commit=False)
         # Do not change the user if posting a reply
         if not question_obj.id:
-            question_obj.asked_by = user
+            if not question_obj.is_anonymous:
+                question_obj.asked_by = user
         elif not user.userprofile.is_admin:
             raise Http404
         else:
