@@ -63,17 +63,22 @@
           <div class="ribbon-wrapper"><div class="ribbon">answered</div></div>
         {% endif %}
 
-        {% if not q.is_anonymous %}
           <div class="askedby">
-            <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
-              {% if q.asked_by.userprofile.avatar_url == "" %}
-                <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}">
-              {% else %}
-                <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}">
-              {% endif %}
-            </a>
+            {% if not q.is_anonymous %}
+              <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
+                {% if q.asked_by.userprofile.avatar_url == "" %}
+                  <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}"
+                       title="{{ q.asked_by.userprofile.username }}" data-toggle="tooltip" data-placement="bottom">
+                {% else %}
+                  <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}"
+                       title="{{ q.asked_by.userprofile.username }}" data-toggle="tooltip" data-placement="bottom">
+                {% endif %}
+              </a>
+            {% else %}
+              <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}"
+                   title="anonymous" data-toggle="tooltip" data-placement="bottom">
+            {% endif %}
           </div>
-        {% endif %}
 
         <div class="question-text">
           <h3>{{ q.question }}</h3>

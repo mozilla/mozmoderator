@@ -21,4 +21,6 @@ jQuery(document).ready(function ($) {
         var action_post = $('#question-form').attr('action')+'/q/'+this.id;
         $('#answer-form').attr('action', action_post);
     });
+
+    $('[data-toggle="tooltip"]').tooltip();
 });
