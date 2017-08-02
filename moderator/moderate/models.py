@@ -71,13 +71,14 @@ class Event(models.Model):
 @python_2_unicode_compatible
 class Question(models.Model):
     """Question relational model."""
-    asked_by = models.ForeignKey(User)
+    asked_by = models.ForeignKey(User, null=True, blank=True)
     event = models.ForeignKey(Event, related_name='questions')
     question = models.TextField(validators=[MaxLengthValidator(140),
                                             MinLengthValidator(10)])
     answer = models.TextField(validators=[MaxLengthValidator(140)],
                               default='', blank=True)
     addressed = models.BooleanField(default=False)
+    is_anonymous = models.BooleanField(default=False, blank=False)
 
     def __str__(self):
         return u'Question {pk} from {user}'.format(pk=self.id, user=self.asked_by)

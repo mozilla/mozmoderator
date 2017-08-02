@@ -188,6 +188,15 @@ ul.errorlist {
     box-shadow: 0 0 0 2px rgba(200, 173, 227, 0.4);
 }
 
+.checkbox-anonymous {
+    margin-left: calc(10% + 4px);
+    float: left;
+}
+
+.checkbox-anonymous label {
+    font-weight: normal;
+}
+
 .vote-container {
     display: inline-block;
     width: 12%;
@@ -265,6 +274,11 @@ ul.errorlist {
 
     .questions-counter {
         margin-top: 5px;
+    }
+
+    .checkbox-anonymous {
+        margin-left: 0;
+        float: none;
     }
 
     .vote-container {
