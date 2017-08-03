@@ -71,7 +71,7 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
 
         if profile.username != self.mozillian_user['username']:
             profile.username = self.mozillian_user['username']
-            if self.mozillian_user['photo']['privacy'] == 'Public':
-                profile.avatar_url = self.mozillian_user['photo']['value']
+        if self.mozillian_user['photo']['privacy'] == 'Public':
+            profile.avatar_url = self.mozillian_user['photo']['value']
         profile.save()
         return user
