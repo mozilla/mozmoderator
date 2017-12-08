@@ -41,7 +41,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'csp.middleware.CSPMiddleware',
-    'mozilla_django_oidc.contrib.auth0.middleware.RefreshIDToken',
 )
 
 # List of finder classes that know how to find static files in
@@ -219,7 +218,7 @@ OIDC_OP_USER_ENDPOINT = config('OIDC_OP_USER_ENDPOINT')
 OIDC_RP_CLIENT_ID = config('OIDC_RP_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = config('OIDC_RP_CLIENT_SECRET')
 OIDC_OP_DOMAIN = config('OIDC_OP_DOMAIN')
-OIDC_RP_CLIENT_SECRET_ENCODED = config('OIDC_RP_CLIENT_SECRET_ENCODED', cast=bool)
+OIDC_RP_CLIENT_SECRET_ENCODED = False
 OIDC_CALLBACK_CLASS = 'moderator.moderate.views.OIDCCallbackView'
 OIDC_USERNAME_ALGO = _username_algo
 OIDC_STORE_ACCESS_TOKEN = config('OIDC_STORE_ACCESS_TOKEN', default=True, cast=bool)
