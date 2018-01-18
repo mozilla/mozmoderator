@@ -23,4 +23,8 @@ jQuery(document).ready(function ($) {
     });
 
     $('[data-toggle="tooltip"]').tooltip();
+
+    $('#logout').click(function() {
+        $('#logout_form').submit();
+    });
 });
