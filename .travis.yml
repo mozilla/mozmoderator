@@ -1,5 +1,6 @@
 language: python
 dist: trusty
+sudo: false
 before_install:
   - pip install flake8
   - npm install -g eslint stylelint
