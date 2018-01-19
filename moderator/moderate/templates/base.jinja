@@ -42,8 +42,11 @@
             <div id="navbar" class="navbar-collapse collapse navbar-left">
               <ul class="nav navbar-nav">
                 <li><a href="{{ url('archive') }}">Event Archive</a></li>
-                <li><a href="{{ url('oidc_logout') }}">Logout</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
               </ul>
+              <form id="logout_form" class="hidden" action="{{ url('oidc_logout') }}" method="post">
+                <input type="submit" value="logout">
+              </form>
             </div>
           {% endif %}
 
