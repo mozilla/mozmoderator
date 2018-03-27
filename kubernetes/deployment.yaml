@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: moderator-deployment
+  namespace: parsys
+  labels:
+    app: moderator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderator
+  template:
+    metadata:
+      labels:
+        app: moderator
+    spec:
+      containers:
+        - name: moderator-web
+          image: 320464205386.dkr.ecr.us-east-2.amazonaws.com/moderator:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: ALLOWED_HOSTS
+              value: "moderator-testing.iam.mozilla.com"
+            - name: ANON_ALWAYS
+              value: "True"
+            - name: MOZILLIANS_API_URL
+              value: "https://mozillians.org/api/v2/"
+            - name: OIDC_OP_AUTHORIZATION_ENDPOINT
+              value: "https://auth.mozilla.auth0.com/authorize"
+            - name: OIDC_OP_TOKEN_ENDPOINT
+              value: "https://auth.mozilla.auth0.com/oauth/token"
+            - name: OIDC_OP_USER_ENDPOINT
+              value: "https://auth.mozilla.auth0.com/userinfo"
+            - name: SESSION_COOKIE_SECURE
+              value: "True"
+            - name: SITE_URL
+              value: "https://moderator-testing.iam.mozilla.com"
+            - name: MOZILLIANS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: MODERATOR_SECRET
+                  key: MOZILLIANS_API_KEY
+            - name: OIDC_RP_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: MODERATOR_SECRET
+                  key: OIDC_RP_CLIENT_SECRET
+            - name: OIDC_RP_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: MODERATOR_SECRET
+                  key: OIDC_RP_CLIENT_ID
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: MODERATOR_SECRET
+                  key: SECRET_KEY
