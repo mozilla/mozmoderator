@@ -4,21 +4,21 @@ from django.core.validators import MaxLengthValidator, MinLengthValidator
 from models import Question
 
 
-QUESTION = 'Ask your question in 140 characters'
-ANSWER = 'Reply to question in 140 characters'
+QUESTION = 'Ask your question in 280 characters'
+ANSWER = 'Reply to question in 280 characters'
 
 
 class QuestionForm(forms.ModelForm):
     """Question Form."""
     question = forms.CharField(
-        validators=[MaxLengthValidator(140), MinLengthValidator(10)],
-        max_length=140, widget=forms.TextInput(attrs={'placeholder': QUESTION,
+        validators=[MaxLengthValidator(280), MinLengthValidator(10)],
+        max_length=280, widget=forms.TextInput(attrs={'placeholder': QUESTION,
                                                       'class': 'form-control',
                                                       'required': 'required'}))
     answer = forms.CharField(
-        validators=[MaxLengthValidator(140)],
+        validators=[MaxLengthValidator(280)],
         required=False,
-        max_length=140, widget=forms.TextInput(attrs={'placeholder': ANSWER,
+        max_length=280, widget=forms.TextInput(attrs={'placeholder': ANSWER,
                                                       'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):

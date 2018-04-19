@@ -73,9 +73,9 @@ class Question(models.Model):
     """Question relational model."""
     asked_by = models.ForeignKey(User, null=True, blank=True)
     event = models.ForeignKey(Event, related_name='questions')
-    question = models.TextField(validators=[MaxLengthValidator(140),
+    question = models.TextField(validators=[MaxLengthValidator(280),
                                             MinLengthValidator(10)])
-    answer = models.TextField(validators=[MaxLengthValidator(140)],
+    answer = models.TextField(validators=[MaxLengthValidator(280)],
                               default='', blank=True)
     addressed = models.BooleanField(default=False)
     is_anonymous = models.BooleanField(default=False, blank=False)

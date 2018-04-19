@@ -40,8 +40,8 @@ class Migration(migrations.Migration):
             name='Question',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('question', models.TextField(validators=[django.core.validators.MaxLengthValidator(140), django.core.validators.MinLengthValidator(10)])),
-                ('answer', models.TextField(default=b'', blank=True, validators=[django.core.validators.MaxLengthValidator(140)])),
+                ('question', models.TextField(validators=[django.core.validators.MaxLengthValidator(280), django.core.validators.MinLengthValidator(10)])),
+                ('answer', models.TextField(default=b'', blank=True, validators=[django.core.validators.MaxLengthValidator(280)])),
                 ('addressed', models.BooleanField(default=False)),
                 ('asked_by', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('event', models.ForeignKey(related_name='questions', to='moderate.Event')),
