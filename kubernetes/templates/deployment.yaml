@@ -2,23 +2,23 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: moderator-deployment
+  name: {{ .Values.name }}-deployment
   namespace: parsys
   labels:
-    app: moderator
+    app: {{ .Values.name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: moderator
+      app: {{ .Values.name }}
   template:
     metadata:
       labels:
-        app: moderator
+        app: {{ .Values.name }}
     spec:
       containers:
         - name: moderator-web
-          image: 320464205386.dkr.ecr.us-east-2.amazonaws.com/moderator:latest
+          image: 320464205386.dkr.ecr.us-east-2.amazonaws.com/{{ .Values.name }}:latest
           ports:
             - containerPort: 8000
           env:
@@ -29,11 +29,11 @@ spec:
             - name: MOZILLIANS_API_URL
               value: "https://mozillians.org/api/v2/"
             - name: OIDC_OP_AUTHORIZATION_ENDPOINT
-              value: "https://auth.mozilla.auth0.com/authorize"
+              value: "{{ .Values.auth0_base_url }}/authorize"
             - name: OIDC_OP_TOKEN_ENDPOINT
-              value: "https://auth.mozilla.auth0.com/oauth/token"
+              value: "{{ .Values.auth0_base_url }}/oauth/token"
             - name: OIDC_OP_USER_ENDPOINT
-              value: "https://auth.mozilla.auth0.com/userinfo"
+              value: "{{ .Values.auth0_base_url }}/userinfo"
             - name: SESSION_COOKIE_SECURE
               value: "True"
             - name: SITE_URL
