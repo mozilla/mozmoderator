@@ -35,10 +35,10 @@
               <img src="{{ user.userprofile.avatar_url }}"  alt="User profile image" />
             {% endif %}
           </div>
-          <div class="form-group question-text id="question-input"
+          <div class="form-group question-text
             {% if q_form.question.errors %}
               has-error
-            {% endif %}">
+            {% endif %}" id="question-input">
             {{ q_form.question }}
             {{ q_form.question.errors }}
           </div>

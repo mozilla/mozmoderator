@@ -193,6 +193,11 @@ ul.errorlist {
     float: left;
 }
 
+.checkbox-nda {
+    margin-right: calc(5% + 4px);
+    float: bottom;
+}
+
 .checkbox-anonymous label {
     font-weight: normal;
 }
@@ -203,6 +208,23 @@ ul.errorlist {
     vertical-align: middle;
     text-align: center;
     padding: 10px;
+    margin-top: -15px;
+    margin-left: 15px;
+}
+
+.edit-container {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px;
+    margin-top: -15px;
+    margin-left: 25px;
+}
+
+.delete-container {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
     margin-top: -15px;
 }
 

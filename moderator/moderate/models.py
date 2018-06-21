@@ -51,6 +51,7 @@ class Event(models.Model):
     slug = models.SlugField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_nda = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
