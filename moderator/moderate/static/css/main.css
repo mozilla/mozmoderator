@@ -93,6 +93,10 @@ h3 {
     background-color: #0c99d5;
 }
 
+#logout {
+    padding: 15px;
+}
+
 .navbar-default {
     background-color: transparent;
     min-height: 70px;
@@ -195,7 +199,6 @@ ul.errorlist {
 
 .checkbox-nda {
     margin-right: calc(5% + 4px);
-    float: bottom;
 }
 
 .checkbox-anonymous label {
