@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
-from models import Question
+from models import Event, Question
 
 
 QUESTION = 'Ask your question in 280 characters'
@@ -45,4 +45,20 @@ class QuestionForm(forms.ModelForm):
         fields = ['question', 'answer', 'is_anonymous']
         widgets = {
             'is_anonymous': forms.CheckboxInput()
+        }
+
+
+class EventForm(forms.ModelForm):
+    """Question Form."""
+
+    def __init__(self, *args, **kwargs):
+        super(EventForm, self).__init__(*args, **kwargs)
+        if self.instance.id:
+            self.fields['name'].required = True
+
+    class Meta:
+        model = Event
+        fields = ['name', 'is_nda']
+        widgets = {
+            'is_nda': forms.CheckboxInput(),
         }

@@ -1,0 +1,57 @@
+{% extends "base.jinja" %}
+
+{% block head %}
+  <title>Mozilla Moderator -
+    {% if event %}
+      Edit event {{ event.name }}
+    {% else %}
+      Create an event
+    {% endif %}
+  </title>
+{% endblock %}
+
+{% block breadcrumb %}
+
+  {% if event_form.errors %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      Please correct the errors below.
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<h3 class="text-center">Please enter the title of the event</h3>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    <form method="post"
+          {% if slug %}
+            action="{{ url('edit_event', slug=slug) }}"
+          {% else %}
+            action="{{ url('create_event') }}"
+          {% endif %}
+          id="question-form">
+      {% csrf_token %}
+      {{ event_form.non_field_errors() }}
+      <div class="form-group question-text" id="event-input">
+        {{ event_form.name }}
+        {{ event_form.errors }}
+      </div>
+      <div class="checkbox-nda">
+        {{ event_form.is_nda }}
+        <label for="{{ event_form.is_nda.id_for_label }}">
+          Is NDA?
+        </label>
+      </div>
+      <div>
+        <input type="submit" class="btn btn-success btn-sm" value="save">
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
