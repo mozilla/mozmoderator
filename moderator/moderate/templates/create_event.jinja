@@ -38,6 +38,7 @@
       {% csrf_token %}
       {{ event_form.non_field_errors() }}
       <div class="form-group question-text" id="event-input">
+        {{ event_form.name.label_tag() }}
         {{ event_form.name }}
         {{ event_form.errors }}
       </div>
