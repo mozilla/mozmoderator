@@ -61,4 +61,7 @@ class EventForm(forms.ModelForm):
         fields = ['name', 'is_nda']
         widgets = {
             'is_nda': forms.CheckboxInput(),
+        },
+        labels = {
+            'name': 'What\'s the name of the event?'
         }
