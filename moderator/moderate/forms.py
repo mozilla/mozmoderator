@@ -52,9 +52,21 @@ class EventForm(forms.ModelForm):
     """Question Form."""
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super(EventForm, self).__init__(*args, **kwargs)
         if self.instance.id:
             self.fields['name'].required = True
+
+    def clean(self):
+        """Clean method to check post data for nda events."""
+        cdata = super(EventForm, self).clean()
+
+        # Do not allow non-nda members to submit NDA events.
+        if not self.user.userprofile.is_nda_member and cdata['is_nda']:
+            msg = 'Only members of the NDA group can create NDA events.'
+            raise forms.ValidationError(msg)
+
+        return cdata
 
     class Meta:
         model = Event

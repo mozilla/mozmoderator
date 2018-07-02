@@ -36,18 +36,19 @@
           {% endif %}
           id="question-form">
       {% csrf_token %}
-      {{ event_form.non_field_errors() }}
       <div class="form-group question-text" id="event-input">
         {{ event_form.name.label_tag() }}
         {{ event_form.name }}
-        {{ event_form.errors }}
       </div>
-      <div class="checkbox-nda">
-        {{ event_form.is_nda }}
-        <label for="{{ event_form.is_nda.id_for_label }}">
-          NDA's Mozillians only
-        </label>
-      </div>
+      {% if profile.is_nda_member %}
+        <div class="checkbox-nda">
+          {{ event_form.is_nda }}
+          <label for="{{ event_form.is_nda.id_for_label }}">
+            NDA's Mozillians only
+          </label>
+        </div>
+      {% endif %}
+      {{ event_form.non_field_errors() }}
       <div>
         <input type="submit" class="btn btn-success btn-sm" value="save">
       </div>
