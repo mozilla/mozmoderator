@@ -59,9 +59,14 @@ def archive(request):
 def edit_event(request, slug=None):
     """Creates a new event."""
     user = request.user
-    query_args = {}
+    query_args = {
+        'created_by': user
+    }
     if slug:
         query_args['slug'] = slug
+
+    if user.is_superuser:
+        del query_args['created_by']
 
     event = get_object_or_404(Event, **query_args) if slug else None
     event_form = EventForm(request.POST or None, instance=event, user=user)
@@ -111,7 +116,7 @@ def delete_event(request, slug):
 @login_required(login_url='/')
 def show_event(request, e_slug, q_id=None):
     """Render event questions."""
-    event = Event.objects.get(slug=e_slug)
+    event = get_object_or_404(Event, slug=e_slug)
     question = None
     user = request.user
 
