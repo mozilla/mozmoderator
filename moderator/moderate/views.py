@@ -41,7 +41,13 @@ def main(request):
 @login_required(login_url='/')
 def archive(request):
     """List of all archived events."""
-    events_list = Event.objects.filter(archived=True)
+    q_args = {
+        'archived': True,
+    }
+    # Filter out NDA events for non-NDA users
+    if not request.user.userprofile.is_nda_member and not request.user.is_superuser:
+        q_args['is_nda'] = False
+    events_list = Event.objects.filter(**q_args)
     paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
     page = request.GET.get('page')
 
