@@ -60,9 +60,6 @@ def edit_event(request, slug=None):
     """Creates a new event."""
     user = request.user
     query_args = {}
-    # Allow superusers to edit all events
-    if not user.is_superuser:
-        query_args['created_by'] = user
     if slug:
         query_args['slug'] = slug
 
@@ -70,10 +67,10 @@ def edit_event(request, slug=None):
     event_form = EventForm(request.POST or None, instance=event)
 
     if event_form.is_valid():
-        event_form.save()
-        event = event_form.save(commit=False)
-        event.created_by = user
-        event.save()
+        e = event_form.save(commit=False)
+        if not event:
+            e.created_by = user
+        e.save()
 
         if slug:
             msg = 'Event successfully edited.'
