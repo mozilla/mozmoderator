@@ -64,7 +64,7 @@ def edit_event(request, slug=None):
         query_args['slug'] = slug
 
     event = get_object_or_404(Event, **query_args) if slug else None
-    event_form = EventForm(request.POST or None, instance=event)
+    event_form = EventForm(request.POST or None, instance=event, user=user)
 
     if event_form.is_valid():
         e = event_form.save(commit=False)
@@ -79,11 +79,14 @@ def edit_event(request, slug=None):
         messages.success(request, msg)
         return redirect(reverse('main'))
 
-    return render(request, 'create_event.jinja',
-                  {'slug': event.slug if event else None,
-                   'event_form': event_form,
-                   'event': event
-                   })
+    ctx = {
+        'slug': event.slug if event else None,
+        'event_form': event_form,
+        'event': event,
+        'profile': user.userprofile
+    }
+
+    return render(request, 'create_event.jinja', ctx)
 
 
 @login_required(login_url='/')
