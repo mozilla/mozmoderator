@@ -55,7 +55,10 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
         # Get alternate emails
         for email_resource in self.mozillian_user['alternate_emails']:
             user_email_domains.append(email_resource['email'].split('@')[1])
-        user_email_domains.append(self.mozillian_user['email']['value'].split('@')[1])
+
+        user_email = self.mozillian_user['email'].get('value')
+        if user_email:
+            user_email_domains.append(user_email.split('@')[1])
         # Remove duplicate domains
         user_email_domains = list(set(user_email_domains))
 
