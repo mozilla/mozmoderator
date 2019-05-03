@@ -66,9 +66,11 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
 
         # Check if the user is member of the NDA group on each login.
         # Automatically add users with @mozilla* email in the nda group.
-        if ([email_domain for email_domain in user_email_domains
-             if email_domain in settings.TRUSTED_MOZILLA_DOMAINS] or
-                settings.NDA_GROUP in user_groups):
+        if [
+            email_domain
+            for email_domain in user_email_domains
+            if email_domain in settings.TRUSTED_MOZILLA_DOMAINS
+        ] or settings.NDA_GROUP in user_groups:
             # Find an exact match for the username, eg foo != foo1
             profile.is_nda_member = True
 
