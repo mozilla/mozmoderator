@@ -1,6 +1,6 @@
-Django==1.11.25 \
-    --hash=sha256:2f31cdaaeffdb1728614c4ede5f7101c5770aa90b471c1299d4a203bf00f3b05 \
-    --hash=sha256:5314e8586285d532b7aa5c6d763b0248d9a977a37efec86d30f0212b82e8ef66
+Django==1.11.26 \
+    --hash=sha256:83615ecf738ed710e90ca0dff719b269cc93128c5f0f361370d4e52f42209d16 \
+    --hash=sha256:861db7f82436ab43e1411832ed8dca81fc5fc0f7c2039c7e07a080a63092fb44
 django-jinja==2.2.1 \
     --hash=sha256:04c53ba90cbede97e6543b98291f1eec259e57dfa4e014a5fbf0291afcdae6a9
 MySQL-python==1.2.5 \
