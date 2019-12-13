@@ -1,10 +1,31 @@
 language: python
-dist: trusty
-sudo: false
+dist: xenial
+addons:
+  snaps:
+  - name: aws-cli
+    confinement: classic
+    channel: latest/edge
+services:
+- docker
 before_install:
-  - pip install flake8
-  - npm install -g eslint stylelint
+- pip install flake8
+- npm install -g eslint stylelint
 script:
-  - flake8 moderator
-  - eslint 'moderator/moderate/static/js/*.js'
-  - stylelint 'moderator/moderate/static/css/*.css'
+- flake8 moderator
+- eslint 'moderator/moderate/static/js/*.js'
+- stylelint 'moderator/moderate/static/css/*.css'
+- docker build . -t "$ECR:$TRAVIS_COMMIT"
+before_deploy:
+- eval $(aws ecr get-login --no-include-email --region us-west-2)
+deploy:
+  provider: script
+  on:
+    all_branches: true
+    condition: "$TRAVIS_BRANCH =~ ^(master|prod)$"
+  script: docker push "$ECR:$TRAVIS_COMMIT"
+env:
+  global:
+  - secure: skgZLJXAISgtTGqIZGpz7+NwfhPTnls6bYgsZtmEi5f0xpESj7Ob3XVsT6u/UaHzw12A5oExbFHGum8edryif3MMzKozU1Emcus+mg+zeamaLDVMwrLfutJsR2L3QyEh2A5aDqdrYjUasIRRpHYgYpEoqDCP4A9DcBKb91m2Vq4=
+  - secure: SvUebQxnwCHorlfRNnq/7rSuUKAp8nnL8+UtjVM7we1LXjdOa2nnOMKFkKxcNuO3SzH895n5m8mUMDS+uw5lxZJkAbvz8IjNWLE8fSWB1HcrE0++YKmdEf8xP6JNTlaZq4areN9BUVR3g4wzEhTKuxDlvPMfcBhHYjVuax4HNXg=
+  - secure: bALAvTNF+bDxec+BpxcAbsMIJKF73pDxZBuOKfMsLufGcJ6vaZs0ivnaUQnYPcoZX4I9QxmGt1L+aF1glgkzpdfiEFU+kwOOyygUwORheDmqvdL4vLNSpen0U9irpUTppQpaGDB544DPwIU5QI7unkQYqrwhTydB3dIzH4jLYBg=
+  - ECR="$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/moderator"
