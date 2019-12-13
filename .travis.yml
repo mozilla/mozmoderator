@@ -25,5 +25,5 @@ deploy:
   script: docker push "$ECR:$TRAVIS_COMMIT"
 env:
   global:
-  - secure: "VSt7rF0PCNcdU6Axct8w1qttKyMpWvaIhTy7H084mj29nXPrSM3GOfRy8r/pSmaFgRjo7AiD9Oi5ZE79RwCn/O+q0Bfftua0JL+SXI9XWEAhTlvqJM+EtXLNBP+B9AyssQxOHAp9lgCPaiZEb+ymZfEbZZq9f/UK03PC53b4R5M="
+  - secure: "V8Yo2wTOgf3c4DZoIc2w6Y1NaSUlTpx+RA/XKd66uAGc0HaZ3mcPykCq5YkSfq5z4ONdaUEGPM4hTH7Wf0CnJVANkEXl4dzwkMH3DFsrif2iClLUBuu3/c/gMrGuNi/251RqHWl4DVxSX3pm04iGrtIZzeTByfIAqoV9NmEGRuo="
   - ECR="$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/moderator"
