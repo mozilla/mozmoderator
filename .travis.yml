@@ -25,7 +25,5 @@ deploy:
   script: docker push "$ECR:$TRAVIS_COMMIT"
 env:
   global:
-  - secure: G6cbT01FT7I6Z1UB1ZXo9kX6GoWIbEC/by7ATBs7SPd7FfWtcqDORfCAVL0vDvIFPvQnP4rrb8f/S53jnkUc8lGtJogVYauWdzRGK6Czpi9mgd7pTX7Kd1BWvS5GYv3n3yvz+lG0s9dbix+/b/44y8ZKJEmzzp7WzaGb6qieSDY=
-  - secure: A/duWQ2BEWL2v+12XR6oOW/YruFVGtzezcmanLx5A7wSUp2heo+oqyLopPenwnHXVwrK6UYAVftGe/NzkMavteEyoP70YDJjclbrtPVTjYWr12dwC8M462rIyw7Ee59YFLJuE9wA0+LjZbJpYRqkhMuaMnMAH99NuSndQL0Lk4A=
-  - secure: GF4KtJCLFbjjwvZfDrG6qUNAl1Nedz9vJByDUwGuuU6mMBHssqV3lVV5cKhW/T+zs8nMgcfg8+gK9ASCw4+5Prk+yJd8aqDFe3zCmQWMAMHoOM2bYDpYZeEQBVjIFk7Avpzl7hLGUMKX0VKpH2dK1WwjtIKKZM6MX64Ry/nL70w=
+  - secure: "VSt7rF0PCNcdU6Axct8w1qttKyMpWvaIhTy7H084mj29nXPrSM3GOfRy8r/pSmaFgRjo7AiD9Oi5ZE79RwCn/O+q0Bfftua0JL+SXI9XWEAhTlvqJM+EtXLNBP+B9AyssQxOHAp9lgCPaiZEb+ymZfEbZZq9f/UK03PC53b4R5M="
   - ECR="$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/moderator"
