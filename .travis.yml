@@ -1,37 +1,31 @@
 language: python
-
 dist: xenial
 addons:
   snaps:
-    - name: aws-cli
-      confinement: classic
-      channel: latest/edge
-
+  - name: aws-cli
+    confinement: classic
+    channel: latest/edge
 services:
- - docker
-
+- docker
 before_install:
- - pip install flake8
- - npm install -g eslint stylelint
+- pip install flake8
+- npm install -g eslint stylelint
 script:
- - flake8 moderator
- - eslint 'moderator/moderate/static/js/*.js'
- - stylelint 'moderator/moderate/static/css/*.css'
- - docker build . -t "$ECR:$TRAVIS_COMMIT"
-
+- flake8 moderator
+- eslint 'moderator/moderate/static/js/*.js'
+- stylelint 'moderator/moderate/static/css/*.css'
+- docker build . -t "$ECR:$TRAVIS_COMMIT"
 before_deploy:
- - eval $(aws ecr get-login --no-include-email --region us-west-2)
-
+- eval $(aws ecr get-login --no-include-email --region us-west-2)
 deploy:
   provider: script
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^(master|prod)$
+    condition: "$TRAVIS_BRANCH =~ ^(master|prod)$"
   script: docker push "$ECR:$TRAVIS_COMMIT"
-
 env:
   global:
-  - secure: alnR1tayq6SWkOdg3n02ZxfRm0zbj9HObMIKn71AX/lBZkEvfI1N77I1gl+D3NzfZLJEXzHMNJfUlqi+Ygl+CGGbwCaIafAwmRs0vHwfgKv3ZI+wmk1LMvq5Hor4B+W67A4d2POk47IxDhPJcZ/nKEftfvbVKH7XPZGG+7dpPRTrahr6aWy+NXJCJGp6BqPxHaNhaxtpYwH+AZny4Fo3LD1DCzdBB2C8IbcN/4eXw+3b+m4rJ4lLQHo1VOoA/H6TRl+Dj8UliIQtghsghquc5t78vOPe9YixlkZJeJamuLwownjMdJo37p4rxR0UU4sKxrT5WuCIwIGBcOBGFDsr6IqyPhc7cbwMSd8SwWCXjEwLu6CHs5PQnNv+kzUYY/Q9jw3SUXVJ3belX1ap3YLmGiuJYwdNL1h4uofdJyrw0++1GWEFfrtBWUXcUsBetSVgmJC5wlf1dKxTvDEIx2ZF0l15jWAzdJg27N8CJqQptR+VJgJveLsKN/pZOgdzTZAUisBGcPWdFGnIKsqg1BCdsYBvJx2+Snb1EVyhiQ3vhOSg2DipZ+mT/m3ApEWH8bcO9+vH0IimVVoLDZOh5W/AY3fUtW/iQewd+dpMTjN03oceTlGdDksJAk32lQSnf91TGEdaZy+eyjUJZxOuki9NXc/1a5Rff5bm4JJKHS5bh34=
-  - secure: otSUUS0D9xHf5qZiPv1vvHxztzvMq+vrFTNE+bCR+kKbwdxw7JcKJqNrS1Y7BSlsxPExP6cg+YlqpAMrREemqHU40Ts69YTR2uMDbHPEQHhU2Ei8CQR3f4TLpGwWB6JGmsF4mXryl0IyRAwsFewgOAcyySrWFjAUgPJqwv2WKyxTDK/fzTalLRkWiBLG46jiMOnHSdxtIwDAOXMXMyGgzGJ873+JmezEDFKrLrDtiuyNuugZWDobYMqgZZ2jL6PBhmJwiKhys3In2HBw2aDeIXDRL9rHACl6srLs/+DuOXWO9IQY6BJuqXc8uJHzS1On2fJGt4+cC2HbjhkEl5NrVkVNeCY/4syruuX+aZVXp0C2dPLFMhrDQP02idaKE2aqGtZ2erzQVn1/PrOpW21wMVI21tlEHhJ/8fXaE+NsOhz2imdXciLk2DbBjSFru5PAS/A6vxbeVTroKDeJipTKRF+XQjt51iV4gospbYfjgYpqhUPqICC+tUSk2ZqbbJWyNgE3Z/pkpFUdo42hYlJ9YPOonDB/UqC/WtLlmRi1I+jPyOEcw3HxI2FgmVQFBiGKrHchECr+DUlBu+wvKcpoljJEt1DqwzMFzrrqhVlXustw1jajdOM/anMPWtHF3Esqsi6tirgwqDabskWRjAw/dwZXy/fwHfweSJJA62lkq6Q=
-  - secure: ol+plznHz48j8hb0vqh764e3lEGD19glQFsv6ZTy1VPUviaFEODNbt6xhs/m8wI/qU/xTp9w8RVpMoYyYKcJ+W6a8AX7F/4oWavBqxwXYk5imrBKjxQ5R6JYl3LsNRhxoqRZCfIZad7zdfXzSj5mJVb9nO15Daiq7qIZjpfx9uKT37PtWMRVRzsLplgODlHHFFAo3WY2ZOD3BK0DOfNIsxKa3of6n6ALNpLNSgOuCtFsBmvIKN1VY9drWaDpepLUczs8vLJlua8nB1RGVYF+bgOukZJGTyAt5OeROpeXUs1w7rdUxMk5JgkeqGhoD2z1XC4EH/h8km7/QFaP7gy9YR4DupfSUZWev+7W136G2XMQUPJ8b1zy++npj4vps9liUv3G0MO+ASX1pcsedKTJSyUAs0DEAYkpZfAGkquA4IrKlkOivQ6T3kyOqtmPXVNdVSquUpEG2oFamWL7qyJ+YqufegSyTw2bkmSVEGhWUBJsPqyYZVAN9PQJZE3LR91iJnuao6EbAfmLtWwK2qqkL4qVxAhL2MvyM9vcR062HkFuGld3Tt5UssxIbf4RXUcRMnACiycS0h9b81beRY/Ttab1ewV/c51PlIqam+UAXqHW/ez4a/2g6mfbF6/oO/i2H2mbSD9cslZGEcpLg3x6fONf0pSbL8xgG0mfZPw8xos=
+  - secure: sluzjR0Q9QUslbo5PzfGY2rkXRSboGLkPftKAvJkR5nP2xPcnGXUAFlq/cw01LeGItgCA+i9s/0QpHpilYDGNhglayK6tMi82mj8fSCaHOW4w604G51vxSiaW0MWcfSTe5aaQVKEqoJpCjZ6s82h5hbbi+CEfv7cl8NI0T+e9PMIvKlFlweuTjAwu3FNInneMht4LG9hUi0Tw83XcQmitc6gkTp7viYZyRFg3DNeWVPdJuWATmhf5KS7SmObXreHRVnbr+aKVzyIfINDfMW2PgeXO//SGq+bncr61vaRSBFRlF0OP+re8GGjg+FvhKfVdKyHhJR4bZD4Dh61tESef/PyBq0SVuoTl9tfUb7XZPV9/yWFg0y5VPlXrtKvWSf65vN1ucz7c2Cr4cD72pu87jGndDgCidoEkO2Z0qXoKMkD1hg8c8w/QA5d7ozWqoOUM27e2xJyoidMqhCKPWoZwLywAyzyfEISTDph8O6vmTgdofyATGgWeqLtKuSlMS1RC4ljQ3ohLYmZa/hI3N6rmmEOfbE4fccMQ1hDUnY42+mGa11v1IwxIu9vIXycQlaEKrqZLbTny13a/PH++Zs5aJty6oZC8C8KToz0l3NdR/kd3OiwW8JnYlwHqzFrUUMp9s833FOIDDzHVk+b6kzzqzOGCL5h/QM2YIkc3XC2sUI=
+  - secure: LJDta0ui8uNFCGOpTOtKrhctGPQDtmFVasxHNuTU0qveo5cwunfuIsTg5AXfwkOOOXHJpfwtRnZecFjR5fdTWmHgw1Bz+gkQvDqYlzWWbCzOYWmipc7Dn/Ot10hqWo8I9cEtcIpusyD7pHswgWYOWxQ2PdUrVFKvO+gN1KuAlN/MM5hsWYJt5hWCEUGi7bandHCpqoY7qlvCInjYVROjzKxEFVokM/FwpjUbtEnkRoMDQp544hLwzrFDf33We0dkFuat7iyZkLLwpZp++vjYBcRPPODvIHpYLTRaC1hYx32SpK7bLMvNATBQk5rPHHHkbLwSuuqBUGYTB6jjgpn4BPSzoSeOhgY5Es8Kmh3kned78YlmwXqcRkzQTUPT1mNvnFWL3xbkx5wc2OtDhFhCDLU4kA4y3Bdz6GG9nzWVCSitmtqJOkS2uOaMzgXABCRKqF7FurV/egIFpre+o5SxTOEktSByDccO4NfvF8ELtD89+30BnpjjHcNFwOTTpjagG/29BEFxuyVBjcnuUS71J4nOPIZ4Posg7OWYHvsNMVyA4kf8H+0pfcn6gjg3xD0alcAPf2mizS0bYZS5ty7xLwYqCvDK25F0IuWjhAONkPqrIWm2bXHqDoQZh3CQBrHVVJKHMIMb4O6BzzqkGJOiZL4+Vw7dOX7YlQGflnzmVD4=
+  - secure: eIk1n5KmXYF429YXUJ7SqT1Fa8SaN7qBriC3+0ZG8FZghkzBCaiMHh2wPw9Mhplwnz4UDdprW6u29ByMTaw63v92fw9GefiDQaCvygC/hYSVSW7PCxIOcmqHfaRIxOb3rgQUpE73wNV9ZFUGvBy933vNSGnXbBcm7ky2o9rmuvzK5lkHG02bil6hAVDAcT2aIewfcK9cUo+3MXzSEdv3ux6Ox7G7L8l3gF/pHTAn+Qk9VlZbB2xldPatQX5KLiRDcuGjFRft7R9p4iaHWULVwoB/RsqTNx4LaSnBJKQ5EpVASvBz5d7hmJnxbWMPK4mqWrb7MeTda6/LathLrrNsx4nIpcUCgUNS/MwW/H91TVL9Az8ltXlyIriy/odolO1zkj0//EAl+bofTpDnLjNa3XIYI1pPxMSwF48UQ4PArNBXlNlpKNtenDGkt48HeC6YIcEidE7aDOn0vIF+88g8p+5yeX/jkT5ADkdlYfOywzbkNjxJkinxTlgUkXoIX9ObV+P0wBaPu7CvBv7knk+kWGEX+bpRSpM9cdWFxSntC0NLlByPBxs1QmoubSqtyHsvf6N1rZVm2s6kFoGqF8uCYgvL++ezEhPSt4mN49xlo3PoYh6izPKqfpqc3vB/vzx8pFwmNiFK3NFg8WIvGAM1ohV2+dOegoSMifS+WeDhgxE=
   - ECR="$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/moderator"
