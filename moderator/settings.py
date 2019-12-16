@@ -222,6 +222,9 @@ OIDC_RP_CLIENT_SECRET_ENCODED = config('OIDC_RP_CLIENT_SECRET_ENCODED', default=
 OIDC_CALLBACK_CLASS = 'moderator.moderate.views.OIDCCallbackView'
 OIDC_USERNAME_ALGO = _username_algo
 OIDC_STORE_ACCESS_TOKEN = config('OIDC_STORE_ACCESS_TOKEN', default=True, cast=bool)
+OIDC_RP_SIGN_ALGO = config('OIDC_RP_SIGN_ALGO')
+OIDC_OP_JWKS_ENDPOINT = config('OIDC_OP_JWKS_ENDPOINT')
+
 
 # NDA group
 NDA_GROUP = 'nda'
