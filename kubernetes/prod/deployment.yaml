@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: moderator-web
-          image: 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator:91e987717292633cb940eb0ce416dcddac9a6309
+          image: 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator:6d854c71e90dc3f3d6872c5c5e50a5490e9b6ee4
           ports:
             - containerPort: 8000
           envFrom:
