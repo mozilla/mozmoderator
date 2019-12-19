@@ -175,7 +175,7 @@ metadata:
   labels:
     app: moderator-prod
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-west-2:783633885093:certificate/e7e63ba9-d5b6-46e6-9d66-efe783ada037
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-west-2:783633885093:certificate/ec68eb04-93f6-4a34-be22-3166b476969f
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
 spec:
