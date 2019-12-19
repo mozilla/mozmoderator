@@ -2,10 +2,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: moderator-service
-  namespace: parsys
+  name: moderator-prod
+  namespace: moderator-prod
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: moderator
   ports:

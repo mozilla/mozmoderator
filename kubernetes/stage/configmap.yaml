@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: moderator-stage
+  namespace: moderator-stage
+data:
+  ALLOWED_HOSTS: "moderator-stage.itsre-apps.mozit.cloud"
+  ANON_ALWAYS: "True"
+  MOZILLIANS_API_URL: "https://mozillians.org/api/v2/"
+  MOZILLIANS_API_BASE: "https://mozillians.org/api/v1/users/"
+  OIDC_OP_DOMAIN: "auth.mozilla.auth0.com"
+  OIDC_OP_AUTHORIZATION_ENDPOINT: "https://auth.mozilla.auth0.com/authorize"
+  OIDC_OP_TOKEN_ENDPOINT: "https://auth.mozilla.auth0.com/oauth/token"
+  OIDC_OP_USER_ENDPOINT: "https://auth.mozilla.auth0.com/userinfo"
+  SESSION_COOKIE_SECURE: "True"
+  SITE_URL: "https://moderator-stage.itsre-apps.mozit.cloud"
+  OIDC_RP_SIGN_ALGO: 'RS256'
+  OIDC_OP_JWKS_ENDPOINT: "https://auth.mozilla.auth0.com/.well-known/jwks.json"
