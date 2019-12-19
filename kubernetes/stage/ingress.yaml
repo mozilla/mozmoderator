@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: moderator-stage-nginx-ingress
+  namespace: moderator-stage
+  annotations:
+    kubernetes.io/ingress.class: "nginx-moderator-stage"
+spec:
+  rules:
+  - host: moderator-stage.itsre-apps.mozit.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: moderator-stage
+          servicePort: 80

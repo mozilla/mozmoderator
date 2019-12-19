@@ -1,0 +1,14 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: moderator-stage
+  namespace: moderator-stage
+spec:
+  type: ClusterIP
+  selector:
+    app: moderator
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000

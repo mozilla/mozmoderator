@@ -1,0 +1,28 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderator
+  namespace: moderator-stage
+  labels:
+    app: moderator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderator
+  template:
+    metadata:
+      labels:
+        app: moderator
+    spec:
+      containers:
+        - name: moderator-web
+          image: 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator:91e987717292633cb940eb0ce416dcddac9a6309
+          ports:
+            - containerPort: 8000
+          envFrom:
+          - configMapRef:
+              name: moderator-stage
+          - secretRef:
+              name: moderator-stage
