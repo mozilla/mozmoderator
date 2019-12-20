@@ -4,7 +4,7 @@ metadata:
   name: moderator-prod
   namespace: moderator-prod
 data:
-  ALLOWED_HOSTS: "moderator-prod.itsre-apps.mozit.cloud"
+  ALLOWED_HOSTS: "moderator.mozilla.org,moderator-prod.itsre-apps.mozit.cloud"
   ANON_ALWAYS: "True"
   MOZILLIANS_API_URL: "https://mozillians.org/api/v2/"
   MOZILLIANS_API_BASE: "https://mozillians.org/api/v1/users/"
@@ -13,6 +13,6 @@ data:
   OIDC_OP_TOKEN_ENDPOINT: "https://auth.mozilla.auth0.com/oauth/token"
   OIDC_OP_USER_ENDPOINT: "https://auth.mozilla.auth0.com/userinfo"
   SESSION_COOKIE_SECURE: "True"
-  SITE_URL: "https://moderator-prod.itsre-apps.mozit.cloud"
+  SITE_URL: "https://moderator.mozilla.org"
   OIDC_RP_SIGN_ALGO: 'RS256'
   OIDC_OP_JWKS_ENDPOINT: "https://auth.mozilla.auth0.com/.well-known/jwks.json"
