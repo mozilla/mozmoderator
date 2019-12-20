@@ -4,7 +4,7 @@ metadata:
   name: moderator-prod
   namespace: moderator-prod
 data:
-  ALLOWED_HOSTS: "moderator.mozilla.org"
+  ALLOWED_HOSTS: "moderator.mozilla.org,moderator-prod.itsre-apps.mozit.cloud"
   ANON_ALWAYS: "True"
   MOZILLIANS_API_URL: "https://mozillians.org/api/v2/"
   MOZILLIANS_API_BASE: "https://mozillians.org/api/v1/users/"
