@@ -17,12 +17,12 @@ spec:
         app: moderator
     spec:
       containers:
-        - name: moderator-web
-          image: 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator:a1e93718831a1ddd0ac509d0509cb915bfe19595
-          ports:
-            - containerPort: 8000
-          envFrom:
-          - configMapRef:
-              name: moderator-prod
-          - secretRef:
-              name: moderator-prod
+      - name: moderator-web
+        image: 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator:c285426edacb3a1791bab84f64c16d00e6d865eb
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: moderator-prod
+        - secretRef:
+            name: moderator-prod
