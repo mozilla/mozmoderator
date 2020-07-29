@@ -5,3 +5,4 @@ moderator-db
 /static
 bower_components
 node_modules
+.python-version
