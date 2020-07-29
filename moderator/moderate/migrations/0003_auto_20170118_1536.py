@@ -5,8 +5,6 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import migrations
 
-from moderator.moderate.mozillians import BadStatusCode, MozilliansClient, ResourceDoesNotExist
-
 
 def forwards(apps, schema_editor):
     """Forwards method.
@@ -14,21 +12,7 @@ def forwards(apps, schema_editor):
     Sync with mozillians.org to fix broken
     profile info.
     """
-    User = apps.get_model('auth', 'User')
-    mozillians_client = MozilliansClient(settings.MOZILLIANS_API_URL,
-                                         settings.MOZILLIANS_API_KEY)
-    for user in User.objects.all():
-
-        try:
-            mozillian_user = mozillians_client.lookup_user({'email': user.email})
-        except (BadStatusCode, ResourceDoesNotExist):
-            continue
-
-        if user.userprofile.username != mozillian_user['username']:
-            user.userprofile.username = mozillian_user['username']
-            if mozillian_user['photo']['privacy'] == 'Public':
-                user.userprofile.avatar_url = mozillian_user['photo']['value']
-            user.userprofile.save()
+    pass
 
 
 def backwards(apps, schema_editor):
@@ -42,9 +26,7 @@ def backwards(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('moderate', '0002_auto_20170118_1120'),
+        ("moderate", "0002_auto_20170118_1120"),
     ]
 
-    operations = [
-        migrations.RunPython(forwards, backwards)
-    ]
+    operations = [migrations.RunPython(forwards, backwards)]

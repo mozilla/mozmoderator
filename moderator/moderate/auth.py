@@ -1,84 +1,33 @@
 from django.conf import settings
-from django.contrib.auth.models import User
-
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
-
-from moderator.moderate.mozillians import BadStatusCode, MozilliansClient, ResourceDoesNotExist
 
 
 class ModeratorAuthBackend(OIDCAuthenticationBackend):
     """Override base authentication class."""
 
-    def __init__(self, *args, **kwargs):
-        """Add the mozillian user in the init method."""
-        self.mozillian_user = None
-        self.mozillians_client = MozilliansClient(settings.MOZILLIANS_API_URL,
-                                                  settings.MOZILLIANS_API_KEY)
+    def get_or_create_user(self, access_token, id_token, payload):
+        """Get or create a new user only if they have one of the groups
+        mentioned in the ALLOWED_LOGIN_GROUPS in the claims.
+        """
 
-        super(ModeratorAuthBackend, self).__init__(*args, **kwargs)
+        user_info = self.get_userinfo(access_token, id_token, payload)
+        groups = user_info.get("https://sso.mozilla.com/claim/groups", [])
 
-    def create_user(self, claims, **kwargs):
-        """Create a new user only if there is a vouched mozillians.org account."""
-
-        email = claims.get('email')
-        try:
-            self.mozillian_user = self.mozillians_client.lookup_user({'email': email})
-        except (BadStatusCode, ResourceDoesNotExist):
+        # The user is not staff or NDA member. Return None
+        if not any(x in groups for x in settings.ALLOWED_LOGIN_GROUPS):
             return None
+        return super(ModeratorAuthBackend, self).get_or_create_user(
+            access_token, id_token, payload
+        )
 
-        user_emails = []
-        if self.mozillian_user['is_vouched']:
-            for email_entry in self.mozillian_user['alternate_emails']:
-                user_emails.append(email_entry['email'])
-            user_emails.append(self.mozillian_user['email']['value'])
-            users = User.objects.filter(email__in=user_emails)
-            if users:
-                return users[0]
-            return super(ModeratorAuthBackend, self).create_user(claims, **kwargs)
-        return None
-
-    def authenticate(self, **kwargs):
-        """Override authenticate method of the OIDC lib."""
-        user = super(ModeratorAuthBackend, self).authenticate(**kwargs)
-        if not user:
-            return None
+    def update_user(self, user, claims):
+        # Update user status (nda, staff based on assertions)
         profile = user.userprofile
-        profile.is_nda_member = False
-
-        try:
-            self.mozillian_user = self.mozillians_client.lookup_user({'email': user.email})
-        except (BadStatusCode, ResourceDoesNotExist):
-            return None
-
-        # The email the user used to log in
-        user_email_domains = [user.email.split('@')[1]]
-        # Get alternate emails
-        for email_resource in self.mozillian_user['alternate_emails']:
-            user_email_domains.append(email_resource['email'].split('@')[1])
-
-        user_email = self.mozillian_user['email'].get('value')
-        if user_email:
-            user_email_domains.append(user_email.split('@')[1])
-        # Remove duplicate domains
-        user_email_domains = list(set(user_email_domains))
-
-        user_groups = [group['name'] for group in self.mozillian_user['groups']['value']]
-
-        # Check if the user is member of the NDA group on each login.
-        # Automatically add users with @mozilla* email in the nda group.
-        if [
-            email_domain
-            for email_domain in user_email_domains
-            if email_domain in settings.TRUSTED_MOZILLA_DOMAINS
-        ] or settings.NDA_GROUP in user_groups:
-            # Find an exact match for the username, eg foo != foo1
-            profile.is_nda_member = True
-
-        if profile.username != self.mozillian_user['username']:
-            profile.username = self.mozillian_user['username']
-        if self.mozillian_user['photo']['privacy'] == 'Public':
-            profile.avatar_url = self.mozillian_user['photo']['value']
-        else:
-            profile.avatar_url = ''
+        profile.avatar_url = claims.get("picture")
+        profile.username = claims.get("nickname", "")
+        # Only staff members and members of the NDA group are allowed to login.
+        # Because of this everyone will get the is_nda_member set to True.
+        # If in the future more people are allowed to login this needs to be
+        # available to only members of the ALLOWED_LOGIN_GROUPS
+        profile.is_nda_member = True
         profile.save()
-        return user
