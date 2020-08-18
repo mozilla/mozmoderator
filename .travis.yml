@@ -13,7 +13,6 @@ before_install:
 script:
 - flake8 moderator
 - eslint 'moderator/moderate/static/js/*.js'
-- stylelint 'moderator/moderate/static/css/*.css'
 - docker build . -t "$ECR:$TRAVIS_COMMIT"
 before_deploy:
 - eval $(aws ecr get-login --no-include-email --region us-west-2)
