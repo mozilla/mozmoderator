@@ -31,3 +31,4 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
         # available to only members of the ALLOWED_LOGIN_GROUPS
         profile.is_nda_member = True
         profile.save()
+        return user
