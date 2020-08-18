@@ -1,4 +1,4 @@
-FROM python:2.7.18-slim-stretch
+FROM python:2.7.18-slim-buster
 
 EXPOSE 8000
 WORKDIR /app
@@ -8,7 +8,7 @@ RUN adduser --uid 431 --disabled-password --disabled-login --gecos 'webdev' --no
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends build-essential gnupg default-libmysqlclient-dev default-mysql-client curl && \
-    curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
+    curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g bower gulp-cli
