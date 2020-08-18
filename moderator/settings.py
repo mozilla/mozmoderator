@@ -133,6 +133,7 @@ USE_TZ = config("USE_TZ", default=True, cast=bool)
 
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
+DEV = config("DEV", default=False, cast=bool)
 SITE_URL = config("SITE_URL")
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
@@ -152,10 +153,14 @@ CSRF_USE_SESSIONS = True
 CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
 
 # Security Middleware
-SECURE_CONTENT_TYPE_NOSNIFF = config("SECURE_CONTENT_TYPE_NOSNIFF", default=True, cast=bool)
+SECURE_CONTENT_TYPE_NOSNIFF = config(
+    "SECURE_CONTENT_TYPE_NOSNIFF", default=True, cast=bool
+)
 SECURE_BROWSER_XSS_FILTER = config("SECURE_BROWSER_XSS_FILTER", default=True, cast=bool)
 SECURE_HSTS_SECONDS = config("SECURE_HSTS_SECONDS", default=15768000, cast=int)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = config("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True, cast=int)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = config(
+    "SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True, cast=int
+)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Database
@@ -199,7 +204,9 @@ def _username_algo(email):
     except ImportError:
         from django.utils.encoding import smart_str as smart_bytes
 
-    return base64.urlsafe_b64encode(hashlib.sha1(smart_bytes(email)).digest()).rstrip(b"=")
+    return base64.urlsafe_b64encode(hashlib.sha1(smart_bytes(email)).digest()).rstrip(
+        b"="
+    )
 
 
 OIDC_OP_AUTHORIZATION_ENDPOINT = config("OIDC_OP_AUTHORIZATION_ENDPOINT")
@@ -208,7 +215,9 @@ OIDC_OP_USER_ENDPOINT = config("OIDC_OP_USER_ENDPOINT")
 OIDC_RP_CLIENT_ID = config("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = config("OIDC_RP_CLIENT_SECRET")
 OIDC_OP_DOMAIN = config("OIDC_OP_DOMAIN")
-OIDC_RP_CLIENT_SECRET_ENCODED = config("OIDC_RP_CLIENT_SECRET_ENCODED", default=True, cast=bool)
+OIDC_RP_CLIENT_SECRET_ENCODED = config(
+    "OIDC_RP_CLIENT_SECRET_ENCODED", default=True, cast=bool
+)
 OIDC_CALLBACK_CLASS = "moderator.moderate.views.OIDCCallbackView"
 OIDC_USERNAME_ALGO = _username_algo
 OIDC_STORE_ACCESS_TOKEN = config("OIDC_STORE_ACCESS_TOKEN", default=True, cast=bool)
@@ -225,3 +234,6 @@ ALLOWED_LOGIN_GROUPS = [
     "mozilliansorg_nda",
     "mozilliansorg_contingentworkernda",
 ]
+
+if DEV and DEBUG:
+    INSTALLED_APPS.insert(0, "sslserver")
