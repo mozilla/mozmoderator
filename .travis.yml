@@ -1,14 +1,9 @@
 language: python
 dist: bionic
-addons:
-  snaps:
-  - name: aws-cli
-    confinement: classic
-    channel: latest/edge
 services:
 - docker
 before_install:
-- pip install flake8
+- pip install flake8 awscli
 - nvm install 12.18.3
 - nvm use 12.18.3
 - npm install -g eslint stylelint
