@@ -1,4 +1,4 @@
-FROM python:2.7.18-slim-stretch
+FROM python:2.7.18-slim-buster
 
 EXPOSE 8000
 WORKDIR /app
