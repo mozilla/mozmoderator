@@ -16,12 +16,11 @@ from moderator.moderate.forms import EventForm, QuestionForm
 class OIDCCallbackView(OIDCAuthenticationCallbackView):
     """Override OIDC callback view."""
 
-    def login_failure(self, msg=''):
+    def login_failure(self, msg=""):
         """Returns a custom message in case of login failure."""
 
         if not msg:
-            msg = ('Login failed. Make sure you are using a valid email '
-                   'address and you are a vouched Mozillian.')
+            msg = "Login failed. Access is allowed only to staff and NDA members."
         messages.error(self.request, msg)
         return super(OIDCCallbackView, self).login_failure()
 
@@ -34,22 +33,22 @@ def main(request):
         events = Event.objects.filter(archived=False)
         if not user.userprofile.is_nda_member:
             events = events.exclude(is_nda=True)
-        return render(request, 'index.jinja', {'events': events, 'user': user})
-    return render(request, 'index.jinja', {'user': user})
+        return render(request, "index.jinja", {"events": events, "user": user})
+    return render(request, "index.jinja", {"user": user})
 
 
-@login_required(login_url='/')
+@login_required(login_url="/")
 def archive(request):
     """List of all archived events."""
     q_args = {
-        'archived': True,
+        "archived": True,
     }
     # Filter out NDA events for non-NDA users
     if not request.user.userprofile.is_nda_member and not request.user.is_superuser:
-        q_args['is_nda'] = False
+        q_args["is_nda"] = False
     events_list = Event.objects.filter(**q_args)
     paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
-    page = request.GET.get('page')
+    page = request.GET.get("page")
 
     try:
         events = paginator.page(page)
@@ -58,21 +57,19 @@ def archive(request):
     except EmptyPage:
         events = paginator.page(paginator.num_pages)
 
-    return render(request, 'archive.jinja', {'events': events})
+    return render(request, "archive.jinja", {"events": events})
 
 
-@login_required(login_url='/')
+@login_required(login_url="/")
 def edit_event(request, slug=None):
     """Creates a new event."""
     user = request.user
-    query_args = {
-        'created_by': user
-    }
+    query_args = {"created_by": user}
     if slug:
-        query_args['slug'] = slug
+        query_args["slug"] = slug
 
     if user.is_superuser:
-        del query_args['created_by']
+        del query_args["created_by"]
 
     event = get_object_or_404(Event, **query_args) if slug else None
     event_form = EventForm(request.POST or None, instance=event, user=user)
@@ -84,42 +81,39 @@ def edit_event(request, slug=None):
         e.save()
 
         if slug:
-            msg = 'Event successfully edited.'
+            msg = "Event successfully edited."
         else:
-            msg = 'Event successfully created.'
+            msg = "Event successfully created."
         messages.success(request, msg)
-        return redirect(reverse('main'))
+        return redirect(reverse("main"))
 
     ctx = {
-        'slug': event.slug if event else None,
-        'event_form': event_form,
-        'event': event,
-        'profile': user.userprofile
+        "slug": event.slug if event else None,
+        "event_form": event_form,
+        "event": event,
+        "profile": user.userprofile,
     }
 
-    return render(request, 'create_event.jinja', ctx)
+    return render(request, "create_event.jinja", ctx)
 
 
-@login_required(login_url='/')
+@login_required(login_url="/")
 def delete_event(request, slug):
     """Delete an event."""
     user = request.user
-    query_args = {
-        'slug': slug,
-        'created_by': user
-    }
+    query_args = {"slug": slug, "created_by": user}
     # Allow superusers to edit all events
     if user.is_superuser:
-        del query_args['created_by']
+        del query_args["created_by"]
 
     event = get_object_or_404(Event, **query_args)
     event.delete()
-    msg = 'Event successfully deleted.'
+    msg = "Event successfully deleted."
     messages.success(request, msg)
-    return redirect(reverse('main'))
+    return redirect(reverse("main"))
 
 
-@login_required(login_url='/')
+@login_required(login_url="/")
 def show_event(request, e_slug, q_id=None):
     """Render event questions."""
     event = get_object_or_404(Event, slug=e_slug)
@@ -133,8 +127,10 @@ def show_event(request, e_slug, q_id=None):
     if q_id:
         question = Question.objects.get(id=q_id)
 
-    questions_q = Question.objects.filter(event=event).annotate(vote_count=Count('votes'))
-    questions = questions_q.order_by('-vote_count')
+    questions_q = Question.objects.filter(event=event).annotate(
+        vote_count=Count("votes")
+    )
+    questions = questions_q.order_by("-vote_count")
 
     question_form = QuestionForm(request.POST or None, instance=question)
 
@@ -152,17 +148,25 @@ def show_event(request, e_slug, q_id=None):
         question_obj.event = event
         question_obj.save()
 
-        if not Vote.objects.filter(user=user, question=question_obj).exists() and not is_replied:
+        if (
+            not Vote.objects.filter(user=user, question=question_obj).exists()
+            and not is_replied
+        ):
             Vote.objects.create(user=user, question=question_obj)
 
-        return redirect(reverse('event', kwargs={'e_slug': event.slug}))
+        return redirect(reverse("event", kwargs={"e_slug": event.slug}))
 
-    return render(request, 'questions.jinja',
-                  {'user': user,
-                   'open': not event.archived,
-                   'event': event,
-                   'questions': questions,
-                   'q_form': question_form})
+    return render(
+        request,
+        "questions.jinja",
+        {
+            "user": user,
+            "open": not event.archived,
+            "event": event,
+            "questions": questions,
+            "q_form": question_form,
+        },
+    )
 
 
 @login_required
@@ -180,9 +184,7 @@ def upvote(request, q_id):
         else:
             Vote.objects.filter(user=request.user, question=question).delete()
 
-        response_dict = {
-            'current_vote_count': question.votes.count()
-        }
+        response_dict = {"current_vote_count": question.votes.count()}
 
         return JsonResponse(response_dict)
 
