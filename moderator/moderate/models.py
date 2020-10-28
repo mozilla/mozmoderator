@@ -1,10 +1,9 @@
-from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.db import models
 from django.db.models import signals as dbsignals
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
-
 from uuslug import uuslug
 
 
@@ -30,7 +29,7 @@ class MozillianProfile(models.Model):
 
     @property
     def is_admin(self):
-        return self.user.groups.filter(name='Admin').exists()
+        return self.user.groups.filter(name='Admin').exists() or self.user.is_superuser
 
 
 @receiver(dbsignals.post_save, sender=User,
