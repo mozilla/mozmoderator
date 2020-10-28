@@ -85,7 +85,9 @@
         </div>
 
         <div class="vote-container">
+        {% if not open or user.userprofile.is_admin %}
           <span class="vote-count" >{{ q.vote_count }}</span>
+        {% endif %}
           {% if open %}
             {% if user_voted(q, user) %}
               <button class="btn btn-primary btn-sm vote" id="{{ q.id }}">

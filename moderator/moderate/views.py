@@ -1,16 +1,15 @@
 from django.conf import settings
-from django.db.models import Count
-from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.http import Http404, JsonResponse
-from django.shortcuts import get_object_or_404, render, redirect
-
+from django.shortcuts import get_object_or_404, redirect, render
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
-from moderator.moderate.models import Event, Question, Vote
 from moderator.moderate.forms import EventForm, QuestionForm
+from moderator.moderate.models import Event, Question, Vote
 
 
 class OIDCCallbackView(OIDCAuthenticationCallbackView):
@@ -130,7 +129,10 @@ def show_event(request, e_slug, q_id=None):
     questions_q = Question.objects.filter(event=event).annotate(
         vote_count=Count("votes")
     )
-    questions = questions_q.order_by("-vote_count")
+    if user.userprofile.is_admin:
+        questions = questions_q.order_by("-vote_count")
+    else:
+        questions = questions_q.order_by("?")
 
     question_form = QuestionForm(request.POST or None, instance=question)
 
