@@ -18,7 +18,7 @@ Use [bower](https://bower.io/) to download all Frontend libraries.
 
     bower install
 
-Install all required packages.
+Install all required packages for the above thing to work on local computer.
 
     npm install
 
