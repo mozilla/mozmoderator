@@ -2,10 +2,10 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
 from moderator.moderate.forms import EventForm, QuestionForm
@@ -27,7 +27,7 @@ class OIDCCallbackView(OIDCAuthenticationCallbackView):
 def main(request):
     """Render main page."""
     user = request.user
-    if user.is_authenticated():
+    if user.is_authenticated:
 
         events = Event.objects.filter(archived=False)
         if not user.userprofile.is_nda_member:
