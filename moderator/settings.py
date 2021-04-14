@@ -24,24 +24,23 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     # Third party apps
     "axes",
-    "raven.contrib.django.raven_compat",
     "mozilla_django_oidc",
     # Project specific apps
     "moderator.moderate",
 ]
 
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "csp.middleware.CSPMiddleware",
-)
+    "axes.middleware.AxesMiddleware",
+]
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -104,10 +103,11 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.BCryptPasswordHasher",
 ]
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesBackend",
     "moderator.moderate.auth.ModeratorAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
-)
+]
 
 SESSION_SERIALIZER = "django.contrib.sessions.serializers.JSONSerializer"
 
@@ -172,7 +172,13 @@ if DEBUG:
         backend["OPTIONS"]["debug"] = DEBUG
 
 # Sentry support
-RAVEN_CONFIG = config("RAVEN_CONFIG", cast=json.loads, default="{}")
+if SENTRY_DSN := config("SENTRY_DSN", None):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN, integrations=[DjangoIntegration()], traces_sample_rate=1.0
+    )
 
 # Django-CSP
 CSP_DEFAULT_SRC = (
@@ -235,5 +241,5 @@ ALLOWED_LOGIN_GROUPS = [
     "mozilliansorg_contingentworkernda",
 ]
 
-if DEV and DEBUG:
-    INSTALLED_APPS.insert(0, "sslserver")
+# Django 3.2 Autofield
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

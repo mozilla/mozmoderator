@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
-from models import Event, Question
+from .models import Event, Question
 
 
 QUESTION = 'Ask your question in 280 characters'

@@ -26,7 +26,7 @@
       <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
           <div class="navbar-header">
-            {% if user.is_authenticated() %}
+            {% if user.is_authenticated %}
               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                       data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -38,7 +38,7 @@
             <a class="navbar-brand" href="/"><img class="main-logo"
                 src="{{ static('img/mozillamoderator.png') }}" alt="mozillamoderator"></a>
           </div>
-          {% if user.is_authenticated() %}
+          {% if user.is_authenticated %}
             <div id="navbar" class="navbar-collapse collapse navbar-left">
               <ul class="nav navbar-nav">
                 <li>
