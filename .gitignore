@@ -7,3 +7,4 @@ bower_components
 node_modules
 .python-version
 .node-version
+.vscode
