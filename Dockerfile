@@ -4,7 +4,7 @@ EXPOSE 8000
 WORKDIR /app
 CMD ["./bin/run-prod.sh"]
 
-RUN adduser --uid 431 --disabled-password --disabled-login --gecos 'webdev' --no-create-home webdev
+RUN useradd -d /app -M --uid 1000 --shell /usr/bin/nologin webdev
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends build-essential gnupg default-libmysqlclient-dev default-mysql-client curl && \
