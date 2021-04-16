@@ -40,13 +40,24 @@
         {{ event_form.name.label_tag() }}
         {{ event_form.name }}
       </div>
+      <div class="form-group question-text">
+        {{ event_form.body.label_tag() }} </br>
+        {{ event_form.body.help_text }}
+        {{ event_form.body }}
+      </div>
       {% if profile.is_nda_member %}
         <div class="checkbox-nda">
           {{ event_form.is_nda }}
           <label for="{{ event_form.is_nda.id_for_label }}">
-            NDA'd Mozillians only
+            Is this an NDA event?
           </label>
         </div>
+      <div class="checkbox-moderated">
+        {{ event_form.is_moderated }}
+        <label for="{{ event_form.is_moderated.id_for_label }}">
+          Is this event moderated?
+        </label>
+      </div>
       {% endif %}
       {{ event_form.non_field_errors() }}
       <div>
