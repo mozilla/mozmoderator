@@ -1,6 +1,5 @@
 # This is your project's main settings file that can be committed to your
 # repo. If you need to override a setting locally, use local.py
-import json
 import os
 
 import dj_database_url
@@ -243,3 +242,6 @@ ALLOWED_LOGIN_GROUPS = [
 
 # Django 3.2 Autofield
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+# Enable dev login
+ENABLE_DEV_LOGIN = config("ENABLE_DEV_LOGIN", default=False, cast=bool)
