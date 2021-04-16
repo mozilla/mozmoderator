@@ -47,6 +47,11 @@ class Event(models.Model):
     """Event model."""
 
     name = models.CharField(max_length=400)
+    body = models.TextField(
+        help_text="Optional: Helpful links, additional information - Markdown supported",
+        blank=True,
+        default="",
+    )
     archived = models.BooleanField(default=False)
     slug = models.SlugField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -54,6 +59,8 @@ class Event(models.Model):
     created_by = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL
     )
+    moderators = models.ManyToManyField(User, related_name="events_moderated")
+    is_moderated = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["-created_at"]
@@ -64,7 +71,7 @@ class Event(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.slug = uuslug(self.name, instance=self)
-        super(Event, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @property
     def questions_count(self):
@@ -77,16 +84,25 @@ class Question(models.Model):
     asked_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     event = models.ForeignKey(Event, related_name="questions", on_delete=models.CASCADE)
     question = models.TextField(
-        validators=[MaxLengthValidator(280), MinLengthValidator(10)]
+        validators=[MaxLengthValidator(768), MinLengthValidator(10)]
     )
     answer = models.TextField(
-        validators=[MaxLengthValidator(280)], default="", blank=True
+        validators=[MaxLengthValidator(768)], default="", blank=True
     )
     addressed = models.BooleanField(default=False)
     is_anonymous = models.BooleanField(default=False, blank=False)
+    submitter_contant_info = models.EmailField(max_length=512, default="", blank=True)
+    # Default value is None, which means that moderation is still pending
+    is_accepted = models.BooleanField(null=True)
 
     def __str__(self):
         return "Question {pk} from {user}".format(pk=self.id, user=self.asked_by)
+
+    @property
+    def is_moderated(self):
+        return self.event.is_moderated and (
+            self.is_accepted is False or self.is_accepted is True
+        )
 
 
 class Vote(models.Model):
