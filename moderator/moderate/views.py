@@ -1,9 +1,11 @@
 from django.conf import settings
-from django.contrib import messages
+from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.http import Http404, JsonResponse
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
@@ -177,17 +179,34 @@ def upvote(request, q_id):
 
     question = Question.objects.get(pk=q_id)
     user_can_vote = True
-    if question.event.is_nda and not request.user.userprofile.is_nda_member:
+    user = request.user
+    if question.event.is_nda and not user.userprofile.is_nda_member:
         user_can_vote = False
 
     if request.is_ajax() and not question.event.archived and user_can_vote:
-        if not Vote.objects.filter(user=request.user, question=question).exists():
-            Vote.objects.create(user=request.user, question=question)
+        if not Vote.objects.filter(user=user, question=question).exists():
+            Vote.objects.create(user=user, question=question)
         else:
-            Vote.objects.filter(user=request.user, question=question).delete()
+            Vote.objects.filter(user=user, question=question).delete()
 
         response_dict = {"current_vote_count": question.votes.count()}
 
         return JsonResponse(response_dict)
 
     return show_event(request, question.event.slug)
+
+
+def login_local_user(request, username=""):
+    """Allow a user to login for local dev."""
+    if not (settings.DEV and settings.ENABLE_DEV_LOGIN) or not username:
+        raise Http404
+
+    user = None
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        raise Http404
+
+    if user:
+        auth.login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+    return HttpResponseRedirect(reverse("main"))
