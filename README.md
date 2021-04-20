@@ -1,5 +1,7 @@
 # Mozilla Moderator
 
+[![Code CI](https://github.com/mozilla/mozmoderator/actions/workflows/ci.yaml/badge.svg)](https://github.com/mozilla/mozmoderator/actions/workflows/ci.yaml)
+
 Mozilla Moderator is a panel moderation webapp that enables users to view, vote and ask questions on different events.
 
 Then panel moderators can export the questions and use them during panel discussions and Q&A.
