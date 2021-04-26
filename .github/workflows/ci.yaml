@@ -20,21 +20,9 @@ jobs:
     - name: Lint with flake8
       run: flake8 moderator --count --show-source --statistics
 
-  eslint-stylelint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 12.18.3
-      - run: npm install -g eslint stylelint
-      - run: eslint 'moderator/moderate/static/js/*.js'
-      - run: stylelint 'moderator/moderate/static/css/*.css'
-
   prepare:
     needs:
       - flake8
-      - eslint-stylelint
     runs-on: ubuntu-latest
     outputs:
       FULL_IMAGE_TAG: ${{ steps.tag.outputs.tag }}
