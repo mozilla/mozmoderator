@@ -1,0 +1,80 @@
+
+name: CI Checks & Build
+
+on: [ push, pull_request ]
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 2.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 2.7.18
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade 'pip==20.3.1'
+        python -m pip install -r requirements/dev.txt
+    - name: Lint with flake8
+      run: flake8 moderator --count --show-source --statistics
+
+  prepare:
+    needs:
+      - flake8
+    runs-on: ubuntu-latest
+    outputs:
+      FULL_IMAGE_TAG: ${{ steps.tag.outputs.tag }}
+    steps:
+      - name: Set Tag
+        id: tag
+        run: |
+          export CI_COMMIT_SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-8)
+          echo $CI_COMMIT_SHORT_SHA;
+          echo ${GITHUB_REF##*/};
+          echo $version_pattern;
+          if [[ ${GITHUB_REF} =~ $version_pattern ]]; then
+            echo "::set-output name=tag::${GITHUB_REF##*/}"
+          elif [ ${GITHUB_REF##*/} = "main" ]; then
+            echo "::set-output name=tag::stg-$CI_COMMIT_SHORT_SHA"
+          else
+            echo "::set-output name=tag::$CI_COMMIT_SHORT_SHA"
+          fi
+        env:
+          version_pattern: "tags\\/v[0-9]+\\.[0-9]+\\.[0-9]+"
+
+  build-image:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo tag
+        id: echotag
+        env:
+          IMAGE_TAG: ${{ needs.prepare.outputs.FULL_IMAGE_TAG }}
+        run: |
+          echo "Building an image with the following tag:"
+          echo $IMAGE_TAG
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        id: configure-aws-creds
+        with:
+          aws-access-key-id: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build and push to ECR
+        id: build-push
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: moderator
+          IMAGE_TAG: ${{ needs.prepare.outputs.FULL_IMAGE_TAG }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Logut of Amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}
