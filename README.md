@@ -72,3 +72,19 @@ Production Deploy:
 10. (automated): upon merge into master, GHA will do all of the above, _and_ Flux will:
     a. Apply the manifests found in the kubernetes/ directory;
     b. as there will be a change in those manifests for the production application, (our new docker image tag), kubernetes will pull that image down and redeploy the application.
+
+## Moderator Docker Registry Manual Access
+
+In case you want to view or manually push Moderator Docker images to our Production ECR Registry, members of the MozilliansOrg Group `mozilla-moderators-dev` should be able to do the following steps:
+
+```
+# log into that mozilla-moderators-dev group via MAWS
+$ maws -r arn:aws:iam::783633885093:role/moderator-devs
+
+# docker login to that moderator registry
+$ aws ecr get-login-password | docker login --username AWS --password-stdin 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator
+
+# interact with Moderator docker images either via AWS CLI or docker
+$ aws ecr list-images --repository-name moderator
+$ docker pull 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator:379b95c7
+```
