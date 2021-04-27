@@ -2,6 +2,10 @@
 
 -r prod.txt
 
+pip
+isort
+debugpy
+pylint
 flake8
 ipython
 pep8
