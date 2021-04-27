@@ -1,16 +1,18 @@
-version: '2'
+version: "3.4"
 services:
   db:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: 'root'
-      MYSQL_USER: 'mozillians'
-      MYSQL_PASSWORD: 'mozillians'
-      MYSQL_DATABASE: 'mozillians'
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_USER: "moderator"
+      MYSQL_PASSWORD: "moderator"
+      MYSQL_DATABASE: "moderator"
   web:
-    build: .
+    build:
+      context: .
+      target: moderator-dev
     ports:
-      - '8000:8000'
+      - "8000:8000"
     stdin_open: true
     tty: true
     volumes:
@@ -18,14 +20,4 @@ services:
     links:
       - db
     command: ./bin/run-dev.sh
-    environment:
-      SECRET_KEY: 'some-secret'
-      MOZILLIANS_API_BASE: 'https://mozillians.org/api/v1/users/'
-      DEBUG: 'True'
-      ANON_ALWAYS: 'True'
-      SESSION_COOKIE_SECURE: 'False'
-      DATABASE_URL: 'mysql://mozillians:mozillians@db:3306/mozillians'
-      SITE_URL: 'http://127.0.0.1:8000'
-      ALLOWED_HOSTS: '127.0.0.1'
-      HMAC_KEYS: >-
-        {"2015-08-17": "pancakes"}
+    env_file: .env

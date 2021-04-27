@@ -1,0 +1,15 @@
+Django==3.1
+django-jinja
+dj-database-url
+django-axes
+django-uuslug
+requests
+python-decouple
+gunicorn
+sentry-sdk
+whitenoise
+mozilla-django-oidc
+pytz
+cryptography
+django_csp
+mysqlclient

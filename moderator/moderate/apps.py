@@ -2,6 +2,5 @@ from django.apps import AppConfig
 
 
 class ModeratorConfig(AppConfig):
-    name = 'moderate'
-    label = 'moderator'
-    verbose_name = 'Mozilla Moderator'
+    name = "moderator.moderate"
+    verbose_name = "Mozilla Moderator"

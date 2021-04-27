@@ -1,0 +1,13 @@
+# Requirements for development.
+
+-r prod.txt
+
+flake8
+ipython
+pep8
+ipdb
+pyflakes
+django-sslserver
+pip-compile-multi
+black
+isort
