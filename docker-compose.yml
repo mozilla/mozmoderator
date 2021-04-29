@@ -7,6 +7,8 @@ services:
       MYSQL_USER: "moderator"
       MYSQL_PASSWORD: "moderator"
       MYSQL_DATABASE: "moderator"
+    volumes:
+      - mysqlvolume:/var/lib/mysql
   web:
     build:
       context: .
@@ -21,3 +23,5 @@ services:
       - db
     command: ./bin/run-dev.sh
     env_file: .env
+volumes:
+  mysqlvolume:
