@@ -1,9 +1,10 @@
+from dal import autocomplete
 from django.conf import settings
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import Http404, JsonResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
@@ -80,6 +81,7 @@ def edit_event(request, slug=None):
         if not event:
             e.created_by = user
         e.save()
+        event_form.save_m2m()
 
         if slug:
             msg = "Event successfully edited."
@@ -210,3 +212,15 @@ def login_local_user(request, username=""):
     if user:
         auth.login(request, user, backend="django.contrib.auth.backends.ModelBackend")
     return HttpResponseRedirect(reverse("main"))
+
+
+class ModeratorsAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated or not self.request.user.is_superuser:
+            return User.objects.none()
+
+        qs = User.objects.filter(is_superuser=True)
+
+        if self.q:
+            qs = qs.filter(Q(first_name__icontains=self.q) | Q(email__icontains=self.q))
+        return qs
