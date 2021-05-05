@@ -25,7 +25,6 @@
 {% block content %}
 
 <h1 class="text-center h3">Create an Event</h1>
-
 <div class="panel panel-default">
   <div class="panel-body">
     <form method="post"
@@ -58,6 +57,9 @@
           Is this event moderated?
         </label>
       </div>
+      <div>
+        {{ event_form.moderators }}
+      </div>
       {% endif %}
       {{ event_form.non_field_errors() }}
       <div>
@@ -67,4 +69,8 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block js %}
+{{ event_form.media }}
 {% endblock %}

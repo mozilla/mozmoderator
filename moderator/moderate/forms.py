@@ -1,4 +1,6 @@
+from dal import autocomplete
 from django import forms
+from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 from .models import Event, Question
@@ -56,16 +58,22 @@ class QuestionForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     """Question Form."""
 
+    moderators = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=autocomplete.ModelSelect2Multiple(url="users-autocomplete"),
+    )
+
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
         super(EventForm, self).__init__(*args, **kwargs)
         if self.instance.id:
             self.fields["name"].required = True
+        else:
+            self.fields["moderators"].initial = User.objects.filter(id=self.user.pk)
 
     def clean(self):
         """Clean method to check post data for nda events."""
         cdata = super(EventForm, self).clean()
-
         # Do not allow non-nda members to submit NDA events.
         if not self.user.userprofile.is_nda_member and cdata["is_nda"]:
             msg = "Only members of the NDA group can create NDA events."
@@ -75,7 +83,7 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ["name", "is_nda", "body", "is_moderated"]
+        fields = ["name", "is_nda", "body", "is_moderated", "moderators"]
         widgets = (
             {
                 "is_nda": forms.CheckboxInput(),

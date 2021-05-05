@@ -5,6 +5,7 @@ django-axes
 django-uuslug
 requests
 python-decouple
+django-autocomplete-light
 gunicorn
 sentry-sdk
 whitenoise

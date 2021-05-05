@@ -12,6 +12,14 @@ event_urls = [
     path("<str:slug>/delete", moderate_views.delete_event, name="delete_event"),
 ]
 
+user_urls = [
+    path(
+        "user-autocomplete/",
+        moderate_views.ModeratorsAutocomplete.as_view(),
+        name="users-autocomplete",
+    )
+]
+
 question_urls = [
     path("<str:q_id>/upvote", moderate_views.upvote, name="upvote"),
 ]
@@ -22,6 +30,7 @@ urlpatterns = [
     path("event/new", moderate_views.edit_event, name="create_event"),
     path("e/", include(event_urls)),
     path("q/", include(question_urls)),
+    path("u/", include(user_urls)),
 ]
 
 if settings.DEBUG:
