@@ -1,12 +1,17 @@
 from dal import autocomplete
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 from .models import Event, Question
 
 QUESTION = "Ask your question in 280 characters"
 ANSWER = "Reply to question in 280 characters"
+CONTACT_INFO = "Optional: Please supply a valid email address."
+REJECTION_REASON = (
+    "Reply to the submitter on why this question was moderated in 512 characters."
+)
 
 
 class QuestionForm(forms.ModelForm):
@@ -29,19 +34,38 @@ class QuestionForm(forms.ModelForm):
         max_length=280,
         widget=forms.TextInput(attrs={"placeholder": ANSWER, "class": "form-control"}),
     )
+    submitter_contact_info = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={"placeholder": CONTACT_INFO, "class": "form-control"}
+        ),
+    )
+    rejection_reason = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={"placeholder": REJECTION_REASON, "class": "form-control"}
+        ),
+    )
 
     def __init__(self, *args, **kwargs):
+        self.is_locked = kwargs.pop("is_locked", False)
         super(QuestionForm, self).__init__(*args, **kwargs)
         if self.instance.id:
             self.fields["question"].required = False
 
     def clean(self):
         cdata = super(QuestionForm, self).clean()
+        if self.is_locked and (
+            cdata.get("is_approved") or cdata.get("rejection_reason")
+        ):
+            raise ValidationError(
+                "The question can only be moderated by event moderators"
+            )
 
         if self.instance.id:
             cdata["question"] = self.instance.question
             # Raise an error if there is no answer
-            if not cdata["answer"]:
+            if not cdata["answer"] and self.is_locked:
                 msg = "Please provide a reply."
                 self._errors["answer"] = self.error_class([msg])
             return cdata
@@ -51,7 +75,13 @@ class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ["question", "answer", "is_anonymous"]
+        fields = [
+            "question",
+            "answer",
+            "is_anonymous",
+            "submitter_contact_info",
+            "rejection_reason",
+        ]
         widgets = {"is_anonymous": forms.CheckboxInput()}
 
 

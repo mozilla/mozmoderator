@@ -88,8 +88,15 @@ class QuestionAdmin(admin.ModelAdmin):
         "asked_by",
         "event",
         "question",
+        "is_accepted",
         "is_anonymous",
+        "has_contact_info",
     )
+
+    def has_contact_info(self, obj):
+        return obj.has_contact_info
+
+    has_contact_info.boolean = True
 
 
 admin.site.register(User, UserAdmin)

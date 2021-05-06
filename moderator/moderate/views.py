@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Q
 from django.http import Http404, JsonResponse
@@ -101,6 +102,41 @@ def edit_event(request, slug=None):
 
 
 @login_required(login_url="/")
+def moderate_event(request, slug, q_id=None, accepted=None):
+    event = get_object_or_404(Event, slug=slug)
+    user = request.user
+    if not event.moderators.filter(pk=user.pk).exists():
+        raise Http404
+
+    questions = Question.objects.filter(event=event, is_accepted__isnull=True)
+    question_form = QuestionForm()
+
+    # Update the question if it's accepted or rejected
+    if q_id:
+        try:
+            question = Question.objects.get(id=q_id)
+        except Question.DoesNotExist:
+            raise ValidationError("This question is not valid")
+        question.is_accepted = accepted
+        question.save()
+
+        if request.method == "POST":
+            question_form = QuestionForm(request.POST, instance=question)
+            # update the question with moderator's reply
+            if question_form.is_valid():
+                Question.objects.filter(id=question.pk).update(
+                    rejection_reason=question_form.cleaned_data.get("rejection_reason")
+                )
+                return redirect(reverse("moderate_event", kwargs={"slug": event.slug}))
+
+    return render(
+        request,
+        "moderation.jinja",
+        {"user": user, "event": event, "questions": questions, "q_form": question_form},
+    )
+
+
+@login_required(login_url="/")
 def delete_event(request, slug):
     """Delete an event."""
     user = request.user
@@ -130,7 +166,7 @@ def show_event(request, e_slug, q_id=None):
     if q_id:
         question = Question.objects.get(id=q_id)
 
-    questions_q = Question.objects.filter(event=event).annotate(
+    questions_q = Question.objects.filter(event=event, is_accepted=True).annotate(
         vote_count=Count("votes")
     )
     if user.userprofile.is_admin:
@@ -138,21 +174,34 @@ def show_event(request, e_slug, q_id=None):
     else:
         questions = questions_q.order_by("?")
 
-    question_form = QuestionForm(request.POST or None, instance=question)
+    question_form = QuestionForm(
+        request.POST or None, instance=question, **{"is_locked": True}
+    )
 
     is_replied = False
+    is_new_question = False
     if question_form.is_valid() and not event.archived:
         question_obj = question_form.save(commit=False)
         # Do not change the user if posting a reply
         if not question_obj.id:
+            is_new_question = True
             if not question_obj.is_anonymous:
                 question_obj.asked_by = user
+                question_obj.submitter_contact_info = user.email
         elif not user.userprofile.is_admin:
             raise Http404
         else:
             is_replied = True
         question_obj.event = event
         question_obj.save()
+        if is_new_question:
+            messages.success(
+                request,
+                (
+                    "Your question has been successfully submitted. "
+                    "Review is pending by an event moderator."
+                ),
+            )
 
         if (
             not Vote.objects.filter(user=user, question=question_obj).exists()
@@ -198,6 +247,18 @@ def upvote(request, q_id):
     return show_event(request, question.event.slug)
 
 
+class ModeratorsAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.request.user.is_authenticated or not self.request.user.is_superuser:
+            return User.objects.none()
+
+        qs = User.objects.filter(is_superuser=True)
+
+        if self.q:
+            qs = qs.filter(Q(first_name__icontains=self.q) | Q(email__icontains=self.q))
+        return qs
+
+
 def login_local_user(request, username=""):
     """Allow a user to login for local dev."""
     if not (settings.DEV and settings.ENABLE_DEV_LOGIN) or not username:
@@ -212,15 +273,3 @@ def login_local_user(request, username=""):
     if user:
         auth.login(request, user, backend="django.contrib.auth.backends.ModelBackend")
     return HttpResponseRedirect(reverse("main"))
-
-
-class ModeratorsAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        if not self.request.user.is_authenticated or not self.request.user.is_superuser:
-            return User.objects.none()
-
-        qs = User.objects.filter(is_superuser=True)
-
-        if self.q:
-            qs = qs.filter(Q(first_name__icontains=self.q) | Q(email__icontains=self.q))
-        return qs

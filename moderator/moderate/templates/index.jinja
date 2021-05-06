@@ -17,10 +17,13 @@
           <span class="questions-counter"> {{ event.questions.count() }} questions asked</span>
         </a>
       </div>
-      {% if event.created_by == request.user or request.user.is_superuser %}
+      {% if event.created_by == request.user or request.user in event.moderators.all() %}
+      <div>
         <div class="edit-container">
           <a href="{{ url('edit_event', slug=event.slug) }}"
              class="btn btn-primary btn-sm">edit</a>
+          <a href="{{ url('moderate_event', slug=event.slug) }}"
+             class="btn btn-primary btn-sm">moderate</a>
         </div>
         <div class="delete-container">
           <a href="{{ url('delete_event', slug=event.slug) }}"
