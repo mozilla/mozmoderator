@@ -83,7 +83,13 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ("id", "asked_by", "event")
+    list_display = (
+        "id",
+        "asked_by",
+        "event",
+        "question",
+        "is_anonymous",
+    )
 
 
 admin.site.register(User, UserAdmin)
