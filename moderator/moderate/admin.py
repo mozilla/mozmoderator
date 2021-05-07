@@ -83,7 +83,20 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ("id", "asked_by", "event")
+    list_display = (
+        "id",
+        "asked_by",
+        "event",
+        "question",
+        "is_accepted",
+        "is_anonymous",
+        "has_contact_info",
+    )
+
+    def has_contact_info(self, obj):
+        return obj.has_contact_info
+
+    has_contact_info.boolean = True
 
 
 admin.site.register(User, UserAdmin)

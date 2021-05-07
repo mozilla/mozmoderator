@@ -235,6 +235,12 @@ ul.errorlist {
     margin-left: 25px;
 }
 
+.moderation-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+}
+
 .delete-container {
     display: inline-block;
     vertical-align: middle;
@@ -242,12 +248,23 @@ ul.errorlist {
     margin-top: -15px;
 }
 
+.contact-info-container {
+    vertical-align: top;
+    margin-left: 10%;
+}
+
+.contact-info-container :is(input, ul) {
+    width: 50%;
+    margin: auto;
+}
+
 .ask-container {
-    display: inline-block;
-    width: 12%;
+    align-items: center;
+    justify-content: space-between;
     vertical-align: top;
     text-align: center;
     padding: 10px;
+    margin-top: 30px;
 }
 
 .ask-container input {
@@ -260,6 +277,11 @@ ul.errorlist {
     margin-right: 8px;
     display: inline-block;
     vertical-align: middle;
+}
+
+.accept-container,
+.reject-container {
+    display: inline-block;
 }
 
 .info {
@@ -277,6 +299,10 @@ ul.errorlist {
     float: right;
 }
 
+#moderation-button {
+    padding: 5px 10px;
+    font-size: 12px;
+}
 @media only screen and (max-width: 1200px) {
     .reply-button {
         margin-top: 5px;

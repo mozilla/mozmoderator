@@ -84,16 +84,21 @@ class Question(models.Model):
     asked_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     event = models.ForeignKey(Event, related_name="questions", on_delete=models.CASCADE)
     question = models.TextField(
-        validators=[MaxLengthValidator(768), MinLengthValidator(10)]
+        validators=[MaxLengthValidator(280), MinLengthValidator(10)]
     )
     answer = models.TextField(
-        validators=[MaxLengthValidator(768)], default="", blank=True
+        validators=[MaxLengthValidator(280)], default="", blank=True
     )
     addressed = models.BooleanField(default=False)
     is_anonymous = models.BooleanField(default=False, blank=False)
-    submitter_contact_info = models.EmailField(max_length=512, default="", blank=True)
+    submitter_contact_info = models.EmailField(max_length=256, default="", blank=True)
     # Default value is None, which means that moderation is still pending
-    is_accepted = models.BooleanField(default=None)
+    is_accepted = models.BooleanField(blank=True, null=True)
+    rejection_reason = models.TextField(
+        default="",
+        blank=True,
+        validators=[MaxLengthValidator(512), MinLengthValidator(10)],
+    )
 
     def __str__(self):
         return "Question {pk} from {user}".format(pk=self.id, user=self.asked_by)
@@ -103,6 +108,11 @@ class Question(models.Model):
         return self.event.is_moderated and (
             self.is_accepted is False or self.is_accepted is True
         )
+
+    @property
+    def has_contact_info(self):
+        """Whether contact info has been provided upon submission."""
+        return bool(self.submitter_contact_info)
 
 
 class Vote(models.Model):

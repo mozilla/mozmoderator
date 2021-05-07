@@ -18,11 +18,27 @@ jQuery(document).ready(function ($) {
     });
 
     $('.reply-button').click(function () {
-        var action_post = $('#question-form').attr('action')+'/q/'+this.id;
+        var action_post = $('#question-form').attr('action')+'q/'+this.id + '/reply';
         $('#answer-form').attr('action', action_post);
     });
 
+    $('.moderate-button').click(function () {
+        var action_post = $('#moderate-form').attr('action')+this.id + '/rejected';
+        $('#moderate-form').attr('action', action_post);
+    });
+
+    function toggleContactInfo() {
+        if ( $("#id_is_anonymous").is(":checked")) {
+            $(".contact-info-container").show();
+        }
+        else {
+            $(".contact-info-container").hide();
+        }
+    }
+
     $('[data-toggle="tooltip"]').tooltip();
+    toggleContactInfo()
+    $("#id_is_anonymous").click(toggleContactInfo);
 
     $('#logout').click(function() {
         $('#logout_form').submit();
