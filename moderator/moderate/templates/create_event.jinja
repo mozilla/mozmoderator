@@ -1,5 +1,10 @@
 {% extends "base.jinja" %}
 
+{% set edit=False %}
+{% if slug %}
+  {% set edit=True %}
+{% endif %}
+
 {% block head %}
   <title>Mozilla Moderator -
     {% if event %}
@@ -24,11 +29,17 @@
 
 {% block content %}
 
-<h1 class="text-center h3">Create an Event</h1>
+<h1 class="text-center h3">
+  {% if edit %}
+    Edit Event
+  {% else %}
+    Create an Event
+  {% endif %}
+</h1>
 <div class="panel panel-default">
   <div class="panel-body">
     <form method="post"
-          {% if slug %}
+          {% if edit %}
             action="{{ url('edit_event', slug=slug) }}"
           {% else %}
             action="{{ url('create_event') }}"
@@ -51,6 +62,7 @@
             Is this an NDA event?
           </label>
         </div>
+      {% endif %}
       <div class="checkbox-moderated">
         {{ event_form.is_moderated }}
         <label for="{{ event_form.is_moderated.id_for_label }}">
@@ -58,9 +70,9 @@
         </label>
       </div>
       <div>
+        {{ event_form.moderators.label_tag() }}
         {{ event_form.moderators }}
       </div>
-      {% endif %}
       {{ event_form.non_field_errors() }}
       <div>
         <input type="submit" class="btn btn-success btn-sm" value="save">

@@ -91,6 +91,7 @@ class EventForm(forms.ModelForm):
     moderators = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
         widget=autocomplete.ModelSelect2Multiple(url="users-autocomplete"),
+        required=False,
     )
 
     def __init__(self, *args, **kwargs):
@@ -102,11 +103,17 @@ class EventForm(forms.ModelForm):
             self.fields["moderators"].initial = User.objects.filter(id=self.user.pk)
 
     def clean(self):
-        """Clean method to check post data for nda events."""
+        """
+        Clean method to check post data for nda events,
+        and moderated events with no moderators.
+        """
         cdata = super(EventForm, self).clean()
         # Do not allow non-nda members to submit NDA events.
         if not self.user.userprofile.is_nda_member and cdata["is_nda"]:
             msg = "Only members of the NDA group can create NDA events."
+            raise forms.ValidationError(msg)
+        if cdata["is_moderated"] and not cdata["moderators"]:
+            msg = "A moderated event requires moderators."
             raise forms.ValidationError(msg)
 
         return cdata
