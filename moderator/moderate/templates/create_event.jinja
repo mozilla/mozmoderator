@@ -63,16 +63,18 @@
           </label>
         </div>
       {% endif %}
-      <div class="checkbox-moderated">
-        {{ event_form.is_moderated }}
-        <label for="{{ event_form.is_moderated.id_for_label }}">
-          Is this event moderated?
-        </label>
-      </div>
-      <div>
-        {{ event_form.moderators.label_tag() }}
-        {{ event_form.moderators }}
-      </div>
+      {% if user.is_superuser %}
+        <div class="checkbox-moderated">
+          {{ event_form.is_moderated }}
+          <label for="{{ event_form.is_moderated.id_for_label }}">
+            Is this event moderated?
+          </label>
+        </div>
+        <div>
+          {{ event_form.moderators.label_tag() }}
+          {{ event_form.moderators }}
+        </div>
+      {% endif %}
       {{ event_form.non_field_errors() }}
       <div>
         <input type="submit" class="btn btn-success btn-sm" value="save">

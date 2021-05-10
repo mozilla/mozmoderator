@@ -25,10 +25,12 @@
           <a href="{{ url('moderate_event', slug=event.slug) }}"
              class="btn btn-primary btn-sm">moderate</a>
         </div>
-        <div class="delete-container">
-          <a href="{{ url('delete_event', slug=event.slug) }}"
-             class="btn btn-danger btn-sm">delete</a>
-        </div>
+        {% if event.created_by == request.user %}
+          <div class="delete-container">
+            <a href="{{ url('delete_event', slug=event.slug) }}"
+              class="btn btn-danger btn-sm">delete</a>
+          </div>
+        {% endif %}
       {% endif %}
     </div>
   {% endfor %}
