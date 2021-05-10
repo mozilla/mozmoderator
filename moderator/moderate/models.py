@@ -48,7 +48,7 @@ class Event(models.Model):
 
     name = models.CharField(max_length=400)
     body = models.TextField(
-        help_text="Optional: Helpful links, additional information - Markdown supported",
+        help_text="Optional: Helpful links, additional information",
         blank=True,
         default="",
     )
