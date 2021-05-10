@@ -195,14 +195,11 @@ def show_event(request, e_slug, q_id=None):
             is_replied = True
         question_obj.event = event
         question_obj.save()
+        msg = "Your question has been successfully submitted. "
+        if event.is_moderated:
+            msg += "Review is pending by an event moderator."
         if is_new_question:
-            messages.success(
-                request,
-                (
-                    "Your question has been successfully submitted. "
-                    "Review is pending by an event moderator."
-                ),
-            )
+            messages.success(request, msg)
 
         if (
             not Vote.objects.filter(user=user, question=question_obj).exists()
