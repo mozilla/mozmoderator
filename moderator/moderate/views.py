@@ -185,6 +185,9 @@ def show_event(request, e_slug, q_id=None):
         # Do not change the user if posting a reply
         if not question_obj.id:
             is_new_question = True
+            # mark as accepted for non moderated events
+            if not event.is_moderated:
+                question_obj.is_accepted = True
             if not question_obj.is_anonymous:
                 question_obj.asked_by = user
                 question_obj.submitter_contact_info = user.email
