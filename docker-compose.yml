@@ -23,5 +23,13 @@ services:
       - db
     command: ./bin/run-dev.sh
     env_file: .env
+    depends_on:
+      - db
+      - mailcatcher
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+
 volumes:
   mysqlvolume:

@@ -248,3 +248,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Enable dev login
 ENABLE_DEV_LOGIN = config("ENABLE_DEV_LOGIN", default=False, cast=bool)
+
+if DEV and DEBUG:
+    EMAIL_LOGGING_REAL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "mailcatcher"
+    EMAIL_HOST_USER = ""
+    EMAIL_HOST_PASSWORD = ""
+    EMAIL_PORT = 1025
+    EMAIL_USE_TLS = False
