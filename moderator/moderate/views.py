@@ -67,14 +67,12 @@ def archive(request):
 def edit_event(request, slug=None):
     """Creates a new event."""
     user = request.user
-    query_args = {"created_by": user}
-    if slug:
-        query_args["slug"] = slug
+    query_args = []
 
-    if user.is_superuser:
-        del query_args["created_by"]
+    if not user.is_superuser:
+        query_args = [Q(created_by=user) | Q(moderators=user)]
 
-    event = get_object_or_404(Event, **query_args) if slug else None
+    event = get_object_or_404(Event, *query_args, slug=slug) if slug else None
     event_form = EventForm(request.POST or None, instance=event, user=user)
 
     if event_form.is_valid():
@@ -255,7 +253,7 @@ class ModeratorsAutocomplete(autocomplete.Select2QuerySetView):
         if not self.request.user.is_authenticated or not self.request.user.is_superuser:
             return User.objects.none()
 
-        qs = User.objects.filter(is_superuser=True)
+        qs = User.objects.filter()
 
         if self.q:
             qs = qs.filter(Q(first_name__icontains=self.q) | Q(email__icontains=self.q))
