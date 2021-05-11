@@ -14,7 +14,14 @@
       <div class="panel-body">
         <a href="{{ url('event', e_slug=event.slug) }}" class="event-listing">
           <h1>{{ event.name }}</h1>
-          <span class="questions-counter"> {{ event.questions.count() }} questions asked</span>
+          {% if event.is_moderated and request.user in event.moderators.all() %}
+            <span class="questions-counter">
+              {{ event.approved_count }} approved,
+              {{ event.rejected_count }} rejected,
+              {{ event.pending_count }} pending</span>
+          {% else %}
+            <span class="questions-counter"> {{ event.questions.count() }} questions asked</span>
+          {% endif %}
         </a>
       </div>
       {% if event.created_by == request.user or request.user in event.moderators.all() %}
@@ -22,7 +29,7 @@
         <div class="edit-container">
           <a href="{{ url('edit_event', slug=event.slug) }}"
              class="btn btn-primary btn-sm">edit</a>
-          {% if event.is_moderated %}
+          {% if event.is_moderated and request.user in event.moderators.all() %}
             <a href="{{ url('moderate_event', slug=event.slug) }}"
               class="btn btn-primary btn-sm">moderate</a>
           {% endif %}
