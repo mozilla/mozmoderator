@@ -1,5 +1,6 @@
 Django==3.1.8
 django-jinja
+django-ses
 dj-database-url
 django-axes
 django-uuslug
@@ -14,3 +15,4 @@ pytz
 cryptography
 django_csp
 mysqlclient
+boto3

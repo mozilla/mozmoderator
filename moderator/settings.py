@@ -248,3 +248,24 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Enable dev login
 ENABLE_DEV_LOGIN = config("ENABLE_DEV_LOGIN", default=False, cast=bool)
+FROM_NOREPLY = config(
+    "FROM_NOREPLY",
+    default="Mozilla Moderator <no-reply@moderator.mozilla.org>",
+)
+
+if DEV and DEBUG:
+    EMAIL_LOGGING_REAL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "mailcatcher"
+    EMAIL_HOST_USER = ""
+    EMAIL_HOST_PASSWORD = ""
+    EMAIL_PORT = 1025
+    EMAIL_USE_TLS = False
+else:
+    # AWS SES configuration
+    EMAIL_BACKEND = "django_ses.SESBackend"
+    AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+    AWS_SES_REGION_NAME = config("AWS_DEFAULT_REGION", default="us-west-2")
+    AWS_SES_REGION_ENDPOINT = config(
+        "AWS_REGION_ENDPOINT", default="email.us-west-2.amazonaws.com"
+    )

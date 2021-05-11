@@ -16,3 +16,4 @@ data:
   SITE_URL: "https://moderator-stage.itsre-apps.mozit.cloud"
   OIDC_RP_SIGN_ALGO: 'RS256'
   OIDC_OP_JWKS_ENDPOINT: "https://auth.mozilla.auth0.com/.well-known/jwks.json"
+  FROM_NOREPLY: "Mozilla Moderator <no-reply@moderator-stage.itsre-apps.mozit.cloud>"
