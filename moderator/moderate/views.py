@@ -4,6 +4,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Q
 from django.http import Http404, JsonResponse
@@ -14,6 +15,8 @@ from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
 from moderator.moderate.forms import EventForm, QuestionForm
 from moderator.moderate.models import Event, Question, Vote
+
+SUBJECT = "Question moderation update"
 
 
 class OIDCCallbackView(OIDCAuthenticationCallbackView):
@@ -124,9 +127,20 @@ def moderate_event(request, slug, q_id=None, accepted=None):
             question_form = QuestionForm(request.POST, instance=question)
             # update the question with moderator's reply
             if question_form.is_valid():
-                Question.objects.filter(id=question.pk).update(
-                    rejection_reason=question_form.cleaned_data.get("rejection_reason")
-                )
+                reason = question_form.cleaned_data.get("rejection_reason")
+                Question.objects.filter(id=question.pk).update(rejection_reason=reason)
+                if (
+                    reason
+                    and not question.is_accepted
+                    and question.submitter_contact_info
+                ):
+                    send_mail(
+                        SUBJECT,
+                        reason,
+                        settings.FROM_NOREPLY,
+                        [question.submitter_contact_info],
+                    )
+                    messages.success(request, "Email sent successfully")
                 return redirect(reverse("moderate_event", kwargs={"slug": event.slug}))
 
     return render(
