@@ -22,8 +22,10 @@
         <div class="edit-container">
           <a href="{{ url('edit_event', slug=event.slug) }}"
              class="btn btn-primary btn-sm">edit</a>
-          <a href="{{ url('moderate_event', slug=event.slug) }}"
-             class="btn btn-primary btn-sm">moderate</a>
+          {% if event.is_moderated %}
+            <a href="{{ url('moderate_event', slug=event.slug) }}"
+              class="btn btn-primary btn-sm">moderate</a>
+          {% endif %}
         </div>
         {% if event.created_by == request.user %}
           <div class="delete-container">
