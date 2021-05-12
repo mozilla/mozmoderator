@@ -37,15 +37,19 @@ def main(request):
     if user.is_authenticated:
 
         events = (
-            Event.objects
-            .filter(archived=False)
+            Event.objects.filter(archived=False)
             .prefetch_related("moderators")
             .annotate(
-                approved_count=Count("questions", filter=Q(questions__is_accepted=True)),
-                rejected_count=Count("questions", filter=Q(questions__is_accepted=False)),
+                approved_count=Count(
+                    "questions", filter=Q(questions__is_accepted=True)
+                ),
+                rejected_count=Count(
+                    "questions", filter=Q(questions__is_accepted=False)
+                ),
                 pending_count=Count("questions", filter=Q(questions__is_accepted=None)),
             )
         )
+
         if not user.userprofile.is_nda_member:
             events = events.exclude(is_nda=True)
         return render(request, "index.jinja", {"events": events, "user": user})

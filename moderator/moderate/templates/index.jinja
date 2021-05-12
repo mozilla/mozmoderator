@@ -10,11 +10,19 @@
   <h3 class="text-center">Select event to view and ask questions.</h3>
 
   {% for event in events.order_by('-created_at') %}
+    {% set display_moderation = False %}
+    {% set has_pending_questions = False %}
+    {% if event.is_moderated and request.user in event.moderators.all() %}
+      {% set display_moderation = True %}
+    {% endif %}
+    {% if event.questions.filter(is_accepted__isnull=True).exists() %}
+      {% set has_pending_questions = True %}
+    {% endif %}
     <div class="panel panel-default">
       <div class="panel-body">
         <a href="{{ url('event', e_slug=event.slug) }}" class="event-listing">
           <h1>{{ event.name }}</h1>
-          {% if event.is_moderated and request.user in event.moderators.all() %}
+          {% if display_moderation %}
             <span class="questions-counter">
               {{ event.approved_count }} approved,
               {{ event.rejected_count }} rejected,
@@ -29,7 +37,7 @@
         <div class="edit-container">
           <a href="{{ url('edit_event', slug=event.slug) }}"
              class="btn btn-primary btn-sm">edit</a>
-          {% if event.is_moderated and request.user in event.moderators.all() %}
+          {% if display_moderation and has_pending_questions %}
             <a href="{{ url('moderate_event', slug=event.slug) }}"
               class="btn btn-primary btn-sm">moderate</a>
           {% endif %}
