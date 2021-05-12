@@ -248,6 +248,26 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Enable dev login
 ENABLE_DEV_LOGIN = config("ENABLE_DEV_LOGIN", default=False, cast=bool)
+
+# Enable debug toolbar
+ENABLE_DEBUG_TOOLBAR = config("ENABLE_DEBUG_TOOLBAR", default=False, cast=bool)
+
+
+def show_toolbar_callback(*args):
+    return DEBUG and ENABLE_DEBUG_TOOLBAR
+
+
+SHOW_DEBUG_TOOLBAR = show_toolbar_callback()
+
+if SHOW_DEBUG_TOOLBAR:
+
+    DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": "moderator.settings.show_toolbar_callback"}
+
+    INSTALLED_APPS = INSTALLED_APPS + ["debug_toolbar"]
+
+    MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
+
+# Email setup
 FROM_NOREPLY = config(
     "FROM_NOREPLY",
     default="Mozilla Moderator <no-reply@moderator.mozilla.org>",

@@ -16,3 +16,4 @@ pip-compile-multi
 black
 isort
 pip-tools
+django-debug-toolbar
