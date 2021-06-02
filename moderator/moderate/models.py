@@ -33,6 +33,15 @@ class MozillianProfile(models.Model):
         return self.user.groups.filter(name="Admin").exists() or self.user.is_superuser
 
 
+def get_user_full_name(self):
+    if self.first_name or self.last_name:
+        return f"{self.first_name} {self.last_name}"
+    return self.username
+
+
+User.add_to_class("__str__", get_user_full_name)
+
+
 @receiver(dbsignals.post_save, sender=User, dispatch_uid="create_user_profile_sig")
 def create_user_profile(sender, instance, created, raw, **kwargs):
     if not raw:
