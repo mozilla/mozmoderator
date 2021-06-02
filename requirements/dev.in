@@ -1,6 +1,6 @@
 # Requirements for development.
 
--r prod.txt
+-r prod.in
 
 pip
 isort
