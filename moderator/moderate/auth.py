@@ -25,6 +25,10 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
         profile = user.userprofile
         profile.avatar_url = claims.get("picture")
         profile.username = claims.get("nickname", "")
+        user.first_name = claims.get("given_name", "")
+        user.last_name = claims.get("family_name", "")
+        user.save()
+
         # Only staff members and members of the NDA group are allowed to login.
         # Because of this everyone will get the is_nda_member set to True.
         # If in the future more people are allowed to login this needs to be
