@@ -20,7 +20,8 @@
     {% endif %}
     <div class="panel panel-default">
       <div class="panel-body">
-        <a href="{{ url('event', e_slug=event.slug) }}" class="event-listing">
+        <div class="event-listing">
+        <a href="{{ url('event', e_slug=event.slug) }}">
           <h1>{{ event.name }}</h1>
           {% if display_moderation %}
             <span class="questions-counter">
@@ -31,6 +32,8 @@
             <span class="questions-counter"> {{ event.questions.count() }} questions asked</span>
           {% endif %}
         </a>
+        <p>{{ event.body }}</p>
+        </div>
       </div>
       {% if event.created_by == request.user or request.user in event.moderators.all() %}
       <div>
