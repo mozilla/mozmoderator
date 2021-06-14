@@ -29,7 +29,7 @@
               {{ event.rejected_count }} rejected,
               {{ event.pending_count }} pending</span>
           {% else %}
-            <span class="questions-counter"> {{ event.questions.count() }} questions asked</span>
+            <span class="questions-counter"> {{ event.questions.filter(is_accepted=True).count() }} questions asked</span>
           {% endif %}
         </a>
         <p>{{ event.body }}</p>
