@@ -50,10 +50,10 @@
           </div>
           {% if event.is_moderated %}
             <div class="form-group question-text contact-info-container">
-              <p> 
-              This question will wait in a queue until it's moderated.
-              By supplying <b>any</b> valid email address, the moderator will be able
-              to communicate with you in case your question is not approved.
+              <p>
+                This question will wait in a queue until it's been approved by a moderator.
+                By supplying any valid email address, including those provided by Firefox Relay,
+                the moderator will be able to provide an explanation if your question is declined.
               </p>
               {{ q_form.submitter_contact_info }}
               {{ q_form.submitter_contact_info.errors }}

@@ -146,10 +146,13 @@ ul.errorlist {
 }
 
 .event-listing h1 {
-    font-size: 1.8em;
+    font-size: 1.6em;
     padding: 0;
     margin: -15px 0 0 0;
-    float: left;
+}
+
+.event-listing p {
+    margin-top: 20px;
 }
 
 .questions-counter {

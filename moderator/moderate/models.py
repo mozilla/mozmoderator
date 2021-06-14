@@ -106,7 +106,7 @@ class Question(models.Model):
     rejection_reason = models.TextField(
         default="",
         blank=True,
-        validators=[MaxLengthValidator(512), MinLengthValidator(10)],
+        validators=[MinLengthValidator(10)],
     )
 
     def __str__(self):
