@@ -1,6 +1,6 @@
 name: CI Checks & Build
 
-on: [push, pull_request]
+on: [push, pull_request, pull_request_target]
 
 jobs:
   flake8:
@@ -21,32 +21,21 @@ jobs:
   build-image:
     needs: flake8
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/master'
     steps:
       - name: Echo tag
         id: echotag
         run: |
           echo "Building an image with the following tag:"
           echo $GITHUB_SHA
+          echo "Based off the following commit:"
+          echo $GITHUB_SHA
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        id: configure-aws-creds
-        with:
-          aws-access-key-id: ${{ secrets.ECR_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.ECR_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      - name: Build and push to ECR
-        id: build-push
+      - name: Build Image Only
+        id: build
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: moderator
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
-      - name: Logut of Amazon ECR
-        if: always()
-        run: docker logout ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ci-run
+          ECR_REPOSITORY: pastebin
+          IMAGE_TAG: $GITHUB_SHA
+        run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA .
