@@ -30,61 +30,40 @@ Finally use [gulp](http://gulpjs.com/) to check in all main static files and run
 
 ## CI & CD
 
-This application is currently run through integration and deploy pipelines via both [GitHub Actions](https://github.com/mozilla/mozmoderator/actions/workflows/ci.yaml) & a background Kubernetes [Flux](https://fluxcd.io/) & [Kustomize](https://kustomize.io/) setup.
+This application is currently run through integration and deploy pipelines via both [GitHub Actions](https://github.com/mozilla/mozmoderator/actions/workflows/ci.yaml) & a background Kubernetes [Flux](https://fluxcd.io/) setup leveraging [Helm Charts](github.com/mozilla-it/helm-charts/).
 
-Through those workflows, a Docker image is built, tagged (based on the latest git commit SHA), pushed to ECR, and deployed either to a staging or production environment in our k8s-apps-prod-us-west-2 Kubernetes cluster. 
+Through those workflows, a Docker image is built, tagged, pushed to ECR, and deployed either to a staging (itse-apps-stage-1) or production (itse-apps-prod-1) Kubernetes cluster. 
+
+tl;dr: Push commits to master branch for a stage deploy, cut GitHub releases (following v1.2.3 format) for a production deploy.
 
 The pipelines work as followed:
 
 CI & Docker Builds:
-1. (manual) create your feature branch on this repository & add your work;
-2. (manual) push your feature branch up to GitHub;
-3. (automated) upon push, GitHub Actions will:
+1. (manual) create your feature branch on this repository or a fork (_CI will run in our repository for PRs from forks now_) & add your work;
+2. (manual) push your feature branch up to GitHub & create your PR;
+3. (automated) upon push (if a branch off this repository) or PR (both our repository & forks), GitHub Actions will:
     a. run linting & syntax checks on the code;
-    b. build the Docker image & tag it with the short git commit SHA of the latest commit;
-    c. push that Docker image to our ECR repository for Moderator (this may be removed from the non-master branch commits, fyi);
+    b. build the Docker image & tag it with the short git commit SHA of the latest commit to confirm the image can be built;
 4. (manual) create a PR from your feature branch to the master branch, have it reviewed, then merged into master;
 5. (automated) Upon merge into master, GitHub Actions will:
     a. run linting & syntax checks on the code;
-    b. build the Docker image & tag it with the short git commit SHA of the latest commit;
-    c. push that Docker image to our ECR repository for Moderator;
+    b. build the Docker image & tag it with "stg-{the 7-digit short git commit SHA of the latest commit};
+    c. push that Docker image & tag to our ECR repository for Moderator;
 
 Stage Deploy:
-6. (manual) pull the Docker image from step 5 down, test locally as desired, & when ready to deploy to stage, edit kubernetes/stage/deployment.yaml#21, only replacing that docker image tag with the tag for the image from step 5.
-7. (manual) push the work from step 6 up & create a PR into master;
-8. (automated): upon push & PR, GitHub Actions will:
-    a. run linting & syntax checks on the code;
-    b. build yet another Docker image & tag it with the short git commit SHA of the latest commit (just ignore this for k8s deployment purposes);
-    c. push that Docker image to our ECR repository for Moderator (again, just ignore this for k8s deployment purposes);
-9. (manual): review the PR, approve/edit, & merge into master.
-10. (automated): upon merge into master, GHA will do all of the above, _and_ Flux will:
-    a. Apply the manifests found in the kubernetes/ directory;
-    b. as there will be a change in those manifests for the stage application (our new docker image tag), kubernetes will pull that image down and redeploy the application.
+6. (automated): upon creation & push of any Docker Images to our ECR moderator repository with the tag pattern `^(stg-[a-f0-9]{7})$`:
+    a. Flux will update our [Stage Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-stage-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with that new Stage image tag;
+    b. Flux will rollout that release;
+    c. Flux will update [Stage Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-stage-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with a git commit & the latest image changes upon successful deploy.
 
 Production Deploy:
-6. (manual) test / QA the stage deploy as desired, & when ready to deploy to stage, edit kubernetes/prod/deployment.yaml#21, only replacing that docker image tag with the tag for the image from the stage deployment.
-7. (manual) push the work from step 6 up & create a PR into master;
-8. (automated): upon push & PR, GitHub Actions will:
+6. (manual) test / QA the stage deploy as desired (moderator.allizom.org).
+7. (manual) Create a GitHub Release off of the master branch with appropriate semver updating (using the pattern `^(v[0-9]+.[0-9]+.[0-9]+)$`);
+8. (automated): upon Release, GitHub Actions will:
     a. run linting & syntax checks on the code;
-    b. build yet another Docker image & tag it with the short git commit SHA of the latest commit (just ignore this for k8s deployment purposes);
-    c. push that Docker image to our ECR repository for Moderator (again, just ignore this for k8s deployment purposes);
-9. (manual): review the PR, approve/edit, & merge into master.
-10. (automated): upon merge into master, GHA will do all of the above, _and_ Flux will:
-    a. Apply the manifests found in the kubernetes/ directory;
-    b. as there will be a change in those manifests for the production application, (our new docker image tag), kubernetes will pull that image down and redeploy the application.
-
-## Moderator Docker Registry Manual Access
-
-In case you want to view or manually push Moderator Docker images to our Production ECR Registry, members of the MozilliansOrg Group `mozilla-moderators-dev` should be able to do the following steps:
-
-```
-# log into that mozilla-moderators-dev group via MAWS
-$ maws -r arn:aws:iam::783633885093:role/moderator-devs
-
-# docker login to that moderator registry
-$ aws ecr get-login-password | docker login --username AWS --password-stdin 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator
-
-# interact with Moderator docker images either via AWS CLI or docker
-$ aws ecr list-images --repository-name moderator
-$ docker pull 783633885093.dkr.ecr.us-west-2.amazonaws.com/moderator:379b95c7
-```
+    b. pull the docker image of the latest commit in that release & tag that image with the release version;
+    c. push that Docker image with release tag to our ECR repository for Moderator;
+10. (automated): upon creation & push of any Docker Images to our ECR moderator repository with the tag pattern `^(v[0-9]+.[0-9]+.[0-9]+)$`:
+    a. Flux will update our [Prod Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-prod-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with that new release tag;
+    b. Flux will rollout that release;
+    c. Flux will update [Prod Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-prod-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with a git commit & the latest image changes upon successful deploy.
