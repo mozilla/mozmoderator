@@ -36,6 +36,6 @@ jobs:
         id: build
         env:
           ECR_REGISTRY: ci-run
-          ECR_REPOSITORY: pastebin
+          ECR_REPOSITORY: moderator
           IMAGE_TAG: $GITHUB_SHA
         run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA .
