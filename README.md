@@ -32,7 +32,7 @@ Finally use [gulp](http://gulpjs.com/) to check in all main static files and run
 
 This application is currently run through integration and deploy pipelines via both [GitHub Actions](https://github.com/mozilla/mozmoderator/actions/workflows/ci.yaml) & a background Kubernetes [Flux](https://fluxcd.io/) setup leveraging [Helm Charts](github.com/mozilla-it/helm-charts/).
 
-Through those workflows, a Docker image is built, tagged, pushed to ECR, and deployed either to a staging (itse-apps-stage-1) or production (itse-apps-prod-1) Kubernetes cluster. 
+Through those workflows, a Docker image is built, tagged, pushed to ECR, and deployed either to a staging [(itse-apps-stage-1)](https://github.com/mozilla-it/itse-apps-stage-1-infra/) or production [(itse-apps-prod-1)](https://github.com/mozilla-it/itse-apps-prod-1-infra/) Kubernetes cluster. 
 
 tl;dr: Push commits to master branch for a stage deploy, cut GitHub releases (following v1.2.3 format) for a production deploy.
 
