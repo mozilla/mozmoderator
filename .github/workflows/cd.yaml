@@ -1,8 +1,6 @@
 name: Delivery & Release (Docker Build, Tag & Push)
 
 on:
-  pull_request:
-    branches: [master]
   push:
     branches: [master]
   release:
@@ -45,7 +43,7 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Build and push to ECR
+      - name: Build and Push Stage Image to ECR
         id: build-push
         if: github.ref == 'refs/heads/master'
         env:
@@ -57,7 +55,7 @@ jobs:
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
-      - name: Pull stage, tag prod, & push to ECR
+      - name: Pull Stage Image, Tag Prod, & Push Prod to ECR
         id: pull-tag-push
         if: github.event_name == 'release' && contains(['published', 'created', 'edited'], github.event.action)
         env:
