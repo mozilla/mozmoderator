@@ -14,18 +14,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set Stage Image Tag
+      - name: Set Tag
         id: tag
-        if: github.ref == 'refs/heads/master'
         run: |
-          export GIT_TAG=$(git describe --abbrev=7 --always --tags)
-          echo "::set-output name=tag::stg-${GIT_TAG}"
-      - name: Set Prod / Release Image Tag
-        id: tag
-        if: github.event_name == 'release' && github.event.action == 'released'
-        run: |
-          export GIT_TAG=$(git describe --abbrev=7 --always --tags)
-          echo "::set-output name=tag::${GIT_TAG}"
+          export CI_COMMIT_SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-8)
+          echo $CI_COMMIT_SHORT_SHA;
+          echo ${GITHUB_REF##*/};
+          echo $version_pattern;
+          if [[ ${GITHUB_REF} =~ $version_pattern ]]; then
+            echo "::set-output name=tag::${GITHUB_REF##*/}"
+          elif [ ${GITHUB_REF##*/} = "master" ]; then
+            echo "::set-output name=tag::stg-$CI_COMMIT_SHORT_SHA"
+          else
+            echo "::set-output name=tag::$CI_COMMIT_SHORT_SHA"
+          fi
+        env:
+          version_pattern: "tags\\/v[0-9]+\\.[0-9]+\\.[0-9]+"
 
   build-push-promote-image:
     runs-on: ubuntu-latest
