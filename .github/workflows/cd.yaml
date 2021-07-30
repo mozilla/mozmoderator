@@ -57,7 +57,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
       - name: Pull Stage Image, Tag Prod, & Push Prod to ECR
         id: pull-tag-push
-        if: github.event_name == 'release' && contains(['published', 'created', 'edited'], github.event.action)
+        if: github.event_name == 'release' && contains('released', github.event.action)
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: moderator
