@@ -14,8 +14,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set Image Tag
+      - name: Set Stage Image Tag
         id: tag
+        if: github.ref == 'refs/heads/master'
+        run: |
+          export GIT_TAG=$(git describe --abbrev=7 --always --tags)
+          echo "::set-output name=tag::stg-${GIT_TAG}"
+      - name: Set Prod / Release Image Tag
+        id: tag
+        if: github.event_name == 'release' && github.event.action == 'released'
         run: |
           export GIT_TAG=$(git describe --abbrev=7 --always --tags)
           echo "::set-output name=tag::${GIT_TAG}"
@@ -57,7 +64,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA
       - name: Pull Stage Image, Tag Prod, & Push Prod to ECR
         id: pull-tag-push
-        if: github.event_name == 'release' && contains('released', github.event.action)
+        if: github.event_name == 'release' && github.event.action == 'released'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: moderator
