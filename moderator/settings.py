@@ -261,7 +261,9 @@ SHOW_DEBUG_TOOLBAR = show_toolbar_callback()
 
 if SHOW_DEBUG_TOOLBAR:
 
-    DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": "moderator.settings.show_toolbar_callback"}
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK": "moderator.settings.show_toolbar_callback"
+    }
 
     INSTALLED_APPS = INSTALLED_APPS + ["debug_toolbar"]
 
@@ -271,6 +273,17 @@ if SHOW_DEBUG_TOOLBAR:
 FROM_NOREPLY = config(
     "FROM_NOREPLY",
     default="Mozilla Moderator <no-reply@moderator.mozilla.org>",
+)
+
+# Django Axes
+AXES_PROXY_COUNT = 3
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = config(
+    "AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP", default=True, cast=bool
+)
+IPWARE_META_PRECEDENCE_ORDER = (
+    "HTTP_X_FORWARDED_FOR",
+    "IPWARE_META_PRECEDENCE_ORDER",
+    "REMOTE_ADDR",
 )
 
 if DEV and DEBUG:
