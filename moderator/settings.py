@@ -277,15 +277,13 @@ FROM_NOREPLY = config(
 
 # Django Axes
 AXES_ENABLED = config("AXES_ENABLED", default=True, cast=bool)
-AXES_PROXY_COUNT = 2
 AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = config(
     "AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP", default=True, cast=bool
 )
-IPWARE_META_PRECEDENCE_ORDER = (
-    "HTTP_X_FORWARDED_FOR",
-    "IPWARE_META_PRECEDENCE_ORDER",
-    "REMOTE_ADDR",
-)
+AXES_META_PRECEDENCE_ORDER = [
+   'HTTP_X_FORWARDED_FOR',
+   'REMOTE_ADDR',
+]
 
 if DEV and DEBUG:
     EMAIL_LOGGING_REAL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
