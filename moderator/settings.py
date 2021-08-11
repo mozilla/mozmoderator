@@ -276,7 +276,7 @@ FROM_NOREPLY = config(
 )
 
 # Django Axes
-AXES_ENABLED = config("AXES_ENABLED", default=False, cast=bool)
+AXES_ENABLED = config("AXES_ENABLED", default=True, cast=bool)
 AXES_PROXY_COUNT = 2
 AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = config(
     "AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP", default=True, cast=bool
