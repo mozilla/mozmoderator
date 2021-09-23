@@ -1,4 +1,4 @@
-Django==3.1.12
+Django==3.1.13
 django-jinja
 django-ses
 dj-database-url
