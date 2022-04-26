@@ -96,7 +96,7 @@ class Question(models.Model):
         validators=[MaxLengthValidator(280), MinLengthValidator(10)]
     )
     answer = models.TextField(
-        validators=[MaxLengthValidator(280)], default="", blank=True
+        validators=[MaxLengthValidator(1500)], default="", blank=True
     )
     addressed = models.BooleanField(default=False)
     is_anonymous = models.BooleanField(default=False, blank=False)
