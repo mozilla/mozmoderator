@@ -194,7 +194,7 @@ def show_event(request, e_slug, q_id=None):
     questions_q = Question.objects.filter(event=event, is_accepted=True).annotate(
         vote_count=Count("votes")
     )
-    if user.userprofile.is_admin:
+    if user.userprofile.is_admin or event.archived:
         questions = questions_q.order_by("-vote_count")
     else:
         questions = questions_q.order_by("?")
