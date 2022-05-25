@@ -7,10 +7,10 @@ from django.core.validators import MaxLengthValidator, MinLengthValidator
 from .models import Event, Question
 
 QUESTION = "Ask your question in 280 characters"
-ANSWER = "Reply to question in 280 characters"
+ANSWER = "Reply to question in 2500 characters"
 CONTACT_INFO = "Optional: Please supply a valid email address."
 REJECTION_REASON = (
-    "Reply to the submitter on why this question was moderated in 512 characters."
+    "Reply to the submitter on why this question was moderated."
 )
 
 
@@ -29,10 +29,9 @@ class QuestionForm(forms.ModelForm):
         ),
     )
     answer = forms.CharField(
-        validators=[MaxLengthValidator(280)],
         required=False,
-        max_length=280,
-        widget=forms.TextInput(attrs={"placeholder": ANSWER, "class": "form-control"}),
+        max_length=2500,
+        widget=forms.Textarea(attrs={"placeholder": ANSWER, "class": "form-control"}),
     )
     submitter_contact_info = forms.CharField(
         required=False,
@@ -65,7 +64,7 @@ class QuestionForm(forms.ModelForm):
         if self.instance.id:
             cdata["question"] = self.instance.question
             # Raise an error if there is no answer
-            if not cdata["answer"] and self.is_locked:
+            if 'answer' in cdata and not cdata["answer"] and self.is_locked:
                 msg = "Please provide a reply."
                 self._errors["answer"] = self.error_class([msg])
             return cdata
