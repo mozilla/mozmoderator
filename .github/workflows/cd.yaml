@@ -20,7 +20,7 @@ jobs:
           export CI_COMMIT_SHORT_SHA=$(git describe --abbrev=7 --always --tags)
           echo $CI_COMMIT_SHORT_SHA;
           if [ ${GITHUB_REF##*/} = "master" ]; then
-            echo "::set-output name=tag::stg-$CI_COMMIT_SHORT_SHA"
+            echo "::set-output name=tag::stg-$CI_COMMIT_SHORT_SHA-$(date +%F.%H%M%S)"
           else
             echo "::set-output name=tag::$CI_COMMIT_SHORT_SHA"
           fi
