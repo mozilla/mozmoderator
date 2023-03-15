@@ -36,34 +36,37 @@ Through those workflows, a Docker image is built, tagged, pushed to ECR, and dep
 
 tl;dr: Push commits to master branch for a stage deploy, cut GitHub releases (following v1.2.3 format) for a production deploy.
 
-The pipelines work as followed:
+### The pipelines work as followed:
 
-CI & Docker Builds:
+#### CI & Docker Builds:
+
 1. (manual) create your feature branch on this repository or a fork (_CI will run in our repository for PRs from forks now_) & add your work;
 2. (manual) push your feature branch up to GitHub & create your PR;
 3. (automated) upon push (if a branch off this repository) or PR (both our repository & forks), GitHub Actions will:
-    a. run linting & syntax checks on the code;
-    b. build the Docker image & tag it with the short git commit SHA of the latest commit to confirm the image can be built;
+    - run linting & syntax checks on the code;
+    - build the Docker image & tag it with the short git commit SHA of the latest commit to confirm the image can be built;
 4. (manual) create a PR from your feature branch to the master branch, have it reviewed, then merged into master;
 5. (automated) Upon merge into master, GitHub Actions will:
-    a. run linting & syntax checks on the code;
-    b. build the Docker image & tag it with "stg-{the 7-digit short git commit SHA of the latest commit};
-    c. push that Docker image & tag to our ECR repository for Moderator;
+    - run linting & syntax checks on the code;
+    - build the Docker image & tag it with "stg-{the 7-digit short git commit SHA of the latest commit};
+    - push that Docker image & tag to our ECR repository for Moderator;
 
-Stage Deploy:
+#### Stage Deploy:
+
 6. (automated): upon creation & push of any Docker Images to our ECR moderator repository with the tag pattern `^(stg-[a-f0-9]{7})$`:
-    a. Flux will update our [Stage Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-stage-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with that new Stage image tag;
-    b. Flux will rollout that release;
-    c. Flux will update [Stage Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-stage-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with a git commit & the latest image changes upon successful deploy.
+    - Flux will update our [Stage Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-stage-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with that new Stage image tag;
+    - Flux will rollout that release;
+    - Flux will update [Stage Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-stage-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with a git commit & the latest image changes upon successful deploy.
 
-Production Deploy:
-6. (manual) test / QA the stage deploy as desired (moderator.allizom.org).
-7. (manual) Create a GitHub Release off of the master branch with appropriate semver updating (using the pattern `^(v[0-9]+.[0-9]+.[0-9]+)$`);
-8. (automated): upon Release, GitHub Actions will:
-    a. run linting & syntax checks on the code;
-    b. pull the docker image of the latest commit in that release & tag that image with the release version;
-    c. push that Docker image with release tag to our ECR repository for Moderator;
+#### Production Deploy:
+
+7. (manual) test / QA the stage deploy as desired (moderator.allizom.org).
+8. (manual) Create a GitHub Release off of the master branch with appropriate semver updating (using the pattern `^(v[0-9]+.[0-9]+.[0-9]+)$`);
+9. (automated): upon Release, GitHub Actions will:
+    - run linting & syntax checks on the code;
+    - pull the docker image of the latest commit in that release & tag that image with the release version;
+    - push that Docker image with release tag to our ECR repository for Moderator;
 10. (automated): upon creation & push of any Docker Images to our ECR moderator repository with the tag pattern `^(v[0-9]+.[0-9]+.[0-9]+)$`:
-    a. Flux will update our [Prod Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-prod-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with that new release tag;
-    b. Flux will rollout that release;
-    c. Flux will update [Prod Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-prod-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with a git commit & the latest image changes upon successful deploy.
+    - Flux will update our [Prod Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-prod-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with that new release tag;
+    - Flux will rollout that release;
+    - Flux will update [Prod Helm Release of the Moderator Helm Chart](https://github.com/mozilla-it/itse-apps-prod-1-infra/blob/main/k8s/releases/moderator/moderator.yaml) with a git commit & the latest image changes upon successful deploy.
