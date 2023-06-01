@@ -101,17 +101,18 @@
         {% endif %}
           {% if open %}
             {% if user_voted(q, user) %}
-              <button class="btn btn-primary btn-sm vote" id="{{ q.id }}">
+              <button class="btn btn-primary btn-sm vote" id="{{ q.id }}" aria-label="Remove the upvote">
                 <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
               </button>
             {% else %}
-              <button class="btn btn-primary btn-sm vote" id="{{ q.id }}">
+              <button class="btn btn-primary btn-sm vote" id="{{ q.id }}" aria-label="Upvote">
                 <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
               </button>
             {% endif %}
             {% if user.userprofile.is_admin and not q.answer %}
               <button class="btn btn-default btn-sm reply-button"
                  id="{{ q.id }}"
+                 aria-label="Answer this question"
                  data-toggle="modal" data-target="#AnswerModal">
                 reply
               </button>
