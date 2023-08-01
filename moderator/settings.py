@@ -179,7 +179,10 @@ if SENTRY_DSN := config("SENTRY_DSN", None):
     from sentry_sdk.integrations.django import DjangoIntegration
 
     sentry_sdk.init(
-        dsn=SENTRY_DSN, integrations=[DjangoIntegration()], traces_sample_rate=1.0
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        sample_rate=config("SENTRY_SAMPLE_RATE", 1.0),
+        traces_sample_rate=config("SENTRY_TRACES_SAMPLE_RATE", 0.01),
     )
 
 # Django-CSP
@@ -260,7 +263,6 @@ def show_toolbar_callback(*args):
 SHOW_DEBUG_TOOLBAR = show_toolbar_callback()
 
 if SHOW_DEBUG_TOOLBAR:
-
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK": "moderator.settings.show_toolbar_callback"
     }
@@ -281,8 +283,8 @@ AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = config(
     "AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP", default=True, cast=bool
 )
 AXES_META_PRECEDENCE_ORDER = [
-   'HTTP_X_FORWARDED_FOR',
-   'REMOTE_ADDR',
+    "HTTP_X_FORWARDED_FOR",
+    "REMOTE_ADDR",
 ]
 
 if DEV and DEBUG:
