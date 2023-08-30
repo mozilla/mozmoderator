@@ -89,7 +89,11 @@ class Event(models.Model):
 
 class Question(models.Model):
     """Question relational model."""
-
+    ACCEPTANCE_CHOICES = [
+            (True, "Accepted"),
+            (False, "Rejected"),
+            (None, "Pending"),
+    ]
     asked_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     event = models.ForeignKey(Event, related_name="questions", on_delete=models.CASCADE)
     question = models.TextField(
@@ -102,7 +106,9 @@ class Question(models.Model):
     is_anonymous = models.BooleanField(default=False, blank=False)
     submitter_contact_info = models.EmailField(max_length=256, default="", blank=True)
     # Default value is None, which means that moderation is still pending
-    is_accepted = models.BooleanField(blank=True, null=True)
+    is_accepted = models.BooleanField(
+        blank=True, null=True, default=None, choices=ACCEPTANCE_CHOICES
+        )
     rejection_reason = models.TextField(
         default="",
         blank=True,
