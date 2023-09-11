@@ -220,20 +220,20 @@ def _username_algo(email):
     )
 
 
-OIDC_OP_AUTHORIZATION_ENDPOINT = config("OIDC_OP_AUTHORIZATION_ENDPOINT")
-OIDC_OP_TOKEN_ENDPOINT = config("OIDC_OP_TOKEN_ENDPOINT")
-OIDC_OP_USER_ENDPOINT = config("OIDC_OP_USER_ENDPOINT")
-OIDC_RP_CLIENT_ID = config("OIDC_RP_CLIENT_ID")
-OIDC_RP_CLIENT_SECRET = config("OIDC_RP_CLIENT_SECRET")
-OIDC_OP_DOMAIN = config("OIDC_OP_DOMAIN")
+OIDC_OP_AUTHORIZATION_ENDPOINT = config("OIDC_OP_AUTHORIZATION_ENDPOINT", default="")
+OIDC_OP_TOKEN_ENDPOINT = config("OIDC_OP_TOKEN_ENDPOINT", default="")
+OIDC_OP_USER_ENDPOINT = config("OIDC_OP_USER_ENDPOINT", default="")
+OIDC_RP_CLIENT_ID = config("OIDC_RP_CLIENT_ID", default="")
+OIDC_RP_OIDC_RP_CLIENT_ID = config("OIDC_RP_CLIENT_ID", default="")
+OIDC_RP_CLIENT_ID = config("OIDC_RP_CLIENT_ID", default="")
 OIDC_RP_CLIENT_SECRET_ENCODED = config(
     "OIDC_RP_CLIENT_SECRET_ENCODED", default=True, cast=bool
 )
 OIDC_CALLBACK_CLASS = "moderator.moderate.views.OIDCCallbackView"
 OIDC_USERNAME_ALGO = _username_algo
 OIDC_STORE_ACCESS_TOKEN = config("OIDC_STORE_ACCESS_TOKEN", default=True, cast=bool)
-OIDC_RP_SIGN_ALGO = config("OIDC_RP_SIGN_ALGO")
-OIDC_OP_JWKS_ENDPOINT = config("OIDC_OP_JWKS_ENDPOINT")
+OIDC_RP_SIGN_ALGO = config("OIDC_RP_SIGN_ALGO", default="RS256")
+OIDC_OP_JWKS_ENDPOINT = config("OIDC_OP_JWKS_ENDPOINT", default="")
 OIDC_RP_SCOPES = "openid email profile"
 
 # Allowed groups a user must have to login

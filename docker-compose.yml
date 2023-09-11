@@ -1,14 +1,5 @@
-version: "3.4"
+version: "3.8"
 services:
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_USER: "moderator"
-      MYSQL_PASSWORD: "moderator"
-      MYSQL_DATABASE: "moderator"
-    volumes:
-      - mysqlvolume:/var/lib/mysql
   web:
     build:
       context: .
@@ -19,17 +10,24 @@ services:
     tty: true
     volumes:
       - .:/app
-    links:
-      - db
     command: ./bin/run-dev.sh
     env_file: .env
     depends_on:
-      - db
+      - mariadb
       - mailcatcher
+  mariadb:
+    image: mariadb:10-jammy
+    environment:
+      MYSQL_ROOT_PASSWORD: "moderator"
+      MYSQL_USER: "moderator"
+      MYSQL_PASSWORD: "moderator"
+      MYSQL_DATABASE: "moderator"
+    volumes:
+      - moderatorvolume:/var/lib/mysql
   mailcatcher:
     image: schickling/mailcatcher
     ports:
       - "1080:1080"
 
 volumes:
-  mysqlvolume:
+  moderatorvolume:
