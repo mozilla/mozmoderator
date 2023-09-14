@@ -22,6 +22,7 @@ django-autocomplete-light = "^3.9.7"
 django-jinja = "^2.11.0"
 pymysql = "^1.1.0"
 django-uuslug = "^2.0.0"
+django-ipware = "^5.0.0"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.15.0"

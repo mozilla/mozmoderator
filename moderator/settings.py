@@ -9,6 +9,12 @@ from django_jinja.builtins import DEFAULT_EXTENSIONS
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 path = lambda *a: os.path.abspath(os.path.join(ROOT, *a))  # noqa
+SECRET_KEY = config("SECRET_KEY")
+DEBUG = config("DEBUG", default=False, cast=bool)
+DEV = config("DEV", default=False, cast=bool)
+SITE_URL = config("SITE_URL")
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
+
 
 # Defines the views served for root URLs.
 ROOT_URLCONF = "moderator.urls"
@@ -47,7 +53,8 @@ MIDDLEWARE = [
 
 # List of finder classes that know how to find static files in
 # various locations.
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+if not DEV:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
@@ -133,12 +140,6 @@ TIME_ZONE = config("TIME_ZONE", default="UTC")
 USE_I18N = config("USE_I18N", default=False, cast=bool)
 USE_L10N = config("USE_L10N", default=False, cast=bool)
 USE_TZ = config("USE_TZ", default=True, cast=bool)
-
-SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG", default=False, cast=bool)
-DEV = config("DEV", default=False, cast=bool)
-SITE_URL = config("SITE_URL")
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 # Path to redirect to on successful login.
 LOGIN_REDIRECT_URL = config("LOGIN_REDIRECT_URL", default="/")
@@ -281,10 +282,8 @@ FROM_NOREPLY = config(
 
 # Django Axes
 AXES_ENABLED = config("AXES_ENABLED", default=True, cast=bool)
-AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = config(
-    "AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP", default=True, cast=bool
-)
-AXES_META_PRECEDENCE_ORDER = [
+AXES_IPWARE_PROXY_COUNT = config("AXES_IPWARE_PROXY_COUNT", default=1, cast=int)
+AXES_IPWARE_META_PRECEDENCE_ORDER = [
     "HTTP_X_FORWARDED_FOR",
     "REMOTE_ADDR",
 ]
