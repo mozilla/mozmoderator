@@ -3,6 +3,7 @@
 import os
 
 import dj_database_url
+import pymysql
 from decouple import Csv, config
 from django_jinja.builtins import DEFAULT_EXTENSIONS
 
@@ -167,6 +168,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Database
 DATABASES = {"default": config("DATABASE_URL", cast=dj_database_url.parse)}
+pymysql.install_as_MySQLdb()
 
 # Enable debugging only if in dev env
 if DEBUG:

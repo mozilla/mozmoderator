@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "mozmoderator"
+version = "0.1.0"
+description = "Mozilla Moderator"
+authors = ["Tasos Katsoulas <akatsoulas@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "4.1.11"
+dj-database-url = "^2.1.0"
+django-axes = "^6.1.1"
+django-ses = "^3.5.0"
+django-csp = "^3.7"
+mozilla-django-oidc = "^3.0.0"
+gunicorn = "^21.2.0"
+whitenoise = "^6.5.0"
+sentry-sdk = "^1.31.0"
+boto3 = "^1.28.47"
+python-decouple = "^3.8"
+django-autocomplete-light = "^3.9.7"
+django-jinja = "^2.11.0"
+pymysql = "^1.1.0"
+django-uuslug = "^2.0.0"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.15.0"
+ipdb = "^0.13.13"
+black = "^23.9.1"
+isort = "^5.12.0"
+django-debug-toolbar = "^4.2.0"
+flake8 = "^6.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
