@@ -7,7 +7,6 @@
   "dependencies": {
     "jquery": "3.1.1",
     "bootstrap": "3.3.7",
-    "mozilla-tabzilla": "0.5.1",
     "dnt-helper": "schalkneethling/dnt-helper"
   },
   "overrides": {
@@ -19,12 +18,6 @@
         "dist/css/bootstrap.css",
         "dist/js/bootstrap.js",
         "dist/fonts/*"
-      ]
-    },
-    "mozilla-tabzilla": {
-      "main": [
-        "css/tabzilla.css",
-        "media/img/*.png"
       ]
     },
     "dnt-helper": {
