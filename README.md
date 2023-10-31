@@ -32,9 +32,9 @@ Finally use [gulp](http://gulpjs.com/) to check in all main static files and run
 
 This application is currently run through integration and deploy pipelines via both [GitHub Actions](https://github.com/mozilla/mozmoderator/actions/workflows/ci.yaml) & a background Kubernetes [Flux](https://fluxcd.io/) setup leveraging [Helm Charts](github.com/mozilla-it/helm-charts/).
 
-Through those workflows, a Docker image is built, tagged, pushed to ECR, and deployed either to a staging [(itse-apps-stage-1)](https://github.com/mozilla-it/itse-apps-stage-1-infra/) or production [(itse-apps-prod-1)](https://github.com/mozilla-it/itse-apps-prod-1-infra/) Kubernetes cluster. 
+Through those workflows, a Docker image is built, tagged, pushed to ECR, and deployed either to a staging [(itse-apps-stage-1)](https://github.com/mozilla-it/itse-apps-stage-1-infra/) or production [(itse-apps-prod-1)](https://github.com/mozilla-it/itse-apps-prod-1-infra/) Kubernetes cluster.
 
-tl;dr: Push commits to master branch for a stage deploy, cut GitHub releases (following v1.2.3 format) for a production deploy.
+tl;dr: Push commits to main branch for a stage deploy, cut GitHub releases (following v1.2.3 format) for a production deploy.
 
 ### The pipelines work as followed:
 
@@ -45,8 +45,8 @@ tl;dr: Push commits to master branch for a stage deploy, cut GitHub releases (fo
 3. (automated) upon push (if a branch off this repository) or PR (both our repository & forks), GitHub Actions will:
     - run linting & syntax checks on the code;
     - build the Docker image & tag it with the short git commit SHA of the latest commit to confirm the image can be built;
-4. (manual) create a PR from your feature branch to the master branch, have it reviewed, then merged into master;
-5. (automated) Upon merge into master, GitHub Actions will:
+4. (manual) create a PR from your feature branch to the main branch, have it reviewed, then merged into main;
+5. (automated) Upon merge into main, GitHub Actions will:
     - run linting & syntax checks on the code;
     - build the Docker image & tag it with "stg-{the 7-digit short git commit SHA of the latest commit};
     - push that Docker image & tag to our ECR repository for Moderator;
@@ -61,7 +61,7 @@ tl;dr: Push commits to master branch for a stage deploy, cut GitHub releases (fo
 #### Production Deploy:
 
 7. (manual) test / QA the stage deploy as desired (moderator.allizom.org).
-8. (manual) Create a GitHub Release off of the master branch with appropriate semver updating (using the pattern `^(v[0-9]+.[0-9]+.[0-9]+)$`);
+8. (manual) Create a GitHub Release off of the main branch with appropriate semver updating (using the pattern `^(v[0-9]+.[0-9]+.[0-9]+)$`);
 9. (automated): upon Release, GitHub Actions will:
     - run linting & syntax checks on the code;
     - pull the docker image of the latest commit in that release & tag that image with the release version;
