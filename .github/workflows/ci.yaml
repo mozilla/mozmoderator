@@ -8,13 +8,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.11
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.11
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade 'pip==23.2.1'
           python -m pip install flake8
+
       - name: Lint with flake8
         run: flake8 moderator --count --show-source --statistics
 
@@ -30,12 +32,15 @@ jobs:
           echo $GITHUB_SHA
           echo "Based off the following commit:"
           echo $GITHUB_SHA
+
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
       - name: Build Image Only
         id: build
         env:
           ECR_REGISTRY: ci-run
           ECR_REPOSITORY: moderator
           IMAGE_TAG: $GITHUB_SHA
+
         run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA .
