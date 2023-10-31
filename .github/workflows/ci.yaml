@@ -21,7 +21,7 @@ jobs:
   build-image:
     needs: flake8
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/master'
+    if: github.ref != 'refs/heads/main'
     steps:
       - name: Echo tag
         id: echotag

@@ -2,7 +2,7 @@ name: Delivery & Release (Docker Build, Tag & Push)
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   release:
     types: [released]
 
@@ -19,7 +19,7 @@ jobs:
         run: |
           export CI_COMMIT_SHORT_SHA=$(git describe --abbrev=7 --always --tags)
           echo $CI_COMMIT_SHORT_SHA;
-          if [ ${GITHUB_REF##*/} = "master" ]; then
+          if [ ${GITHUB_REF##*/} = "main" ]; then
             echo "::set-output name=tag::stg-$CI_COMMIT_SHORT_SHA-$(date +%F.%H%M%S)"
           else
             echo "::set-output name=tag::$CI_COMMIT_SHORT_SHA"
@@ -50,7 +50,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
       - name: Build and Push Stage Image to ECR
         id: build-push
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: moderator
