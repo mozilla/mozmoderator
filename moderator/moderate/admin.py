@@ -72,13 +72,23 @@ class EventAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
     list_display = (
         "name",
+        "slug",
         "questions_count",
         "created_at",
         "archived",
         "is_nda",
     )
     actions = [export_questions_csv]
-    list_filter = ["archived"]
+    date_hierarchy = "created_at"
+    search_fields = [
+        "name",
+        "moderators__username",
+        "moderators__email",
+        "moderators__first_name",
+        "moderators__last_name",
+    ]
+    ordering = ["-created_at"]
+    list_filter = ["archived", "is_nda"]
     autocomplete_fields = ["moderators"]
 
 
