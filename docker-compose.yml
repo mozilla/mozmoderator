@@ -1,20 +1,20 @@
-version: "3.8"
 services:
   web:
     build:
       context: .
-      target: moderator-dev
+      target: dev
+      args:
+        UID: ${UID:-10001}
+        GID: ${GID:-10001}
+
     ports:
-      - "8000:8000"
+      - 8000:8000
+
     stdin_open: true
     tty: true
     volumes:
       - .:/app
-    command: ./bin/run-dev.sh
-    env_file: .env
-    depends_on:
-      - mariadb
-      - mailcatcher
+
   mariadb:
     image: mariadb:10-jammy
     environment:
@@ -22,12 +22,14 @@ services:
       MYSQL_USER: "moderator"
       MYSQL_PASSWORD: "moderator"
       MYSQL_DATABASE: "moderator"
+
     volumes:
       - moderatorvolume:/var/lib/mysql
+
   mailcatcher:
     image: schickling/mailcatcher
     ports:
-      - "1080:1080"
+      - 1080:1080
 
 volumes:
-  moderatorvolume:
+  moderatorvolume: {}
