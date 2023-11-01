@@ -1,61 +1,82 @@
-FROM python:3.11-bullseye as moderator-dev
+FROM python:3.11.5 as base
 
-EXPOSE 8000
-WORKDIR /app
-CMD ["./bin/run-dev.sh"]
-ENV LANG=C.UTF-8 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PATH="/venv/bin:$PATH" \
-    POETRY_VERSION=1.6 \
-    PIP_VERSION=23.2.1
+ENV POETRY_VERSION=1.6.1 \
+  POETRY_VIRTUALENVS_IN_PROJECT=true \
+  POETRY_HOME=/opt/poetry \
+  PYSETUP_PATH=/opt/pysetup
 
-RUN useradd -d /app -M --uid 1000 --shell /usr/bin/zsh webdev
+RUN python -m venv $POETRY_HOME; \
+  $POETRY_HOME/bin/pip install poetry==$POETRY_VERSION
 
-RUN set -xe \
-    && apt-get update && apt-get install apt-transport-https \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends build-essential libmariadb3 mariadb-client optipng zip zsh \
-    # python
-    && python -m venv /venv \
-    && pip install --upgrade pip==${PIP_VERSION} \
-    && pip install --upgrade poetry==${POETRY_VERSION} \
-    && poetry config virtualenvs.create false \
-    # clean up
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR $PYSETUP_PATH
 
-COPY scripts/install_nodejs.sh ./install_nodejs.sh
-RUN ./install_nodejs.sh && rm ./install_nodejs.sh
-
-RUN npm install -g bower gulp-cli
 COPY pyproject.toml poetry.lock ./
-RUN poetry install
 
-COPY . /app
+RUN $POETRY_HOME/bin/poetry install --no-dev --no-root
 
-RUN chown webdev.webdev -R .
-USER webdev
+FROM python:3.11.5-slim as dev
 
-FROM python:3.11-slim-bullseye as moderator-prod
+ARG UID=10001
+ARG GID=10001
 
-EXPOSE 8000
+COPY scripts/install_nodejs.sh /opt/
+RUN apt-get update; \
+  apt-get install -y \
+    curl \
+    gpg \
+    mariadb-client \
+    zip \
+    zsh; \
+  /opt/install_nodejs.sh; \
+  npm install -g bower gulp-cli; \
+  rm -rf /var/lib/apt/lists/*
 
+ENV PORT=8000 \
+  PATH=/opt/pysetup/.venv/bin:$PATH \
+  VENV_PATH=/opt/pysetup/.venv
 
+COPY --from=base $VENV_PATH $VENV_PATH
+
+RUN groupadd -g $GID app; \
+  useradd -g $GID -u $UID -M -s /usr/bin/zsh app; \
+  mkdir -p /app; \
+  chown -R app:app /app
+
+USER app
 WORKDIR /app
+
+COPY --chown=app:app . .
+
+EXPOSE $PORT
+
+CMD ["./bin/run-dev.sh"]
+
+FROM python:3.11.5-slim as prod
+
+ARG UID=10001
+ARG GID=10001
+
+RUN apt-get update; \
+  apt-get install --no-install-recommends \
+    mariadb-client; \
+  rm -rf /var/lib/apt/lists/*
+
+ENV PORT=8000 \
+  PATH=/opt/pysetup/.venv/bin:$PATH \
+  VENV_PATH=/opt/pysetup/.venv
+
+COPY --from=base $VENV_PATH $VENV_PATH
+
+RUN groupadd -g $GID app; \
+  useradd -g $GID -u $UID -M -s /bin/bash app; \
+  mkdir -p /app; \
+  chown -R app:app /app
+
+USER app
+WORKDIR /app
+
+COPY --chown=app:app . .
+
+EXPOSE $PORT
+
 CMD ["./bin/run-prod.sh"]
-
-RUN useradd -d /app -M --uid 1000 --shell /usr/bin/nologin webdev
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends build-essential gnupg default-libmysqlclient-dev default-mysql-client curl && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends libmariadb3 mariadb-client && \
-    # clean up
-    rm -rf /var/lib/apt/lists/*
-
-COPY . /app
-
-RUN chown webdev.webdev -R .
-USER webdev
