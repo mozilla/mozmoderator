@@ -229,6 +229,7 @@ OIDC_OP_USER_ENDPOINT = config("OIDC_OP_USER_ENDPOINT", default="")
 OIDC_RP_CLIENT_ID = config("OIDC_RP_CLIENT_ID", default="")
 OIDC_RP_OIDC_RP_CLIENT_ID = config("OIDC_RP_CLIENT_ID", default="")
 OIDC_RP_CLIENT_ID = config("OIDC_RP_CLIENT_ID", default="")
+OIDC_RP_CLIENT_SECRET = config("OIDC_RP_CLIENT_SECRET", default="")
 OIDC_RP_CLIENT_SECRET_ENCODED = config(
     "OIDC_RP_CLIENT_SECRET_ENCODED", default=True, cast=bool
 )
