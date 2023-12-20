@@ -1,6 +1,6 @@
-FROM python:3.11.5 as base
+FROM python:3.11.7 as base
 
-ENV POETRY_VERSION=1.6.1 \
+ENV POETRY_VERSION=1.7.1 \
   POETRY_VIRTUALENVS_IN_PROJECT=true \
   POETRY_HOME=/opt/poetry \
   PYSETUP_PATH=/opt/pysetup
@@ -12,12 +12,15 @@ WORKDIR $PYSETUP_PATH
 
 COPY pyproject.toml poetry.lock ./
 
-RUN $POETRY_HOME/bin/poetry install --no-dev --no-root
+RUN $POETRY_HOME/bin/poetry install --no-root
 
-FROM python:3.11.5-slim as dev
+FROM base as dev
+
+WORKDIR /app
 
 ARG UID=10001
 ARG GID=10001
+
 
 COPY scripts/install_nodejs.sh /opt/
 RUN apt-get update; \
@@ -35,15 +38,10 @@ ENV PORT=8000 \
   PATH=/opt/pysetup/.venv/bin:$PATH \
   VENV_PATH=/opt/pysetup/.venv
 
-COPY --from=base $VENV_PATH $VENV_PATH
-
 RUN groupadd -g $GID app; \
-  useradd -g $GID -u $UID -M -s /usr/bin/zsh app; \
-  mkdir -p /app; \
+  useradd -d /app -g $GID -u $UID -M -s /usr/bin/zsh app; \
   chown -R app:app /app
-
 USER app
-WORKDIR /app
 
 COPY --chown=app:app . .
 
@@ -51,7 +49,8 @@ EXPOSE $PORT
 
 CMD ["./bin/run-dev.sh"]
 
-FROM python:3.11.5-slim as prod
+# Production image
+FROM python:3.11.7-slim as prod
 
 ARG UID=10001
 ARG GID=10001
@@ -66,6 +65,9 @@ ENV PORT=8000 \
   VENV_PATH=/opt/pysetup/.venv
 
 COPY --from=base $VENV_PATH $VENV_PATH
+COPY pyproject.toml poetry.lock ./
+
+RUN $POETRY_HOME/bin/poetry install --no-dev --no-root
 
 RUN groupadd -g $GID app; \
   useradd -g $GID -u $UID -M -s /bin/bash app; \
