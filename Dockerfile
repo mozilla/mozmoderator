@@ -62,8 +62,10 @@ RUN apt-get update; \
 
 ENV PORT=8000 \
   PATH=/opt/pysetup/.venv/bin:$PATH \
+  POETRY_HOME=/opt/poetry \
   VENV_PATH=/opt/pysetup/.venv
 
+COPY --from=base $POETRY_HOME $POETRY_HOME
 COPY --from=base $VENV_PATH $VENV_PATH
 COPY pyproject.toml poetry.lock ./
 
