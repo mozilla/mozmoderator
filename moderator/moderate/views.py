@@ -35,7 +35,6 @@ def main(request):
     """Render main page."""
     user = request.user
     if user.is_authenticated:
-
         events = (
             Event.objects.filter(archived=False)
             .prefetch_related("moderators")
@@ -203,7 +202,6 @@ def show_event(request, e_slug, q_id=None):
         request.POST or None, instance=question, **{"is_locked": True}
     )
 
-    is_replied = False
     is_new_question = False
     if question_form.is_valid() and not event.archived:
         question_obj = question_form.save(commit=False)
@@ -216,10 +214,8 @@ def show_event(request, e_slug, q_id=None):
             if not question_obj.is_anonymous:
                 question_obj.asked_by = user
                 question_obj.submitter_contact_info = user.email
-        elif not user.userprofile.is_admin:
+        if not user.userprofile.is_admin:
             raise Http404
-        else:
-            is_replied = True
         question_obj.event = event
         question_obj.save()
         msg = "Your question has been successfully submitted. "
@@ -227,12 +223,6 @@ def show_event(request, e_slug, q_id=None):
             msg += "Review is pending by an event moderator."
         if is_new_question:
             messages.success(request, msg)
-
-        if (
-            not Vote.objects.filter(user=user, question=question_obj).exists()
-            and not is_replied
-        ):
-            Vote.objects.create(user=user, question=question_obj)
 
         return redirect(reverse("event", kwargs={"e_slug": event.slug}))
 
@@ -259,7 +249,11 @@ def upvote(request, q_id):
     if question.event.is_nda and not user.userprofile.is_nda_member:
         user_can_vote = False
 
-    if request.is_ajax() and not question.event.archived and user_can_vote:
+    if (
+        request.headers.get("x-requested-with") == "XMLHttpRequest"
+        and not question.event.archived
+        and user_can_vote
+    ):
         if not Vote.objects.filter(user=user, question=question).exists():
             Vote.objects.create(user=user, question=question)
         else:

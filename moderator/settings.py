@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "moderator.moderate",
 ]
 
+if DEV:
+    INSTALLED_APPS += ["django_extensions"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

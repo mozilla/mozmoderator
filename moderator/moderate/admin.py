@@ -102,6 +102,8 @@ class QuestionAdmin(admin.ModelAdmin):
         "is_anonymous",
         "has_contact_info",
     )
+    list_filter = ["is_accepted", "is_anonymous", "event__name"]
+    search_fields = ["event__name", "asked_by__username", "asked_by__email"]
 
     def has_contact_info(self, obj):
         return obj.has_contact_info
