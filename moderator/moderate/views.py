@@ -244,10 +244,15 @@ def upvote(request, q_id):
     """Upvote question"""
 
     question = Question.objects.get(pk=q_id)
-    user_can_vote = True
+    event = question.event
     user = request.user
-    if question.event.is_nda and not user.userprofile.is_nda_member:
-        user_can_vote = False
+    if not (
+        user_can_vote := (
+            event.users_can_vote or (event.is_nda and user.userprofile.is_nda_member)
+        )
+    ):
+        msg = "Voting is not allowed for this event."
+        messages.warning(request, msg)
 
     if (
         request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -263,7 +268,7 @@ def upvote(request, q_id):
 
         return JsonResponse(response_dict)
 
-    return show_event(request, question.event.slug)
+    return redirect(reverse("event", kwargs={"e_slug": event.slug}))
 
 
 class ModeratorsAutocomplete(autocomplete.Select2QuerySetView):

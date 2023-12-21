@@ -70,6 +70,7 @@ class Event(models.Model):
     )
     moderators = models.ManyToManyField(User, related_name="events_moderated")
     is_moderated = models.BooleanField(default=False)
+    users_can_vote = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -89,10 +90,11 @@ class Event(models.Model):
 
 class Question(models.Model):
     """Question relational model."""
+
     ACCEPTANCE_CHOICES = [
-            (True, "Accepted"),
-            (False, "Rejected"),
-            (None, "Pending"),
+        (True, "Accepted"),
+        (False, "Rejected"),
+        (None, "Pending"),
     ]
     asked_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     event = models.ForeignKey(Event, related_name="questions", on_delete=models.CASCADE)
@@ -108,7 +110,7 @@ class Question(models.Model):
     # Default value is None, which means that moderation is still pending
     is_accepted = models.BooleanField(
         blank=True, null=True, default=None, choices=ACCEPTANCE_CHOICES
-        )
+    )
     rejection_reason = models.TextField(
         default="",
         blank=True,
