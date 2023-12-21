@@ -9,9 +9,7 @@ from .models import Event, Question
 QUESTION = "Ask your question in 280 characters"
 ANSWER = "Reply to question in 2500 characters"
 CONTACT_INFO = "Optional: Please supply a valid email address."
-REJECTION_REASON = (
-    "Reply to the submitter on why this question was moderated."
-)
+REJECTION_REASON = "Reply to the submitter on why this question was moderated."
 
 
 class QuestionForm(forms.ModelForm):
@@ -64,7 +62,7 @@ class QuestionForm(forms.ModelForm):
         if self.instance.id:
             cdata["question"] = self.instance.question
             # Raise an error if there is no answer
-            if 'answer' in cdata and not cdata["answer"] and self.is_locked:
+            if "answer" in cdata and not cdata["answer"] and self.is_locked:
                 msg = "Please provide a reply."
                 self._errors["answer"] = self.error_class([msg])
             return cdata
@@ -128,11 +126,19 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ["name", "is_nda", "body", "is_moderated", "moderators"]
+        fields = [
+            "name",
+            "is_nda",
+            "body",
+            "is_moderated",
+            "moderators",
+            "users_can_vote",
+        ]
         widgets = (
             {
                 "is_nda": forms.CheckboxInput(),
                 "is_moderated": forms.CheckboxInput(),
+                "users_can_vote": forms.CheckboxInput(),
             },
         )
         labels = {

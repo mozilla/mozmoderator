@@ -65,9 +65,15 @@
       {% endif %}
       {% if user.is_superuser %}
         <div class="checkbox-moderated">
+          {{ event_form.users_can_vote }}
+          <label for="{{ event_form.users_can_vote.id_for_label }}">
+            Allow users to vote in this event?
+          </label>
+        </div>
+        <div class="checkbox-moderated">
           {{ event_form.is_moderated }}
           <label for="{{ event_form.is_moderated.id_for_label }}">
-            Is this event moderated?
+            Is this a moderated event?
           </label>
         </div>
         <div>
