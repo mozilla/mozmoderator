@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    $('.vote.btn').click(function () {
+    $('.vote.btn').on("click", function () {
         var question_id = this.id;
         var icon = '#' + question_id + ' > .glyphicon';
         $.ajax({
@@ -17,12 +17,12 @@ jQuery(document).ready(function ($) {
         window.location = $(this).val();
     });
 
-    $('.reply-button').click(function () {
+    $('.reply-button').on("click", function () {
         var action_post = $('#question-form').attr('action')+'q/'+this.id + '/reply';
         $('#answer-form').attr('action', action_post);
     });
 
-    $('.moderate-button').click(function () {
+    $('.moderate-button').on("click", function () {
         var action_post = $('#moderate-form').attr('action')+this.id + '/rejected';
         $('#moderate-form').attr('action', action_post);
     });
@@ -38,9 +38,9 @@ jQuery(document).ready(function ($) {
 
     $('[data-toggle="tooltip"]').tooltip();
     toggleContactInfo()
-    $("#id_is_anonymous").click(toggleContactInfo);
+    $("#id_is_anonymous").on("click", toggleContactInfo);
 
-    $('#logout').click(function() {
+    $('#logout').on("click", function() {
         $('#logout_form').submit();
     });
 });

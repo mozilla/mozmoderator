@@ -264,7 +264,9 @@ def upvote(request, q_id):
         else:
             Vote.objects.filter(user=user, question=question).delete()
 
-        response_dict = {"current_vote_count": question.votes.count()}
+        response_dict = {}
+        if request.user.is_superuser:
+            response_dict = {"current_vote_count": question.votes.count()}
 
         return JsonResponse(response_dict)
 
