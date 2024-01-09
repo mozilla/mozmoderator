@@ -63,7 +63,7 @@
           </label>
         </div>
       {% endif %}
-      {% if user.is_superuser %}
+      {% if user_can_edit %}
         <div class="checkbox-moderated">
           {{ event_form.users_can_vote }}
           <label for="{{ event_form.users_can_vote.id_for_label }}">
@@ -76,6 +76,14 @@
             Is this a moderated event?
           </label>
         </div>
+        {% if event %}
+          <div class="checkbox-moderated">
+            {{ event_form.archived }}
+            <label for="{{ event_form.archived.id_for_label }}">
+              Should this event be archived?
+            </label>
+          </div>
+        {% endif %}
         <div>
           {{ event_form.moderators.label_tag() }}
           {{ event_form.moderators }}

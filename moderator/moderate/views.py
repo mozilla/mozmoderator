@@ -64,7 +64,7 @@ def archive(request):
     # Filter out NDA events for non-NDA users
     if not request.user.userprofile.is_nda_member and not request.user.is_superuser:
         q_args["is_nda"] = False
-    events_list = Event.objects.filter(**q_args)
+    events_list = Event.objects.filter(**q_args).order_by("-created_at")
     paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
     page = request.GET.get("page")
 
@@ -83,11 +83,15 @@ def edit_event(request, slug=None):
     """Creates a new event."""
     user = request.user
     query_args = []
+    user_can_edit = False
 
     if not user.is_superuser:
         query_args = [Q(created_by=user) | Q(moderators=user)]
 
     event = get_object_or_404(Event, *query_args, slug=slug) if slug else None
+    # if there is an event or no slug, the user can edit
+    if event or not slug:
+        user_can_edit = True
     event_form = EventForm(request.POST or None, instance=event, user=user)
 
     if event_form.is_valid():
@@ -102,6 +106,8 @@ def edit_event(request, slug=None):
         else:
             msg = "Event successfully created."
         messages.success(request, msg)
+        if e.archived:
+            return redirect(reverse("archive"))
         return redirect(reverse("main"))
 
     ctx = {
@@ -109,6 +115,7 @@ def edit_event(request, slug=None):
         "event_form": event_form,
         "event": event,
         "profile": user.userprofile,
+        "user_can_edit": user_can_edit,
     }
 
     return render(request, "create_event.jinja", ctx)

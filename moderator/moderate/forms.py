@@ -98,6 +98,7 @@ class EventForm(forms.ModelForm):
             self.fields["name"].required = True
         else:
             self.fields["moderators"].initial = User.objects.filter(id=self.user.pk)
+            del self.fields["archived"]
 
     def clean(self):
         """
@@ -132,6 +133,7 @@ class EventForm(forms.ModelForm):
             "body",
             "is_moderated",
             "moderators",
+            "archived",
             "users_can_vote",
         ]
         widgets = (
