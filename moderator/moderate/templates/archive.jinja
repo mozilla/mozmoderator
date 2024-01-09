@@ -16,6 +16,20 @@
         <span class="questions-counter"> {{ event.questions.count() }} questions asked</span>
       </a>
     </div>
+    {% if event.created_by == request.user or request.user in event.moderators.all() %}
+      <div>
+        <div class="edit-container">
+          <a href="{{ url('edit_event', slug=event.slug) }}"
+            class="btn btn-primary btn-sm">edit</a>
+        </div>
+        {% if event.created_by == request.user %}
+          <div class="delete-container">
+            <a href="{{ url('delete_event', slug=event.slug) }}"
+              class="btn btn-danger btn-sm">delete</a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 {% endfor %}
 
