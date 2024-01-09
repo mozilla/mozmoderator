@@ -214,7 +214,7 @@ def show_event(request, e_slug, q_id=None):
             if not question_obj.is_anonymous:
                 question_obj.asked_by = user
                 question_obj.submitter_contact_info = user.email
-        if not user.userprofile.is_admin:
+        elif not user.userprofile.is_admin:
             raise Http404
         question_obj.event = event
         question_obj.save()
