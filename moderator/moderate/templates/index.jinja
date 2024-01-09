@@ -32,7 +32,7 @@
               <span class="questions-counter"> {{ event.questions.filter(is_accepted=True).count() }} questions asked</span>
             {% endif %}
           </a>
-          <p>{{ event.body }}</p>
+          <p>{{ event.body|to_markdown }}</p>
         </div>
       </div>
       {% if event.created_by == request.user or request.user in event.moderators.all() %}
