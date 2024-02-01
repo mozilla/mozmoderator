@@ -75,6 +75,7 @@ class EventAdmin(admin.ModelAdmin):
         "slug",
         "questions_count",
         "created_at",
+        "event_date",
         "archived",
         "is_nda",
     )

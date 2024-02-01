@@ -2,49 +2,44 @@
 
 {% set edit=False %}
 {% if slug %}
-  {% set edit=True %}
+{% set edit=True %}
 {% endif %}
 
 {% block head %}
-  <title>Mozilla Moderator -
-    {% if event %}
-      Edit event {{ event.name }}
-    {% else %}
-      Create an event
-    {% endif %}
-  </title>
+<title>Mozilla Moderator -
+  {% if event %}
+  Edit event {{ event.name }}
+  {% else %}
+  Create an event
+  {% endif %}
+</title>
 {% endblock %}
 
 {% block breadcrumb %}
 
-  {% if event_form.errors %}
-    <div class="alert alert-danger alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      Please correct the errors below.
-    </div>
-  {% endif %}
+{% if event_form.errors %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  Please correct the errors below.
+</div>
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
 <h1 class="text-center h3">
   {% if edit %}
-    Edit Event
+  Edit Event
   {% else %}
-    Create an Event
+  Create an Event
   {% endif %}
 </h1>
 <div class="panel panel-default">
   <div class="panel-body">
-    <form method="post"
-          {% if edit %}
-            action="{{ url('edit_event', slug=slug) }}"
-          {% else %}
-            action="{{ url('create_event') }}"
-          {% endif %}
-          id="question-form">
+    <form method="post" {% if edit %} action="{{ url('edit_event', slug=slug) }}" {% else %}
+      action="{{ url('create_event') }}" {% endif %} id="question-form">
       {% csrf_token %}
       <div class="form-group question-text" id="event-input">
         <label for="{{ event_form.name.id_for_label }}">
@@ -58,37 +53,44 @@
         </label>
         {{ event_form.body }}
       </div>
+      <div class="form-group question-text">
+        <label for="{{ event_form.event_date.id_for_label }}">
+          When is this event happening?
+        </label>
+        {{ event_form.event_date }}
+      </div>
       {% if user_can_edit %}
-        <div class="checkbox-moderated">
-          {{ event_form.users_can_vote }}
-          <label for="{{ event_form.users_can_vote.id_for_label }}">
-            Should users be allowed to vote questions in this events?
-          </label>
-        </div>
-        <div class="checkbox-nda">
-          {{ event_form.is_nda }}
-          <label for="{{ event_form.is_nda.id_for_label }}">
-            Should <a target="_blank" href="https://people.mozilla.org/a/nda">NDA Community members</a> be able to see this event?
-          </label>
-        </div>
-        <div class="checkbox-moderated">
-          {{ event_form.is_moderated }}
-          <label for="{{ event_form.is_moderated.id_for_label }}">
-            Should this be a moderated event?
-          </label>
-        </div>
-        {% if event %}
-          <div class="checkbox-moderated">
-            {{ event_form.archived }}
-            <label for="{{ event_form.archived.id_for_label }}">
-              Should this event be archived?
-            </label>
-          </div>
-        {% endif %}
-        <div>
-          {{ event_form.moderators.label_tag() }}
-          {{ event_form.moderators }}
-        </div>
+      <div class="checkbox-moderated">
+        {{ event_form.users_can_vote }}
+        <label for="{{ event_form.users_can_vote.id_for_label }}">
+          Should users be allowed to vote questions in this events?
+        </label>
+      </div>
+      <div class="checkbox-nda">
+        {{ event_form.is_nda }}
+        <label for="{{ event_form.is_nda.id_for_label }}">
+          Should <a target="_blank" href="https://people.mozilla.org/a/nda">NDA Community members</a> be able to see
+          this event?
+        </label>
+      </div>
+      <div class="checkbox-moderated">
+        {{ event_form.is_moderated }}
+        <label for="{{ event_form.is_moderated.id_for_label }}">
+          Should this be a moderated event?
+        </label>
+      </div>
+      {% if event %}
+      <div class="checkbox-moderated">
+        {{ event_form.archived }}
+        <label for="{{ event_form.archived.id_for_label }}">
+          Should this event be archived?
+        </label>
+      </div>
+      {% endif %}
+      <div>
+        {{ event_form.moderators.label_tag() }}
+        {{ event_form.moderators }}
+      </div>
       {% endif %}
       {{ event_form.non_field_errors() }}
       <div>
