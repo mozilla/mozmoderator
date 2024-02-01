@@ -135,6 +135,7 @@ class EventForm(forms.ModelForm):
             "moderators",
             "archived",
             "users_can_vote",
+            "event_date"
         ]
         widgets = (
             {

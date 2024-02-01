@@ -1,9 +1,17 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
 from django.db.models import signals as dbsignals
 from django.dispatch import receiver
+from django.utils.timezone import now as django_now
 from uuslug import uuslug
+
+
+def default_date():
+    """Default date."""
+    return django_now().date() + timedelta(days=1)
 
 
 class MozillianProfile(models.Model):
@@ -64,6 +72,7 @@ class Event(models.Model):
     archived = models.BooleanField(default=False)
     slug = models.SlugField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    event_date = models.DateField(null=True, blank=True, default=default_date)
     is_nda = models.BooleanField(default=False)
     created_by = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL
