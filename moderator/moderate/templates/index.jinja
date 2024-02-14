@@ -1,71 +1,70 @@
 {% extends "base.jinja" %}
 
 {% block head %}
-  <title>Mozilla Moderator - Events</title>
+<title>Mozilla Moderator - Events</title>
 {% endblock %}
 
 {% block content %}
 
 {% if user.is_authenticated %}
-  <h3 class="text-center">Select event to view and ask questions.</h3>
+<h3 class="text-center">Select event to view and ask questions.</h3>
 
-  {% for event in events.order_by('-created_at') %}
-    {% set display_moderation = False %}
-    {% set has_pending_questions = False %}
-    {% if event.is_moderated and request.user in event.moderators.all() %}
-      {% set display_moderation = True %}
-    {% endif %}
-    {% if event.questions.filter(is_accepted__isnull=True).exists() %}
-      {% set has_pending_questions = True %}
-    {% endif %}
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <div class="event-listing">
-          <a href="{{ url('event', e_slug=event.slug) }}">
-            <h1>{{ event.name }}</h1>
-            {% if display_moderation %}
-              <span class="questions-counter">
-                {{ event.approved_count }} approved,
-                {{ event.rejected_count }} rejected,
-                {{ event.pending_count }} pending</span>
-            {% else %}
-              <span class="questions-counter"> {{ event.questions.filter(is_accepted=True).count() }} questions asked</span>
-            {% endif %}
-          </a>
-          <p>{{ event.body|to_markdown }}</p>
-        </div>
-      </div>
-      {% if event.created_by == request.user or request.user in event.moderators.all() %}
-        <div>
-          <div class="edit-container">
-            <a href="{{ url('edit_event', slug=event.slug) }}"
-              class="btn btn-primary btn-sm">edit</a>
-            {% if display_moderation and has_pending_questions %}
-              <a href="{{ url('moderate_event', slug=event.slug) }}"
-                class="btn btn-primary btn-sm">moderate</a>
-            {% endif %}
-          </div>
-          {% if event.created_by == request.user %}
-            <div class="delete-container">
-              <a href="{{ url('delete_event', slug=event.slug) }}"
-                class="btn btn-danger btn-sm">delete</a>
-            </div>
+{% for event in events.order_by('-created_at') %}
+{% set display_moderation = False %}
+{% set has_pending_questions = False %}
+{% if event.is_moderated and request.user in event.moderators.all() %}
+{% set display_moderation = True %}
+{% endif %}
+{% if event.questions.filter(is_accepted__isnull=True).exists() %}
+{% set has_pending_questions = True %}
+{% endif %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="event-listing">
+      <a href="{{ url('event', e_slug=event.slug) }}">
+        <h1>{{ event.name }}</h1>
+        <span class="questions-counter">
+          {{ event.questions.filter(is_accepted=True).count() }} questions asked<br>
+          {% if display_moderation %}
+          {{ event.approved_count }} approved,
+          {{ event.rejected_count }} rejected,
+          {{ event.pending_count }} pending
           {% endif %}
-        </div>
+        </span>
+      </a>
+      <p>{{ event.body|to_markdown }}</p>
+    </div>
+  </div>
+  {% if event.created_by == request.user or request.user in event.moderators.all() %}
+  <div>
+    <div class="edit-container">
+      <a href="{{ url('edit_event', slug=event.slug) }}" class="btn btn-primary btn-sm">edit</a>
+      {% if display_moderation and has_pending_questions %}
+      <a href="{{ url('moderate_event', slug=event.slug) }}" class="btn btn-primary btn-sm">moderate</a>
       {% endif %}
     </div>
-  {% endfor %}
+    {% if event.created_by == request.user %}
+    <div class="delete-container">
+      <a href="{{ url('delete_event', slug=event.slug) }}" class="btn btn-danger btn-sm">delete</a>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="event-date">
+    {{ event.event_date|date('F j, Y') }}
+  </div>
+</div>
+{% endfor %}
 
 {% else %}
-  <h3 class="text-center">Let your voice be heard.</h3>
-  <p class="text-center">
-    Mozilla Moderator is a panel moderation system for submitting and voting
-    on questions.
-  </p>
-  <p class="text-center">
-    <a class="login btn btn-primary"
-       href="{{ url('oidc_authentication_init') }}">Login</a>
-  </p>
+<h3 class="text-center">Let your voice be heard.</h3>
+<p class="text-center">
+  Mozilla Moderator is a panel moderation system for submitting and voting
+  on questions.
+</p>
+<p class="text-center">
+  <a class="login btn btn-primary" href="{{ url('oidc_authentication_init') }}">Login</a>
+</p>
 {% endif %}
 
 {% endblock %}
