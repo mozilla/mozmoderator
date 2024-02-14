@@ -1,4 +1,5 @@
 from dal import autocomplete
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
@@ -11,6 +12,7 @@ from django.http import Http404, JsonResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.timezone import now as django_now
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
 from moderator.moderate.forms import EventForm, QuestionForm
@@ -64,11 +66,13 @@ def archive(request):
     # Filter out NDA events for non-NDA users
     if not request.user.userprofile.is_nda_member and not request.user.is_superuser:
         q_args["is_nda"] = False
-    events_list = Event.objects.filter(**q_args).annotate(
-        approved_count=Count(
-            "questions", filter=Q(questions__is_accepted=True)
+    events_list = (
+        Event.objects.filter(**q_args)
+        .annotate(
+            approved_count=Count("questions", filter=Q(questions__is_accepted=True))
         )
-    ).order_by("-created_at")
+        .order_by("-created_at")
+    )
     paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
     page = request.GET.get("page")
 
@@ -288,10 +292,15 @@ def upvote(request, q_id):
 
 class ModeratorsAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        if not self.request.user.is_authenticated or not self.request.user.is_superuser:
+        if not self.request.user.is_authenticated:
             return User.objects.none()
 
-        qs = User.objects.filter()
+        # exclude users that are not admins
+        # and are not active or haven't logged in for 6 months
+        last_login_date = django_now().date() - relativedelta(months=6)
+        qs = User.objects.exclude(
+            Q(is_active=False) | Q(is_superuser=False, last_login__lt=last_login_date)
+        ).filter()
 
         if self.q:
             qs = qs.filter(Q(first_name__icontains=self.q) | Q(email__icontains=self.q))
