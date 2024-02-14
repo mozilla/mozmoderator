@@ -111,16 +111,8 @@ class EventForm(forms.ModelForm):
             msg = "Only members of the NDA group can create NDA events."
             raise forms.ValidationError(msg)
         # Don't allow non-superusers to modify moderation status or moderators
-        if not self.user.is_superuser:
-            if self.instance.id:
-                cdata["is_moderated"] = self.instance.is_moderated
-                cdata["moderators"] = self.instance.moderators.all()
-            else:
-                cdata["is_moderated"] = False
-                del cdata["moderators"]
-        # Require moderators to be set if the event is moderated
-        if cdata["is_moderated"] and not cdata["moderators"]:
-            msg = "A moderated event requires moderators."
+        if not cdata['moderators']:
+            msg = "An event should have at least one moderator."
             raise forms.ValidationError(msg)
 
         return cdata
