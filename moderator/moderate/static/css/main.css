@@ -3,8 +3,7 @@
 @font-face {
     font-family: "Open Sans";
     src: url("/static/fonts/OpenSans-Regular.eot");
-    src: url("/static/fonts/OpenSans-Regular.eot?#iefix")
-            format("embedded-opentype"),
+    src: url("/static/fonts/OpenSans-Regular.eot?#iefix") format("embedded-opentype"),
         url("/static/fonts/OpenSans-Regular.woff") format("woff"),
         url("/static/fonts/OpenSans-Regular.ttf") format("truetype"),
         url("/static/fonts/OpenSans-Regular.svg#open_sans") format("svg");
@@ -15,8 +14,7 @@
 @font-face {
     font-family: "Open Sans";
     src: url("/static/fonts/OpenSans-Bold.eot");
-    src: url("/static/fonts/OpenSans-Bold.eot?#iefix")
-            format("embedded-opentype"),
+    src: url("/static/fonts/OpenSans-Bold.eot?#iefix") format("embedded-opentype"),
         url("/static/fonts/OpenSans-Bold.woff") format("woff"),
         url("/static/fonts/OpenSans-Bold.ttf") format("truetype"),
         url("/static/fonts/OpenSans-Bold.svg#open_sansbold") format("svg");
@@ -27,12 +25,10 @@
 @font-face {
     font-family: "Open Sans";
     src: url("/static/fonts/OpenSans-BoldItalic.eot");
-    src: url("/static/fonts/OpenSans-BoldItalic.eot?#iefix")
-            format("embedded-opentype"),
+    src: url("/static/fonts/OpenSans-BoldItalic.eot?#iefix") format("embedded-opentype"),
         url("/static/fonts/OpenSans-BoldItalic.woff") format("woff"),
         url("/static/fonts/OpenSans-BoldItalic.ttf") format("truetype"),
-        url("/static/fonts/OpenSans-BoldItalic.svg#open_sansbold_italic")
-            format("svg");
+        url("/static/fonts/OpenSans-BoldItalic.svg#open_sansbold_italic") format("svg");
     font-weight: bold;
     font-style: italic;
 }
@@ -40,8 +36,7 @@
 @font-face {
     font-family: "Open Sans";
     src: url("/static/fonts/OpenSans-Italic.eot");
-    src: url("/static/fonts/OpenSans-Italic.eot?#iefix")
-            format("embedded-opentype"),
+    src: url("/static/fonts/OpenSans-Italic.eot?#iefix") format("embedded-opentype"),
         url("/static/fonts/OpenSans-Italic.woff") format("woff"),
         url("/static/fonts/OpenSans-Italic.ttf") format("truetype"),
         url("/static/fonts/OpenSans-Italic.svg#open_sansitalic") format("svg");
@@ -154,10 +149,20 @@ ul.errorlist {
 .questions-counter {
     float: right;
     color: #999;
-    margin-top: -10px;
+    margin-top: -35px;
+    text-align: right;
 }
 
-.askedby {
+
+.event-date {
+    float: right;
+    color: #999;
+    margin-top: -35px;
+    text-align: right;
+    padding-right: 35px;
+}
+
+*/ .askedby {
     display: inline-block;
     width: 10%;
     vertical-align: top;
@@ -302,6 +307,7 @@ ul.errorlist {
     padding: 5px 10px;
     font-size: 12px;
 }
+
 @media only screen and (max-width: 1200px) {
     .reply-button {
         margin-top: 5px;
@@ -408,6 +414,7 @@ ul.errorlist {
 .ribbon:before {
     left: 0;
 }
+
 .ribbon::after {
     right: 0;
 }
@@ -483,6 +490,7 @@ ul.errorlist {
 }
 
 @media only screen and (max-width: 768px) {
+
     .site-footer,
     #wrapper:after {
         height: 490px;
