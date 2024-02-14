@@ -213,10 +213,12 @@ def show_event(request, e_slug, q_id=None):
     if question_form.is_valid() and not event.archived:
         question_obj = question_form.save(commit=False)
         # Do not change the user if posting a reply
+        moderator_ids = event.moderators.values_list("id", flat=True)
+        accept_question = not event.is_moderated or user.id in moderator_ids
         if not question_obj.id:
             is_new_question = True
             # mark as accepted for non moderated events
-            if not event.is_moderated:
+            if accept_question:
                 question_obj.is_accepted = True
             if not question_obj.is_anonymous:
                 question_obj.asked_by = user
@@ -226,7 +228,7 @@ def show_event(request, e_slug, q_id=None):
         question_obj.event = event
         question_obj.save()
         msg = "Your question has been successfully submitted. "
-        if event.is_moderated:
+        if not accept_question:
             msg += "Review is pending by an event moderator."
         if is_new_question:
             messages.success(request, msg)
