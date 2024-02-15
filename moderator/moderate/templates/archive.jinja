@@ -28,6 +28,9 @@
     {% endif %}
   </div>
   {% endif %}
+  <div class="event-date">
+    {{ event.event_date|date('F j, Y') }}
+  </div>
 </div>
 {% endfor %}
 
