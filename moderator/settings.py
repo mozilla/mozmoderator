@@ -249,6 +249,7 @@ ALLOWED_LOGIN_GROUPS = [
     "team_mozillaonline",
     "team_pocket",
     "team_mzla",
+    "team_mzvc",
     "team_mzai",
     "hris_is_staff",
     "mozilliansorg_nda",
