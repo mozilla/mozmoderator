@@ -1,162 +1,146 @@
 {% extends "base.jinja" %}
+{% from "includes/profiles.html" import user_profile %}
 
 {% block head %}
-  <title>Mozilla Moderator - {{ event.name }}</title>
+<title>Mozilla Moderator - {{ event.name }}</title>
 {% endblock %}
 
 {% block breadcrumb %}
-  <ol class="breadcrumb">
-    <li><a href="/">Events</a></li>
-    <li class="active">{{ event.name }}</li>
-  </ol>
+<ol class="breadcrumb">
+  <li><a href="/">Events</a></li>
+  <li class="active">{{ event.name }}</li>
+</ol>
 
-  {% if q_form.errors %}
-    <div class="alert alert-danger alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-      Please correct the errors below.
-    </div>
-  {% endif %}
+{% if q_form.errors %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  Please correct the errors below.
+</div>
+{% endif %}
 {% endblock %}
 
 {% block content %}
-  {% if open %}
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <form method="post" action="{{ url('event', e_slug=event.slug) }}"
-              id="question-form">
-          {% csrf_token %}
-          {{ q_form.non_field_errors() }}
-          <div class="selfimage">
-            {% if not user.userprofile.avatar_url %}
-              <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}" />
-            {% else %}
-              <img src="{{ user.userprofile.avatar_url }}"  alt="User profile image" />
-            {% endif %}
-          </div>
-          <div class="form-group question-text
+{% if open %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    <form method="post" action="{{ url('event', e_slug=event.slug) }}" id="question-form">
+      {% csrf_token %}
+      {{ q_form.non_field_errors() }}
+      <div class="selfimage">
+        {% if not user.userprofile.avatar_url %}
+        <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}" />
+        {% else %}
+        <img src="{{ user.userprofile.avatar_url }}" alt="User profile image" />
+        {% endif %}
+      </div>
+      <div class="form-group question-text
             {% if q_form.question.errors %}
               has-error
             {% endif %}" id="question-input">
-            {{ q_form.question }}
-            {{ q_form.question.errors }}
-          </div>
-          <div class="checkbox-anonymous">
-            {{ q_form.is_anonymous }}
-            <label for="{{ q_form.is_anonymous.id_for_label }}">
-              Post as an anonymous user.
-            </label>
-          </div>
-          {% if event.is_moderated %}
-            <div class="form-group question-text contact-info-container">
-              <p>
-                This question will wait in a queue until it's been approved by a moderator.
-                By supplying any valid email address, including those provided by Firefox Relay,
-                the moderator will be able to provide an explanation if your question is declined.
-              </p>
-              {{ q_form.submitter_contact_info }}
-              {{ q_form.submitter_contact_info.errors }}
-            </div>
-          {% endif %}
-          <div class="ask-container">
-            <input type="submit" class="btn btn-default" value="submit">
-          </div>
-        </form>
+        {{ q_form.question }}
+        {{ q_form.question.errors }}
       </div>
+      <div class="checkbox-anonymous">
+        {{ q_form.is_anonymous }}
+        <label for="{{ q_form.is_anonymous.id_for_label }}">
+          Post as an anonymous user.
+        </label>
+      </div>
+      {% if event.is_moderated %}
+      <div class="form-group question-text contact-info-container">
+        <p>
+          This question will wait in a queue until it's been approved by a moderator.
+          By supplying any valid email address, including those provided by Firefox Relay,
+          the moderator will be able to provide an explanation if your question is declined.
+        </p>
+        {{ q_form.submitter_contact_info }}
+        {{ q_form.submitter_contact_info.errors }}
+      </div>
+      {% endif %}
+      <div class="ask-container">
+        <input type="submit" class="btn btn-default" value="submit">
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% for q in questions %}
+<div class="panel panel-default">
+  <div class="panel-body">
+    {% if q.addressed %}
+    <div class="ribbon-wrapper">
+      <div class="ribbon">answered</div>
     </div>
-  {% endif %}
+    {% endif %}
 
-  {% for q in questions %}
-    <div class="panel panel-default">
-      <div class="panel-body">
-        {% if q.addressed %}
-          <div class="ribbon-wrapper"><div class="ribbon">answered</div></div>
-        {% endif %}
+    {{ user_profile(q.asked_by) }}
 
-          <div class="askedby">
-            {% if not q.is_anonymous %}
-              <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
-                {% if q.asked_by.userprofile.avatar_url == "" %}
-                  <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}"
-                       title="{{ q.asked_by.userprofile.username }}" data-toggle="tooltip" data-placement="bottom">
-                {% else %}
-                  <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}"
-                       title="{{ q.asked_by.userprofile.username }}" data-toggle="tooltip" data-placement="bottom">
-                {% endif %}
-              </a>
-            {% else %}
-              <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}"
-                   title="anonymous" data-toggle="tooltip" data-placement="bottom">
-            {% endif %}
-          </div>
+    <div class="question-text">
+      <h3>{{ q.question|to_markdown }}</h3>
+    </div>
 
-        <div class="question-text">
-          <h3>{{ q.question|to_markdown }}</h3>
+    <div class="vote-container">
+      {% if event.users_can_vote %}
+      {% if not open or user.userprofile.is_admin %}
+      <span class="vote-count">{{ q.vote_count }}</span>
+      {% endif %}
+      {% if open %}
+      {% if user_voted(q, user) %}
+      <button class="btn btn-primary btn-sm vote" id="{{ q.id }}" aria-label="Remove the upvote">
+        <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+      </button>
+      {% else %}
+      <button class="btn btn-primary btn-sm vote" id="{{ q.id }}" aria-label="Upvote">
+        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+      </button>
+      {% endif %}
+      {% endif %}
+      {% endif %}
+      {% if open and user.userprofile.is_admin and not q.answer %}
+      <button class="btn btn-default btn-sm reply-button" id="{{ q.id }}" aria-label="Answer this question"
+        data-toggle="modal" data-target="#AnswerModal">
+        reply
+      </button>
+      {% endif %}
+    </div>
+
+    {% if q.answer %}
+    <div class="reply-row">
+      Answer: {{ q.answer }}
+    </div>
+    {% endif %}
+    {% if q_form.instance.id == q.id %}
+    {{ q_form.answer.errors }}
+    {% endif %}
+
+  </div>
+</div>
+{% endfor %}
+
+<!-- Modal for Question Reply -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="AnswerModalLabel" id="AnswerModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form method="post" action="" id="answer-form">
+        {% csrf_token %}
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Answer</h4>
         </div>
-
-          <div class="vote-container">
-          {% if event.users_can_vote %}
-            {% if not open or user.userprofile.is_admin %}
-              <span class="vote-count" >{{ q.vote_count }}</span>
-            {% endif %}
-            {% if open %}
-              {% if user_voted(q, user) %}
-                <button class="btn btn-primary btn-sm vote" id="{{ q.id }}" aria-label="Remove the upvote">
-                  <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
-                </button>
-              {% else %}
-                <button class="btn btn-primary btn-sm vote" id="{{ q.id }}" aria-label="Upvote">
-                  <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-                </button>
-              {% endif %}
-            {% endif %}
-          {% endif %}
-          {% if open and user.userprofile.is_admin and not q.answer %}
-            <button class="btn btn-default btn-sm reply-button"
-              id="{{ q.id }}"
-              aria-label="Answer this question"
-              data-toggle="modal" data-target="#AnswerModal">
-              reply
-            </button>
-          {% endif %}
-          </div>
-
-        {% if q.answer %}
-          <div class="reply-row">
-            Answer: {{ q.answer }}
-          </div>
-        {% endif %}
-        {% if q_form.instance.id == q.id %}
-          {{ q_form.answer.errors }}
-        {% endif %}
-
-      </div>
-    </div>
-  {% endfor %}
-
-  <!-- Modal for Question Reply -->
-  <div class="modal fade" tabindex="-1" role="dialog"
-       aria-labelledby="AnswerModalLabel" id="AnswerModal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <form method="post" action="" id="answer-form">
-          {% csrf_token %}
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title">Answer</h4>
-          </div>
-          <div class="modal-body">
-            {{ q_form.answer }}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <input type="submit" class="btn btn-primary" value="Submit">
-          </div>
-        </form>
-      </div>
+        <div class="modal-body">
+          {{ q_form.answer }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Submit">
+        </div>
+      </form>
     </div>
   </div>
+</div>
 {% endblock %}
