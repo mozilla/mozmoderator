@@ -1,84 +1,68 @@
 {% extends "base.jinja" %}
+{% from "includes/profiles.html" import user_profile %}
 
 {% block head %}
-  <title>Mozilla Moderator - Queue</title>
+<title>Mozilla Moderator - Queue</title>
 {% endblock %}
 
 {% block content %}
-  {% if questions %}
-    {% for q in questions %}
-      <div class="panel panel-default">
-        <div class="panel-body">
+{% if questions %}
+{% for q in questions %}
+<div class="panel panel-default">
+  <div class="panel-body">
 
-            <div class="askedby">
-              {% if not q.is_anonymous %}
-                <a href="https://mozillians.org/u/{{ q.asked_by.userprofile.username }}" target="_blank">
-                  {% if q.asked_by.userprofile.avatar_url == "" %}
-                    <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}"
-                        title="{{ q.asked_by.userprofile.username }}" data-toggle="tooltip" data-placement="bottom">
-                  {% else %}
-                    <img alt="User profile image" src="{{ q.asked_by.userprofile.avatar_url }}"
-                        title="{{ q.asked_by.userprofile.username }}" data-toggle="tooltip" data-placement="bottom">
-                  {% endif %}
-                </a>
-              {% else %}
-                <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}"
-                    title="anonymous" data-toggle="tooltip" data-placement="bottom">
-              {% endif %}
-            </div>
+    {{ user_profile(q.asked_by) }}
 
-          <div class="question-text">
-            <h3>{{ q.question }}</h3>
-          </div>
-
-          <div class="accept-container">
-            <a href="{{ url('moderate_accept_question', slug=event.slug, q_id=q.pk) }}"
-              class="btn btn-primary btn-sm">accept</a>
-          </div>
-          <div class="reject-container">
-            {% if not q.has_contact_info %}
-              <a href="{{ url('moderate_reject_question', slug=event.slug, q_id=q.pk) }}"
-                 class="btn btn-danger btn-sm">reject</a>
-              {% else %}
-                <button class="btn btn-danger btn-sm moderate-button"
-                  id="{{ q.pk }}"
-                  data-toggle="modal" data-target="#ModerateModal">
-                  reply
-                </button>
-              {% endif %}
-          </div> 
-        </div>
-      </div>
-    {% endfor %}
-  {% else%}
-    <div class="moderation-container">
-      <h3>This event has no pending questions for moderation &#127881;</p>
+    <div class="question-text">
+      <h3>{{ q.question }}</h3>
     </div>
-  {% endif %}
 
-
-  <!-- Modal for Moderation Reply -->
-  <div class="modal fade" tabindex="-1" role="dialog"
-       aria-labelledby="ModerateModalLabel" id="ModerateModal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <form method="post" action="{{ url('moderate_event', slug=event.slug) }}" id="moderate-form">
-          {% csrf_token %}
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title">Moderator's reply</h4>
-          </div>
-          <div class="modal-body">
-            {{ q_form.rejection_reason }}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <input type="submit" class="btn btn-primary" value="Submit">
-          </div>
-        </form>
-      </div>
+    <div class="accept-container">
+      <a href="{{ url('moderate_accept_question', slug=event.slug, q_id=q.pk) }}"
+        class="btn btn-primary btn-sm">accept</a>
+    </div>
+    <div class="reject-container">
+      {% if not q.has_contact_info %}
+      <a href="{{ url('moderate_reject_question', slug=event.slug, q_id=q.pk) }}"
+        class="btn btn-danger btn-sm">reject</a>
+      {% else %}
+      <button class="btn btn-danger btn-sm moderate-button" id="{{ q.pk }}" data-toggle="modal"
+        data-target="#ModerateModal">
+        reply
+      </button>
+      {% endif %}
     </div>
   </div>
+</div>
+{% endfor %}
+{% else%}
+<div class="moderation-container">
+  <h3>This event has no pending questions for moderation &#127881;</p>
+</div>
+{% endif %}
+
+
+<!-- Modal for Moderation Reply -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ModerateModalLabel" id="ModerateModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form method="post" action="{{ url('moderate_event', slug=event.slug) }}" id="moderate-form">
+        {% csrf_token %}
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Moderator's reply</h4>
+        </div>
+        <div class="modal-body">
+          {{ q_form.rejection_reason }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
