@@ -2,7 +2,7 @@
 <div class="askedby">
   {% if user %}
   {% set profile = user.userprofile %}
-  <a href="https://people.mozilla.org/p/{{ profile.username }}" target="_blank">
+  <a href="https://people.mozilla.org/s/?query={{ profile.username }}&who=staff" target="_blank">
     {% if not profile.avatar_url %}
     <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}" title="{{ profile.username }}"
       data-toggle="tooltip" data-placement="bottom">

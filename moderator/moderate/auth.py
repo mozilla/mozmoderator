@@ -9,7 +9,6 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
         """Get or create a new user only if they have one of the groups
         mentioned in the ALLOWED_LOGIN_GROUPS in the claims.
         """
-
         user_info = self.get_userinfo(access_token, id_token, payload)
         groups = user_info.get("https://sso.mozilla.com/claim/groups", [])
 
@@ -23,10 +22,8 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
     def update_user(self, user, claims):
         # Update user status (nda, staff based on assertions)
         profile = user.userprofile
-        profile.avatar_url = claims.get("picture")
-        profile.username = claims.get("nickname", "")
-        user.first_name = claims.get("given_name", "")
-        user.last_name = claims.get("family_name", "")
+        user.username = claims.get("uid")
+        profile.avatar_url = claims.get("avatar")
         user.save()
 
         # Only staff members and members of the NDA group are allowed to login.
