@@ -12,5 +12,5 @@ def user_voted(question, user):
 @library.filter
 def to_markdown(text):
     """Render markdown text to HTML."""
-    md = markdown.Markdown(extensions=["fenced_code"])
+    md = markdown.Markdown(extensions=["fenced_code", "pymdownx.tilde"])
     return mark_safe(md.convert(text))
