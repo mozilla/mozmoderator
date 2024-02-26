@@ -24,6 +24,7 @@ pymysql = "^1.1.0"
 django-uuslug = "^2.0.0"
 django-ipware = "^5.0.0"
 markdown = "^3.5.1"
+pymdown-extensions = "^10.7"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.15.0"
