@@ -99,7 +99,7 @@
       {% endif %}
       {% endif %}
       {% endif %}
-      {% if open and user.userprofile.is_admin and not q.answer %}
+      {% if open and can_answer_question(q, user) %}
       <button class="btn btn-default btn-sm reply-button" id="{{ q.id }}" aria-label="Answer this question"
         data-toggle="modal" data-target="#AnswerModal">
         reply
