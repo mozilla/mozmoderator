@@ -33,7 +33,7 @@ class MozillianProfile(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.slug = uuslug(self.username, instance=self)
+            self.username = self.user.email.split("@")[0]
         super(MozillianProfile, self).save(*args, **kwargs)
 
     @property

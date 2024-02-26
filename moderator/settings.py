@@ -241,6 +241,7 @@ OIDC_STORE_ACCESS_TOKEN = config("OIDC_STORE_ACCESS_TOKEN", default=True, cast=b
 OIDC_RP_SIGN_ALGO = config("OIDC_RP_SIGN_ALGO", default="RS256")
 OIDC_OP_JWKS_ENDPOINT = config("OIDC_OP_JWKS_ENDPOINT", default="")
 OIDC_RP_SCOPES = "openid email profile"
+OIDC_USE_NONCE = config("OIDC_USE_NONCE", default=True, cast=bool)
 
 # Allowed groups a user must have to login
 ALLOWED_LOGIN_GROUPS = [
