@@ -49,7 +49,7 @@
       </div>
       <div class="form-group question-text">
         <label for="{{ event_form.body.id_for_label }}">
-          Additional information for this event. Markdown supported.
+          Additional information for this event.
           <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">Markdown supported.</a>
         </label>
         {{ event_form.body }}
@@ -64,20 +64,20 @@
       <div class="checkbox-moderated">
         {{ event_form.users_can_vote }}
         <label for="{{ event_form.users_can_vote.id_for_label }}">
-          Should users be allowed to vote questions in this event?
+          Select if users are allowed to vote questions in this event.
         </label>
       </div>
       <div class="checkbox-nda">
         {{ event_form.is_nda }}
         <label for="{{ event_form.is_nda.id_for_label }}">
-          Should <a target="_blank" href="https://people.mozilla.org/a/nda">NDA Community members</a> be able to see
-          this event?
+          Select if <a target="_blank" href="https://people.mozilla.org/a/nda">NDA Community members</a> should be able
+          to see this event.
         </label>
       </div>
       <div class="checkbox-moderated">
         {{ event_form.is_moderated }}
         <label for="{{ event_form.is_moderated.id_for_label }}">
-          Should this be a moderated event?
+          Select if this should be a moderated event.
         </label>
       </div>
       {% if event %}
