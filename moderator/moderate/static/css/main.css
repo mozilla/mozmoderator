@@ -109,7 +109,7 @@ a {
     border: none;
 }
 
-.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav>li>a,
 .navbar-default .btn-link {
     color: #666;
 }
@@ -298,7 +298,7 @@ ul.errorlist {
 }
 
 .info {
-    color: rgb(58, 135, 173);
+    color: #286090;
     background-color: rgb(217, 237, 247);
     border-color: rgb(188, 232, 241);
 }
@@ -308,8 +308,11 @@ ul.errorlist {
 }
 
 .reply-row {
-    margin-right: 60px;
-    float: right;
+    background-color: #f0f0f0;
+    padding: 1em;
+    margin-top: 0.5em;
+    border-left: 5px solid #286090;
+    font-style: italic;
 }
 
 #moderation-button {
