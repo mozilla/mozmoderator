@@ -208,6 +208,8 @@ ul.errorlist {
     display: inline-block;
     width: 75%;
     vertical-align: middle;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .question-text :is(input, textarea) {
@@ -313,6 +315,8 @@ ul.errorlist {
     margin-top: 0.5em;
     border-left: 5px solid #286090;
     font-style: italic;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 #moderation-button {
