@@ -17,6 +17,7 @@ from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
 from moderator.moderate.forms import EventForm, QuestionForm
 from moderator.moderate.models import Event, Question, Vote
+from moderator.moderate.templatetags.helpers import can_moderate_event
 
 SUBJECT = "Question moderation update"
 
@@ -231,7 +232,7 @@ def show_event(request, e_slug, q_id=None):
             if not question_obj.is_anonymous:
                 question_obj.asked_by = user
                 question_obj.submitter_contact_info = user.email
-        elif not user.userprofile.is_admin:
+        elif not can_moderate_event(event, user):
             raise Http404
         question_obj.event = event
         question_obj.save()
@@ -303,7 +304,11 @@ class ModeratorsAutocomplete(autocomplete.Select2QuerySetView):
         ).filter()
 
         if self.q:
-            qs = qs.filter(Q(first_name__icontains=self.q) | Q(email__icontains=self.q))
+            qs = qs.filter(
+                Q(first_name__icontains=self.q)
+                | Q(email__icontains=self.q)
+                | Q(userprofile__username__icontains=self.q)
+            )
         return qs
 
 
