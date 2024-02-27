@@ -19,4 +19,6 @@ def to_markdown(text):
 @library.global_function
 def can_answer_question(question, user):
     """Check if a user can answer a question."""
-    return not question.answer and question.event.moderators.filter(id=user.id).exists()
+    return not question.answer and (
+        user.is_superuser or question.event.moderators.filter(id=user.id).exists()
+    )
