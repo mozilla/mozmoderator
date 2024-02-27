@@ -95,7 +95,7 @@ def edit_event(request, slug=None):
     user_can_edit = False
 
     if not user.is_superuser:
-        query_args = [Q(created_by=user) | Q(moderators=user)]
+        query_args = [Q(moderators=user)]
 
     event = get_object_or_404(Event, *query_args, slug=slug) if slug else None
     # if there is an event or no slug, the user can edit
