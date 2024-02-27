@@ -1,4 +1,5 @@
 {% extends "base.jinja" %}
+{% from "includes/moderator_macros.html" import edit_event_container %}
 
 {% block head %}
 <title>Mozilla Moderator - Events archive</title>
@@ -16,21 +17,7 @@
       <span class="questions-counter"> {{ event.approved_count }} questions asked</span>
     </a>
   </div>
-  {% if event.created_by == request.user or request.user in event.moderators.all() %}
-  <div>
-    <div class="edit-container">
-      <a href="{{ url('edit_event', slug=event.slug) }}" class="btn btn-primary btn-sm">edit</a>
-    </div>
-    {% if event.created_by == request.user %}
-    <div class="delete-container">
-      <a href="{{ url('delete_event', slug=event.slug) }}" class="btn btn-danger btn-sm">delete</a>
-    </div>
-    {% endif %}
-  </div>
-  {% endif %}
-  <div class="event-date">
-    {{ event.event_date|date('F j, Y') }}
-  </div>
+  {{ edit_event_container(event, request.user) }}
 </div>
 {% endfor %}
 

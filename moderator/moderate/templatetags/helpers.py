@@ -16,6 +16,7 @@ def to_markdown(text):
     return mark_safe(md.convert(text))
 
 
+@library.global_function
 def can_moderate_event(event, user):
     """Check if a user can moderate an event."""
     return user.is_superuser or event.moderators.filter(id=user.id).exists()
