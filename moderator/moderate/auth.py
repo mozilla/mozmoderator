@@ -22,7 +22,11 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
     def update_user(self, user, claims):
         # Update user status (nda, staff based on assertions)
         profile = user.userprofile
-        user.username = claims.get("uid")
+        if username := claims.get("uid"):
+            user.username = username
+        email = claims.get("email")
+        if email and user.email != email:
+            user.email = email
         profile.avatar_url = claims.get("avatar")
         user.save()
 
