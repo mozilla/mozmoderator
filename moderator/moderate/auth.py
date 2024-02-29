@@ -27,7 +27,7 @@ class ModeratorAuthBackend(OIDCAuthenticationBackend):
         email = claims.get("email")
         if email and user.email != email:
             user.email = email
-        profile.avatar_url = claims.get("avatar")
+        profile.avatar_url = claims.get("avatar", "")
         user.save()
 
         # Only staff members and members of the NDA group are allowed to login.
