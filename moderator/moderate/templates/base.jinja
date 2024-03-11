@@ -1,5 +1,6 @@
 <!doctype html>
 <html class="no-js" lang="en-US" dir="ltr">
+
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,8 +13,8 @@
     <link rel="shortcut icon" href="{{ static('img/favicon.ico') }}">
 
     {% block google_analytics %}
-      <script src="{{ static('lib/dnt-helper/js/dnt-helper.js') }}"></script>
-      <script src="{{ static('js/google-analytics.js') }}"></script>
+    <script src="{{ static('lib/dnt-helper/js/dnt-helper.js') }}"></script>
+    <script src="{{ static('js/google-analytics.js') }}"></script>
     {% endblock %}
 
   </head>
@@ -26,35 +27,35 @@
         <div class="container">
           <div class="navbar-header">
             {% if user.is_authenticated %}
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                      data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+              aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
             {% endif %}
-            <a class="navbar-brand" href="/"><img class="main-logo"
-                src="{{ static('img/mozillamoderator.png') }}" alt="mozillamoderator"></a>
+            <a class="navbar-brand" href="/"><img class="main-logo" src="{{ static('img/mozillamoderator.png') }}"
+                alt="mozillamoderator"></a>
           </div>
           {% if user.is_authenticated %}
-            <div id="navbar" class="navbar-collapse collapse navbar-left">
-              <ul class="nav navbar-nav">
-                <li>
-                  <a href="{{ url('create_event') }}">Create an Event</a>
-                </li>
-                <li>
-                  <a href="{{ url('archive') }}">Event Archive</a>
-                </li>
-                <li>
-                  <button id="logout" class="btn btn-link" type="button">Log out</button>
-                </li>
-              </ul>
-              <form id="logout_form" class="hidden" action="{{ url('oidc_logout') }}" method="post">
-                {% csrf_token %}
-                <input type="submit" value="logout">
-              </form>
-            </div>
+          <div id="navbar" class="navbar-collapse collapse navbar-left">
+            <ul class="nav navbar-nav">
+              <li>
+                <a href="{{ url('create_event') }}">Create an Event</a>
+              </li>
+              <li>
+                <a href="{{ url('archive') }}">View past events</a>
+              </li>
+              <li>
+                <button id="logout" class="btn btn-link" type="button">Log out</button>
+              </li>
+            </ul>
+            <form id="logout_form" class="hidden" action="{{ url('oidc_logout') }}" method="post">
+              {% csrf_token %}
+              <input type="submit" value="logout">
+            </form>
+          </div>
           {% endif %}
 
         </div>
@@ -66,14 +67,14 @@
         {% endblock %}
 
         {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible text-center" role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              {{ message }}
-            </div>
-          {% endfor %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible text-center" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{ message }}
+        </div>
+        {% endfor %}
         {% endif %}
 
         <div id="main-content">
@@ -99,22 +100,19 @@
           <div class="icon-container">
             <div class="icon">
               <img src="/static/img/icon-discourse.png" class="footer-icon">
-              <a href="https://discourse.mozilla-community.org/c/participationsystems"
-                 target="_blank">Discuss</a>
+              <a href="https://discourse.mozilla-community.org/c/participationsystems" target="_blank">Discuss</a>
             </div>
           </div>
           <div class="icon-container">
             <div class="icon">
               <img src="/static/img/icon-terms.png" class="footer-icon">
-              <a href="https://www.mozilla.org/en-US/about/legal.html"
-                 target="_blank">Legal</a>
+              <a href="https://www.mozilla.org/en-US/about/legal.html" target="_blank">Legal</a>
             </div>
           </div>
           <div class="icon-container">
             <div class="icon">
               <img src="/static/img/icon-cc.png" class="footer-icon">
-              <a href="https://www.mozilla.org/foundation/licensing/website-content.html"
-                 target="_blank">License</a>
+              <a href="https://www.mozilla.org/foundation/licensing/website-content.html" target="_blank">License</a>
             </div>
           </div>
         </div>
@@ -137,4 +135,5 @@
     <script src="{{ static('js/app.js') }}"></script>
     {% block js %}{% endblock %}
   </body>
+
 </html>
