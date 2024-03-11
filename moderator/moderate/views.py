@@ -180,10 +180,10 @@ def moderate_event(request, slug, q_id=None, accepted=None):
 def delete_event(request, slug):
     """Delete an event."""
     user = request.user
-    query_args = {"slug": slug, "created_by": user}
+    query_args = {"slug": slug, "moderators__in": [user]}
     # Allow superusers to edit all events
     if user.is_superuser:
-        del query_args["created_by"]
+        del query_args["moderators__in"]
 
     event = get_object_or_404(Event, **query_args)
     event.delete()
