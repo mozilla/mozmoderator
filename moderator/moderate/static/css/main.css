@@ -220,6 +220,7 @@ ul.errorlist {
 
 .checkbox-anonymous {
     margin-left: calc(10% + 4px);
+    margin-bottom: 10px;
     float: left;
 }
 
@@ -324,6 +325,10 @@ ul.errorlist {
     font-size: 12px;
 }
 
+.breadcrumb.help-text {
+    text-align: center;
+}
+
 @media only screen and (max-width: 1200px) {
     .reply-button {
         margin-top: 5px;
@@ -356,6 +361,11 @@ ul.errorlist {
     }
 
     .checkbox-anonymous {
+        margin-left: 0;
+        float: none;
+    }
+
+    .contact-info-container {
         margin-left: 0;
         float: none;
     }

@@ -22,6 +22,13 @@
 {% endblock %}
 
 {% block content %}
+{% if event.is_moderated %}
+<div class="breadcrumb help-text">
+  Questions will remain in a queue until a moderator approves them.
+  By using any legitimate email address, such as those offered by Firefox Relay,
+  the moderator can offer a reason if your question is declined.
+</div>
+{% endif %}
 {% if open %}
 <div class="panel panel-default">
   <div class="panel-body">
@@ -50,11 +57,6 @@
       </div>
       {% if event.is_moderated %}
       <div class="form-group question-text contact-info-container">
-        <p>
-          This question will wait in a queue until it's been approved by a moderator.
-          By supplying any valid email address, including those provided by Firefox Relay,
-          the moderator will be able to provide an explanation if your question is declined.
-        </p>
         {{ q_form.submitter_contact_info }}
         {{ q_form.submitter_contact_info.errors }}
       </div>
