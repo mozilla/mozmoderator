@@ -109,7 +109,7 @@
 
     {% if q.answer %}
     <div class="reply-row">
-      {{ q.answer }}
+      {{ q.answer|to_markdown }}
     </div>
     {% endif %}
     {% if q_form.instance.id == q.id %}
