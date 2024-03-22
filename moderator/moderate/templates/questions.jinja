@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block content %}
-{% if event.is_moderated %}
+{% if event.is_moderated and not event.archived %}
 <div class="breadcrumb help-text">
   Questions will remain in a queue until a moderator approves them.
   By using any legitimate email address, such as those offered by Firefox Relay,
