@@ -134,7 +134,8 @@ def edit_event(request, slug=None):
 def moderate_event(request, slug, q_id=None, accepted=None):
     event = get_object_or_404(Event, slug=slug)
     user = request.user
-    if not event.moderators.filter(pk=user.pk).exists():
+
+    if not (event.moderators.filter(pk=user.pk).exists() or user.is_superuser):
         raise Http404
 
     questions = Question.objects.filter(event=event, is_accepted__isnull=True)
