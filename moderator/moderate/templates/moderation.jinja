@@ -55,7 +55,7 @@
           <h4 class="modal-title">Moderator's reply</h4>
         </div>
         <div class="modal-body">
-          {{ q_form.rejection_reason }}
+          {{ q_form.rejection_reason|to_markdown }}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
