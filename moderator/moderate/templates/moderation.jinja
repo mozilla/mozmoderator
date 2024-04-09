@@ -14,7 +14,7 @@
     {{ user_profile(q.asked_by) }}
 
     <div class="question-text">
-      <h3>{{ q.question }}</h3>
+      <h3>{{ q.question|to_markdown }}</h3>
     </div>
 
     <div class="accept-container">
@@ -55,7 +55,7 @@
           <h4 class="modal-title">Moderator's reply</h4>
         </div>
         <div class="modal-body">
-          {{ q_form.rejection_reason|to_markdown }}
+          {{ q_form.rejection_reason }}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
