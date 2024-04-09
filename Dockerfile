@@ -1,6 +1,6 @@
 FROM python:3.11.7 as base
 
-ENV POETRY_VERSION=1.7.1 \
+ENV POETRY_VERSION=1.8.2 \
   POETRY_VIRTUALENVS_IN_PROJECT=true \
   POETRY_HOME=/opt/poetry \
   PYSETUP_PATH=/opt/pysetup
@@ -25,11 +25,11 @@ ARG GID=10001
 COPY scripts/install_nodejs.sh /opt/
 RUN apt-get update; \
   apt-get install -y \
-    curl \
-    gpg \
-    mariadb-client \
-    zip \
-    zsh; \
+  curl \
+  gpg \
+  mariadb-client \
+  zip \
+  zsh; \
   /opt/install_nodejs.sh; \
   npm install -g bower gulp-cli; \
   rm -rf /var/lib/apt/lists/*
@@ -57,7 +57,7 @@ ARG GID=10001
 
 RUN apt-get update; \
   apt-get install --no-install-recommends \
-    mariadb-client; \
+  mariadb-client; \
   rm -rf /var/lib/apt/lists/*
 
 ENV PORT=8000 \
