@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "dal_select2",
     "django.contrib.admin",
     # Third party apps
-    "axes",
+    # "axes",
     "mozilla_django_oidc",
     # Project specific apps
     "moderator.moderate",
@@ -50,7 +50,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "csp.middleware.CSPMiddleware",
-    "axes.middleware.AxesMiddleware",
+    # "axes.middleware.AxesMiddleware",
 ]
 
 # List of finder classes that know how to find static files in
@@ -116,7 +116,7 @@ PASSWORD_HASHERS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    "axes.backends.AxesBackend",
+    # "axes.backends.AxesBackend",
     "moderator.moderate.auth.ModeratorAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
@@ -289,12 +289,12 @@ FROM_NOREPLY = config(
 )
 
 # Django Axes
-AXES_ENABLED = config("AXES_ENABLED", default=True, cast=bool)
-AXES_IPWARE_PROXY_COUNT = config("AXES_IPWARE_PROXY_COUNT", default=1, cast=int)
-AXES_IPWARE_META_PRECEDENCE_ORDER = [
-    "HTTP_X_FORWARDED_FOR",
-    "REMOTE_ADDR",
-]
+# AXES_ENABLED = config("AXES_ENABLED", default=True, cast=bool)
+# AXES_IPWARE_PROXY_COUNT = config("AXES_IPWARE_PROXY_COUNT", default=1, cast=int)
+# AXES_IPWARE_META_PRECEDENCE_ORDER = [
+#     "HTTP_X_FORWARDED_FOR",
+#     "REMOTE_ADDR",
+# ]
 
 if DEV and DEBUG:
     EMAIL_LOGGING_REAL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
