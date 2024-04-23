@@ -325,8 +325,10 @@ ul.errorlist {
     font-size: 12px;
 }
 
+
 .breadcrumb.help-text {
     text-align: center;
+    font-weight: bold;
 }
 
 @media only screen and (max-width: 1200px) {
