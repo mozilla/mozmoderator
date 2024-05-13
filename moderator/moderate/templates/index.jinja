@@ -8,11 +8,6 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-<div class="breadcrumb help-text">
-  On the 13th of May, between 12:00pm and 03:00pm UTC, the site will be temporarily unavailable due to scheduled
-  maintenance.
-  We apologize for any inconvenience.
-</div>
 <h3 class="text-center">Select event to view and ask questions.</h3>
 
 {% for event in events.order_by('-created_at') %}
