@@ -18,7 +18,7 @@ class QuestionForm(forms.ModelForm):
     question = forms.CharField(
         validators=[MaxLengthValidator(280), MinLengthValidator(10)],
         max_length=280,
-        widget=forms.TextInput(
+        widget=forms.Textarea(
             attrs={
                 "placeholder": QUESTION,
                 "class": "form-control",
@@ -111,7 +111,7 @@ class EventForm(forms.ModelForm):
             msg = "Only members of the NDA group can create NDA events."
             raise forms.ValidationError(msg)
         # Don't allow non-superusers to modify moderation status or moderators
-        if not cdata['moderators']:
+        if not cdata["moderators"]:
             msg = "An event should have at least one moderator."
             raise forms.ValidationError(msg)
 
@@ -127,7 +127,7 @@ class EventForm(forms.ModelForm):
             "moderators",
             "archived",
             "users_can_vote",
-            "event_date"
+            "event_date",
         ]
         widgets = (
             {
