@@ -86,7 +86,7 @@
 
     <div class="vote-container">
       {% if event.users_can_vote %}
-      {% if not open or user.userprofile.is_admin %}
+      {% if not open or user.userprofile.is_admin or event.created_by == user %}
       <span class="vote-count">{{ q.vote_count }}</span>
       {% endif %}
       {% if open %}
