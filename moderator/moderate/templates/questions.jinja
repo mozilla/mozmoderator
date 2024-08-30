@@ -135,6 +135,10 @@
           <h4 class="modal-title">Answer</h4>
         </div>
         <div class="modal-body">
+          <label for="{{ q_form.answer.id_for_label }}">
+            Ask your question below.
+            <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">Markdown supported.</a>
+          </label>
           {{ q_form.answer }}
         </div>
         <div class="modal-footer">
