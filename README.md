@@ -28,6 +28,23 @@ Finally use [gulp](http://gulpjs.com/) to check in all main static files and run
 
     gulp
 
+## Development with Docker
+
+After cloning this repo, you need to create an .env file. Make a copy of .env-dist named .env.
+
+    cp .env-dist .env
+
+Now docker compose from the root directory of the repo
+
+    docker compose up
+
+Since this is Django, you will need to create a superuser for your dev work. Do this by attaching to the web container and running the command.
+
+    docker compose exec web bash
+    ./manage.py createsuperuser
+
+You should now be able to login at /admin/
+
 ## CI & CD
 
 This application is currently run through integration and deploy pipelines via both [GitHub Actions](https://github.com/mozilla/mozmoderator/actions/workflows/ci.yaml) & a background Kubernetes [Flux](https://fluxcd.io/) setup leveraging [Helm Charts](github.com/mozilla-it/helm-charts/).
