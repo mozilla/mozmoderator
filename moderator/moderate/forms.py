@@ -18,7 +18,7 @@ class QuestionForm(forms.ModelForm):
     question = forms.CharField(
         validators=[MaxLengthValidator(280), MinLengthValidator(10)],
         max_length=280,
-        widget=forms.TextInput(
+        widget=forms.Textarea(
             attrs={
                 "placeholder": QUESTION,
                 "class": "form-control",

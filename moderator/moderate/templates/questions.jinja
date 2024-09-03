@@ -46,6 +46,10 @@
             {% if q_form.question.errors %}
               has-error
             {% endif %}" id="question-input">
+            <label for="{{ q_form.question.id_for_label }}">
+              Ask your question below.
+              <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">Markdown supported.</a>
+            </label>
         {{ q_form.question }}
         {{ q_form.question.errors }}
       </div>
