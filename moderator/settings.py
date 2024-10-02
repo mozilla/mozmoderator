@@ -203,6 +203,8 @@ CSP_IMG_SRC = (
     "https://*.gravatar.com",
     "https://*.wp.com",
     "https://cdn.mozillians.org",
+    "https://people.mozilla.org",
+    "https://*.mozaws.net",
 )
 CSP_SCRIPT_SRC = (
     "'self'",
