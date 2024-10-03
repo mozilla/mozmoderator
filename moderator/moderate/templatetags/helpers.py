@@ -1,3 +1,5 @@
+import hashlib
+
 import markdown
 from django.utils.safestring import mark_safe
 from django_jinja import library
@@ -26,3 +28,21 @@ def can_moderate_event(event, user):
 def can_answer_question(question, user):
     """Check if a user can answer a question."""
     return not question.answer and can_moderate_event(question.event, user)
+
+
+def get_gravatar_url(email, size=70, default="identicon"):
+    if email:
+        email_hash = hashlib.md5(email.strip().lower().encode("utf-8")).hexdigest()
+        return f"https://www.gravatar.com/avatar/{email_hash}?s={size}&d={default}"
+    return None
+
+
+@library.global_function
+def get_profile_image(user, is_anonymous=True):
+    if user and not is_anonymous:
+        return (
+            get_gravatar_url(user.email)
+            or user.userprofile.avatar_url
+            or "/static/img/unknown.png"
+        )
+    return "/static/img/unknown.png"

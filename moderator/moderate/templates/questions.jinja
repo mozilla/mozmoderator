@@ -82,7 +82,7 @@
     </div>
     {% endif %}
 
-    {{ user_profile(q.asked_by) }}
+    {{ user_profile(q.asked_by, q.is_anonymous) }}
 
     <div class="question-text">
       <h3>{{ q.question|to_markdown }}</h3>
