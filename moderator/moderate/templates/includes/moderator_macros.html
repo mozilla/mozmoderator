@@ -1,5 +1,6 @@
 {% macro user_profile(user, is_anonymous=True) %}
 <div class="askedby">
+  {% if user %}
   {% if not is_anonymous %}
   <a href="https://people.mozilla.org/s/?query={{ user.userprofile.username }}&who=staff" target="_blank">
     <img alt="User profile image" src="{{ get_profile_image(user, is_anonymous) }}"
@@ -9,6 +10,10 @@
   {% else %}
   <img alt="profile image" src="{{ get_profile_image(user, is_anonymous) }}"
     title="{% if is_anonymous %}anonymous{% else %}{{ user.userprofile.username }}{% endif %}" data-toggle="tooltip"
+    data-placement="bottom" />
+  {% endif %}
+  {% else %}
+  <img alt="profile image" src="{{ static('img/unknown.png') }}" title="anonymous" data-toggle="tooltip"
     data-placement="bottom" />
   {% endif %}
 </div>
