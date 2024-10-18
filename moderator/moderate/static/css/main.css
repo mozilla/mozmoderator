@@ -310,6 +310,11 @@ ul.errorlist {
     margin-top: 3px;
 }
 
+.vote-container .btn-dark {
+    background-color: #333;
+    color: white;
+}
+
 .reply-row {
     background-color: #f0f0f0;
     padding: 1em;
