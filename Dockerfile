@@ -12,15 +12,12 @@ WORKDIR $PYSETUP_PATH
 
 COPY pyproject.toml poetry.lock ./
 
-RUN $POETRY_HOME/bin/poetry install --no-root
+RUN $POETRY_HOME/bin/poetry install --without=dev --no-root
 
 FROM base as dev
 
-WORKDIR /app
-
 ARG UID=10001
 ARG GID=10001
-
 
 COPY scripts/install_nodejs.sh /opt/
 RUN apt-get update; \
@@ -35,13 +32,17 @@ RUN apt-get update; \
   rm -rf /var/lib/apt/lists/*
 
 ENV PORT=8000 \
-  PATH=/opt/pysetup/.venv/bin:$PATH \
-  VENV_PATH=/opt/pysetup/.venv
+  PATH=/opt/pysetup/.venv/bin:$PATH
 
 RUN groupadd -g $GID app; \
   useradd -d /app -g $GID -u $UID -M -s /usr/bin/zsh app; \
-  chown -R app:app /app
+  mkdir -p /app; \
+  chown app:app /app
+
+RUN $POETRY_HOME/bin/poetry install --no-root
+
 USER app
+WORKDIR /app
 
 COPY --chown=app:app . .
 
@@ -62,19 +63,14 @@ RUN apt-get update; \
 
 ENV PORT=8000 \
   PATH=/opt/pysetup/.venv/bin:$PATH \
-  POETRY_HOME=/opt/poetry \
   VENV_PATH=/opt/pysetup/.venv
 
-COPY --from=base $POETRY_HOME $POETRY_HOME
 COPY --from=base $VENV_PATH $VENV_PATH
-COPY pyproject.toml poetry.lock ./
-
-RUN $POETRY_HOME/bin/poetry install --no-dev --no-root
 
 RUN groupadd -g $GID app; \
   useradd -g $GID -u $UID -M -s /bin/bash app; \
   mkdir -p /app; \
-  chown -R app:app /app
+  chown app:app /app
 
 USER app
 WORKDIR /app
