@@ -1,14 +1,14 @@
-jQuery(document).ready(function ($) {
-    $('.vote.btn').on("click", function () {
+jQuery(function ($) {
+    $('.vote').on("click", function () {
         var question_id = this.id;
-        var icon = '#' + question_id + ' > .glyphicon';
+        var v_button= '#' + question_id;
         $.ajax({
             url: '/q/' + question_id + '/upvote',
             type: 'GET',
             dataType: 'json',
             success: function (json) {
                 $('#' + question_id).prev().html(json.current_vote_count);
-                $(icon).toggleClass('glyphicon-thumbs-down').toggleClass('glyphicon-thumbs-up');
+                $(v_button).toggleClass('btn-light').toggleClass('btn-dark');
             }
         });
     });
