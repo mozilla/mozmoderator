@@ -95,12 +95,14 @@
       {% endif %}
       {% if open %}
       {% if user_voted(q, user) %}
-      <button class="btn btn-dark btn-sm vote" id="{{ q.id }}" aria-label="Remove the upvote" title="Remove the upvote">
+      <button class="btn btn-dark btn-sm vote" id="{{ q.id }}">
         <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+        Remove the upvote
       </button>
       {% else %}
-      <button class="btn btn-light btn-sm vote" id="{{ q.id }}" aria-label="Upvote" title="Upvote">
+      <button class="btn btn-light btn-sm vote" id="{{ q.id }}">
         <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+        Upvote
       </button>
       {% endif %}
       {% endif %}
