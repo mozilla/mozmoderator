@@ -242,6 +242,10 @@ ul.errorlist {
     margin-left: 15px;
 }
 
+.vote-container .vote .glyphicon {
+    margin-inline-end: 5px;
+}
+
 .edit-container {
     display: inline-block;
     vertical-align: middle;
