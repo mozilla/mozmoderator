@@ -195,14 +195,12 @@ CSP_DEFAULT_SRC = (
     "'self'",
     "https://*.mozilla.org",
     "https://*.mozilla.net",
-    "https://mozillians.org",
 )
 CSP_IMG_SRC = (
     "'self'",
     "https://*.google-analytics.com",
     "https://*.gravatar.com",
     "https://*.wp.com",
-    "https://cdn.mozillians.org",
     "https://people.mozilla.org",
     "https://*.mozaws.net",
 )
