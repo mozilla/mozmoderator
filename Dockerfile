@@ -1,4 +1,4 @@
-FROM python:3.11.7 as base
+FROM python:3.11.7 AS base
 
 ENV POETRY_VERSION=1.8.2 \
   POETRY_VIRTUALENVS_IN_PROJECT=true \
@@ -14,7 +14,7 @@ COPY pyproject.toml poetry.lock ./
 
 RUN $POETRY_HOME/bin/poetry install --no-root
 
-FROM base as dev
+FROM base AS dev
 
 WORKDIR /app
 
@@ -50,7 +50,7 @@ EXPOSE $PORT
 CMD ["./bin/run-dev.sh"]
 
 # Production image
-FROM python:3.11.7-slim as prod
+FROM python:3.11.7-slim AS prod
 
 ARG UID=10001
 ARG GID=10001
