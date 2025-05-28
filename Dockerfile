@@ -50,7 +50,7 @@ EXPOSE $PORT
 CMD ["./bin/run-dev.sh"]
 
 # Production image
-FROM python:3.11.12-slim AS prod
+FROM python:3.11-slim AS prod
 
 ARG UID=10001
 ARG GID=10001
