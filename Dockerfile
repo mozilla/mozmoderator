@@ -1,4 +1,4 @@
-FROM python:3.11.12 AS base
+FROM python:3.11 AS base
 
 ENV POETRY_VERSION=1.8.2 \
   POETRY_VIRTUALENVS_IN_PROJECT=true \
