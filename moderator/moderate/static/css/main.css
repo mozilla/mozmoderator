@@ -51,6 +51,46 @@
     margin: 0;
 }
 
+:root {
+    color-scheme: light dark;
+
+    --breadcrumb-background-color: light-dark(#f5f5f5, #282828);
+    --breadcrumb-active-color: light-dark(#777777, #999999);
+    --button-secondary-background-color: light-dark(#333333, #ffffff);
+    --button-secondary-color: light-dark(#ffffff, #1e1e1e);
+    --button-secondary-pressed-background-color: light-dark(#777777, #bbbbbb);
+    --button-secondary-pressed-color: light-dark(#ffffff, #1e1e1e);
+    --close-button-color: light-dark(rgba(0, 0, 0, 0.5), rgba(250, 250, 250, 0.75));
+    --close-button-hover-color: light-dark(rgba(0, 0, 0, 1.0), rgba(250, 250, 250, 1.0));
+	--close-button-text-shadow-color: light-dark(#ffffff, #1e1e1e);
+    --combobox-background-color: light-dark(#ffffff, #1e1e1e);
+    --combobox-border-color: light-dark(#aaaaaa, #444444);
+    --combobox-tag-background-color: light-dark(#ffffff, #282828);
+    --combobox-tag-border-color: light-dark(#aaaaaa, #444444);
+    --combobox-tag-color: light-dark(#000000, #fafafa);
+    --errorlist-color: light-dark(#a94442, #c27c7a);
+    --footer-background-color: light-dark(#333333, #282828);
+    --form-control-background-color: light-dark(#ffffff, #1e1e1e);
+    --form-control-border-color: light-dark(#cccccc, #444444);
+    --form-control-color: light-dark(#555555, #fafafa);
+    --link-color: light-dark(#337ab7, #63a0d4);
+    --modal-background-color: light-dark(#ffffff, #282828);
+    --modal-border-color: light-dark(#e5e5e5, #333333);
+    --modal-color: light-dark(#666666, #fafafa);
+    --nav-link-color: light-dark(#666666, #fafafa);
+    --nav-link-hover-color: light-dark(#333333, #cccccc);
+    --page-background: light-dark(#eeeeee, #1e1e1e);
+    --page-foreground: light-dark(#666666, #fafafa);
+    --panel-background: light-dark(#ffffff, #282828);
+    --panel-border-color: light-dark(#dddddd, #333333);
+    --question-counter-color: light-dark(#666666, #999999);
+    --question-text-box-shadow-color:
+        light-dark(rgba(200, 173, 227, 0.4), none);
+    --reply-row-background-color: light-dark(#f0f0f0, #333333);
+    --reply-row-border-color: light-dark(#286090, #63a0d4);
+    --reply-row-color: light-dark(#666666, #fafafa);
+}
+
 html,
 body {
     height: 100%;
@@ -59,8 +99,8 @@ body {
 body {
     padding: 0;
     margin: 0;
-    background-color: #eee;
-    color: #666;
+    background-color: var(--page-background);
+    color: var(--page-foreground);
     font-size: 16px;
     line-height: 1.4;
     font-family: "Open Sans", sans-serif;
@@ -80,6 +120,7 @@ h3 {
 }
 
 a {
+    color: var(--link-color);
     text-decoration: underline;
 }
 
@@ -99,6 +140,12 @@ a {
     margin: 15px;
 }
 
+@media (prefers-color-scheme: dark) {
+    .main-logo {
+        filter: invert(100%);
+    }
+}
+
 #logout {
     padding: 15px;
 }
@@ -111,7 +158,12 @@ a {
 
 .navbar-default .navbar-nav>li>a,
 .navbar-default .btn-link {
-    color: #666;
+    color: var(--nav-link-color);
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .btn-link:hover {
+    color: var(--nav-link-hover-color);
 }
 
 #navbar {
@@ -127,14 +179,80 @@ a {
 ul.errorlist {
     list-style: none;
     list-style-position: outside;
-    color: #a94442;
+    color: var(--errorlist-color);
     padding: 5px 0 0 0;
+}
+
+.breadcrumb {
+    background-color: var(--breadcrumb-background-color);
+}
+
+.breadcrumb > .active {
+    color: var(--breadcrumb-active-color);
+}
+
+.form-group > input,
+.form-group > textarea,
+.form-control {
+    color: var(--form-control-color);
+	background-color: var(--form-control-background-color);
+	border: 1px solid var(--form-control-border-color);
+}
+
+.close {
+    color: var(--close-button-color);
+	text-shadow: 0 1px 0 var(--close-button-text-shadow-color);
+    opacity: 1;
+}
+
+.close:hover {
+    color: var(--close-button-hover-color);
+    opacity: 1;
+}
+
+/* Combobox
+ *
+ * We use !important because select2.css is loaded at the bottom of create_event
+ * template.
+ *
+ * TODO: Move select2.css to the head block of create_event and make sure its
+ *       styling aren't overriden by bootstrap or main.css.
+==================== */
+.select2-container--default .select2-selection {
+	background-color: var(--combobox-background-color) !important;
+	border-color: var(--combobox-border-color) !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+	background-color: var(--combobox-tag-background-color) !important;
+	border-color: var(--combobox-tag-border-color) !important;
+    color: var(--combobox-tag-color) !important;
+}
+
+/* Modals
+==================== */
+.modal-content {
+    background-color: var(--modal-background-color);
+    color: var(--modal-color);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--modal-border-color);
+}
+.modal-footer {
+    border-top: 1px solid var(--modal-border-color);
 }
 
 /* Events
 ==================== */
 
+.panel {
+    background-color: var(--panel-background);
+    color: var(--page-foreground);
+}
+
 .panel-default {
+    border-color: var(--panel-border-color);
     margin-bottom: 30px;
     position: relative;
 }
@@ -157,7 +275,7 @@ ul.errorlist {
 
 .questions-counter {
     float: right;
-    color: #666;
+    color: var(--question-counter-color);
     margin-top: -35px;
     text-align: right;
 }
@@ -215,7 +333,7 @@ ul.errorlist {
 .question-text :is(input, textarea) {
     margin-top: 10px;
     width: 100%;
-    box-shadow: 0 0 0 2px rgba(200, 173, 227, 0.4);
+    box-shadow: 0 0 0 2px var(--question-text-box-shadow-color);
 }
 
 .checkbox-anonymous {
@@ -314,16 +432,22 @@ ul.errorlist {
     margin-top: 3px;
 }
 
+.vote-container .btn-light {
+    background-color: var(--button-secondary-background-color);
+    color: var(--button-secondary-color);
+}
+
 .vote-container .btn-dark {
-    background-color: #333;
-    color: white;
+    background-color: var(--button-secondary-pressed-background-color);
+    color: var(--button-secondary-pressed-color);
 }
 
 .reply-row {
-    background-color: #f0f0f0;
+    background-color: var(--reply-row-background-color);
+    color: var(--reply-row-color);
     padding: 1em;
     margin-top: 0.5em;
-    border-left: 5px solid #286090;
+    border-left: 5px solid var(--reply-row-border-color);
     font-style: italic;
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -462,7 +586,7 @@ ul.errorlist {
 .site-footer {
     height: 190px;
     color: #a6a7a9;
-    background-color: #333;
+    background-color: var(--footer-background-color);
     padding: 40px 0;
     font-size: 0.9em;
     line-height: 1.3;

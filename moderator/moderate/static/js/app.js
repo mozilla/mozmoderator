@@ -44,3 +44,36 @@ jQuery(function ($) {
         $('#logout_form').submit();
     });
 });
+
+/**
+ * Toggle Theme
+ */
+function setDefaultTheme() {
+  const theme = localStorage.getItem('theme');
+  if (!theme) {
+    const prefersLightTheme = window.matchMedia('(prefers-color-scheme: light)');
+    if (prefersLightTheme.matches) {
+      localStorage.setItem("theme", "light");
+      return;
+    }
+    localStorage.setItem("theme", "dark");
+  }
+}
+
+function toggleTheme() {
+  const toggle = document.getElementById("toggle-theme");
+  toggle.addEventListener("click", () => {
+    const theme = localStorage.getItem("theme");
+
+    if (theme == "dark") {
+        document.documentElement.style.colorScheme = "light";
+        localStorage.setItem("theme", "light");
+    } else {
+        document.documentElement.style.colorScheme = "dark";
+        localStorage.setItem("theme", "dark");
+    }
+  });
+}
+
+setDefaultTheme();
+toggleTheme();
