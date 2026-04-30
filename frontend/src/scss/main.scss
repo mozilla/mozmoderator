@@ -173,6 +173,25 @@ ul.errorlist {
     color: #999;
 }
 
+// On phones (xs, < 576px) stack the footer vertically: date on top, buttons
+// below, everything centered. Tablets keep the row layout.
+@include media-breakpoint-down(sm) {
+    .event-footer {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .event-actions {
+        margin-right: 0;
+        justify-content: center;
+    }
+
+    .event-date {
+        order: -1;
+    }
+}
+
 .askedby {
     display: inline-block;
     width: 10%;
