@@ -110,12 +110,6 @@ a {
     margin-top: 15px;
 }
 
-.alert-error {
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #ebccd1;
-}
-
 ul.errorlist {
     list-style: none;
     list-style-position: outside;
@@ -125,11 +119,6 @@ ul.errorlist {
 
 /* Events
 ==================== */
-
-.panel-default {
-    margin-bottom: 30px;
-    position: relative;
-}
 
 .event-listing {
     cursor: pointer;
@@ -211,29 +200,174 @@ ul.errorlist {
 // Override Bootstrap 5's .form-floating > .form-control fixed height (56px) for
 // textareas — done via CSS class so we don't trip the CSP style-src directive
 // (which forbids inline style="" attributes under default-src 'self').
-.form-floating > textarea.form-control.textarea-lg {
-    height: 400px;
-}
-
 .form-floating > textarea.form-control.textarea-md {
     height: 200px;
 }
 
-.form-floating > textarea.form-control.textarea-sm {
-    height: 120px;
+// Event detail page header — editorial treatment for the title +
+// metadata + description above the ask form.
+.event-header {
+    margin-top: 1.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-// Ask-question form: avatar + textarea side-by-side.
-.ask-row {
+.event-title {
+    font-family: "Zilla Slab", serif;
+    font-weight: 500;
+    font-size: 2.75rem;
+    line-height: 1.15;
+    color: #1a1a1a;
+    margin-bottom: 0.75rem;
+}
+
+.event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-bottom: 1.5rem;
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+.event-meta-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.event-meta .badge {
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.event-body {
+    max-width: 65ch;
+    color: #444;
+    line-height: 1.7;
+    font-size: 1.125rem;
+}
+
+.event-body p:last-child {
+    margin-bottom: 0;
+}
+
+// "Composer" pattern for the ask-question block: a single card with three
+// horizontal zones (header / body / footer). Replaces the legacy card+form
+// markup. Header carries the section title and event-level meta; body is
+// the avatar + borderless textarea; footer carries the submit row.
+.composer {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.composer-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.25rem;
+    padding: 0.875rem 1.25rem;
+    background-color: #f6f6f4;
+    border-bottom: 1px solid #ececec;
+}
+
+.composer-title {
+    margin: 0;
+    font-family: "Inter Variable", "Inter", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.composer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+.composer-note,
+.composer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.composer-link {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.composer-link:hover {
+    color: #1a1a1a;
+    text-decoration: underline;
+}
+
+.composer-body {
     display: flex;
     gap: 1rem;
+    padding: 1rem 1.25rem;
     align-items: flex-start;
-    margin-bottom: 1rem;
 }
 
-.ask-row-field {
+.composer-input {
     flex: 1;
     min-width: 0;
+}
+
+// Borderless textarea — visually integrated with the composer card.
+.composer-input > textarea.form-control {
+    border: 0;
+    box-shadow: none;
+    padding: 0.25rem 0;
+    background: transparent;
+    resize: vertical;
+    min-height: 100px;
+    font-size: 1.05rem;
+    line-height: 1.55;
+}
+
+.composer-input > textarea.form-control:focus {
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.composer-input > textarea.form-control::placeholder {
+    color: #999;
+}
+
+// JS-injected character counter — pin to the right under the textarea.
+.composer-input .textarea-counter {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+// Conditional contact-email row that appears when "Post as anonymous" is
+// checked. Sits between body and footer with light side padding.
+.composer-aux {
+    padding: 0 1.25rem;
+}
+
+.composer-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    padding: 0.75rem 1.25rem;
+    background-color: #fcfcfb;
+    border-top: 1px solid #ececec;
 }
 
 .selfimage {
@@ -263,20 +397,6 @@ ul.errorlist {
     box-shadow: 0 0 0 2px rgba(200, 173, 227, 0.4);
 }
 
-.checkbox-anonymous {
-    margin-left: calc(10% + 4px);
-    margin-bottom: 10px;
-    float: left;
-}
-
-.checkbox-nda {
-    margin-right: calc(5% + 4px);
-}
-
-.checkbox-anonymous label {
-    font-weight: normal;
-}
-
 .vote-container {
     display: inline-block;
     width: 12%;
@@ -285,10 +405,6 @@ ul.errorlist {
     padding: 10px;
     margin-top: -15px;
     margin-left: 15px;
-}
-
-.vote-container .vote .glyphicon {
-    margin-inline-end: 5px;
 }
 
 .edit-container {
@@ -306,19 +422,6 @@ ul.errorlist {
     margin-top: 10%;
 }
 
-.ask-container {
-    align-items: center;
-    justify-content: space-between;
-    vertical-align: top;
-    text-align: center;
-    padding: 10px;
-    margin-top: 30px;
-}
-
-.ask-container input {
-    font-size: 1em;
-}
-
 .vote-count {
     font-weight: bold;
     font-size: 2rem;
@@ -330,12 +433,6 @@ ul.errorlist {
 .accept-container,
 .reject-container {
     display: inline-block;
-}
-
-.info {
-    color: #286090;
-    background-color: rgb(217, 237, 247);
-    border-color: rgb(188, 232, 241);
 }
 
 .vote-container .button {
@@ -362,11 +459,6 @@ ul.errorlist {
     font-size: 12px;
 }
 
-
-.breadcrumb.help-text {
-    text-align: center;
-    font-weight: bold;
-}
 
 @media only screen and (max-width: 1200px) {
     .reply-button {
