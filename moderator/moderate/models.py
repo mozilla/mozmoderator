@@ -83,7 +83,7 @@ class Event(models.Model):
     users_can_vote = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ["-event_date"]
 
     def __str__(self):
         return self.name

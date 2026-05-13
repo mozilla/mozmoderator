@@ -51,6 +51,7 @@ def main(request):
                 ),
                 pending_count=Count("questions", filter=Q(questions__is_accepted=None)),
             )
+            .order_by("-event_date")
         )
 
         if not user.userprofile.is_nda_member:
@@ -73,7 +74,7 @@ def archive(request):
         .annotate(
             approved_count=Count("questions", filter=Q(questions__is_accepted=True))
         )
-        .order_by("-created_at")
+        .order_by("-event_date")
     )
     paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
     page = request.GET.get("page")
