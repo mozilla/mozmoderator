@@ -97,6 +97,13 @@ class Event(models.Model):
     def questions_count(self):
         return self.questions.all().count()
 
+    @property
+    def is_past(self):
+        """True when the event date has passed (used to gate the archive action)."""
+        if not self.event_date:
+            return False
+        return self.event_date < django_now().date()
+
 
 class Question(models.Model):
     """Question relational model."""
