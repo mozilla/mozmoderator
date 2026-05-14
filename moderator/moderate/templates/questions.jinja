@@ -1,6 +1,6 @@
 {% extends "base.jinja" %}
 {% from "includes/moderator_macros.html" import user_profile %}
-{% from "includes/form_macros.html" import floating, check %}
+{% from "includes/form_macros.html" import floating, check, field_errors %}
 
 {% block head %}
 <title>Mozilla Moderator - {{ event.name }}</title>
@@ -64,6 +64,7 @@
       </div>
       <div class="composer-input">
         {{ q_form.question }}
+        {{ field_errors(q_form.question) }}
       </div>
     </div>
     {% if event.is_moderated %}
