@@ -46,6 +46,7 @@ class QuestionForm(forms.ModelForm):
                 "placeholder": QUESTION,
                 "class": "form-control textarea-md",
                 "required": "required",
+                "rows": 4,
             }
         ),
     )

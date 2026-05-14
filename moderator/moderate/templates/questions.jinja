@@ -16,52 +16,71 @@
 {% endblock %}
 
 {% block content %}
-{% if event.is_moderated and not event.archived %}
-<div class="alert alert-info help-text">
-  Questions will remain in a queue until a moderator approves them.
-  By using any legitimate email address, such as those offered by Firefox Relay,
-  the moderator can offer a reason if your question is declined.
-</div>
-{% endif %}
-{% if open %}
-<div class="card mb-4">
-  <div class="card-body">
-    <form method="post" action="{{ url('event', e_slug=event.slug) }}" id="question-form">
-      {% csrf_token %}
-      {{ q_form.non_field_errors() }}
-      <div class="ask-row">
-        <div class="selfimage">
-          {% if not user.userprofile.avatar_url %}
-          <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}" />
-          {% else %}
-          <img src="{{ user.userprofile.avatar_url }}" alt="User profile image" />
-          {% endif %}
-        </div>
-        <div class="ask-row-field">
-          {{ floating(q_form.question, "Ask your question") }}
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="form-check">
-              {{ q_form.is_anonymous }}
-              <label class="form-check-label" for="{{ q_form.is_anonymous.id_for_label }}">
-                Post as an anonymous user
-              </label>
-            </div>
-            <div class="form-text">
-              <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">Markdown supported.</a>
-            </div>
-          </div>
-          {% if event.is_moderated %}
-          <div class="contact-info-container">
-            {{ floating(q_form.submitter_contact_info, "Contact email (optional)") }}
-          </div>
-          {% endif %}
-          <div class="ask-container">
-            <input type="submit" class="btn btn-primary" value="Submit">
-          </div>
-        </div>
-      </div>
-    </form>
+<header class="event-header">
+  <h1 class="event-title">{{ event.name }}</h1>
+  <div class="event-meta">
+    {% if event.event_date %}
+    <time class="event-meta-date" datetime="{{ event.event_date }}">
+      <i class="bi bi-calendar3" aria-hidden="true"></i>
+      {{ event.event_date|date('F j, Y') }}
+    </time>
+    {% endif %}
+    {% if event.is_nda %}<span class="badge bg-warning-subtle text-warning-emphasis">NDA</span>{% endif %}
+    {% if event.is_moderated %}<span class="badge bg-info-subtle text-info-emphasis">Moderated</span>{% endif %}
+    {% if event.archived %}<span class="badge bg-secondary-subtle text-secondary-emphasis">Archived</span>{% endif %}
   </div>
+  {% if event.body %}
+  <div class="event-body">{{ event.body|to_markdown }}</div>
+  {% endif %}
+</header>
+
+{% if open %}
+<div class="composer mb-4">
+  <div class="composer-header">
+    <h2 class="composer-title">Ask your question</h2>
+    <div class="composer-meta">
+      {% if event.is_moderated and not event.archived %}
+      <span class="composer-note">
+        <i class="bi bi-shield-check" aria-hidden="true"></i>
+        Moderated — questions need approval
+      </span>
+      {% endif %}
+      <a class="composer-link" href="https://guides.github.com/features/mastering-markdown/" target="_blank">
+        <i class="bi bi-markdown" aria-hidden="true"></i>
+        Markdown supported
+      </a>
+    </div>
+  </div>
+  <form method="post" action="{{ url('event', e_slug=event.slug) }}" id="question-form">
+    {% csrf_token %}
+    {{ q_form.non_field_errors() }}
+    <div class="composer-body">
+      <div class="selfimage">
+        {% if not user.userprofile.avatar_url %}
+        <img alt="Unknown profile image" src="{{ static('img/unknown.png') }}" />
+        {% else %}
+        <img src="{{ user.userprofile.avatar_url }}" alt="User profile image" />
+        {% endif %}
+      </div>
+      <div class="composer-input">
+        {{ q_form.question }}
+      </div>
+    </div>
+    {% if event.is_moderated %}
+    <div class="contact-info-container composer-aux">
+      {{ floating(q_form.submitter_contact_info, "Contact email (optional)") }}
+    </div>
+    {% endif %}
+    <div class="composer-footer">
+      <div class="form-check m-0">
+        {{ q_form.is_anonymous }}
+        <label class="form-check-label" for="{{ q_form.is_anonymous.id_for_label }}">
+          Post as anonymous
+        </label>
+      </div>
+      <input type="submit" class="btn btn-primary" value="Post question">
+    </div>
+  </form>
 </div>
 {% endif %}
 

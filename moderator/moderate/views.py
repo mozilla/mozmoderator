@@ -14,6 +14,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.timezone import now as django_now
 from django.views import View
+from django.views.decorators.http import require_POST
 from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
 from moderator.moderate.forms import EventForm, QuestionForm
@@ -51,6 +52,7 @@ def main(request):
                 ),
                 pending_count=Count("questions", filter=Q(questions__is_accepted=None)),
             )
+            .order_by("-event_date")
         )
 
         if not user.userprofile.is_nda_member:
@@ -73,7 +75,7 @@ def archive(request):
         .annotate(
             approved_count=Count("questions", filter=Q(questions__is_accepted=True))
         )
-        .order_by("-created_at")
+        .order_by("-event_date")
     )
     paginator = Paginator(events_list, settings.ITEMS_PER_PAGE)
     page = request.GET.get("page")
@@ -191,6 +193,26 @@ def delete_event(request, slug):
     event.delete()
     msg = "Event successfully deleted."
     messages.success(request, msg)
+    return redirect(reverse("main"))
+
+
+@login_required(login_url="/")
+@require_POST
+def archive_event(request, slug):
+    """Archive a past event. Moderators (and superusers) can archive only after
+    the event date has passed."""
+    user = request.user
+    query_args = {"slug": slug, "moderators__in": [user]}
+    if user.is_superuser:
+        del query_args["moderators__in"]
+
+    event = get_object_or_404(Event, **query_args)
+    if event.archived or not event.is_past:
+        messages.error(request, "Only past events can be archived.")
+    else:
+        event.archived = True
+        event.save()
+        messages.success(request, f"Event '{event.name}' archived.")
     return redirect(reverse("main"))
 
 

@@ -28,6 +28,12 @@
       {% if event.is_moderated and event.questions.filter(is_accepted__isnull=True).exists() %}
       <a href="{{ url('moderate_event', slug=event.slug) }}" class="btn btn-primary btn-sm">moderate</a>
       {% endif %}
+      {% if event.is_past and not event.archived %}
+      <form method="post" action="{{ url('archive_event', slug=event.slug) }}" class="d-inline m-0">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning btn-sm">archive</button>
+      </form>
+      {% endif %}
     </div>
     <div class="delete-container">
       <button class="btn btn-danger btn-sm" aria-label="Delete event" data-bs-toggle="modal" data-bs-target="#DeleteModal"

@@ -23,6 +23,7 @@ event_urls = [
     ),
     path("<str:slug>/edit", moderate_views.edit_event, name="edit_event"),
     path("<str:slug>/delete", moderate_views.delete_event, name="delete_event"),
+    path("<str:slug>/archive", moderate_views.archive_event, name="archive_event"),
 ]
 
 user_urls = [
