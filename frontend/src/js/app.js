@@ -78,6 +78,17 @@ function init() {
         });
     });
 
+    const deleteModal = document.getElementById('DeleteModal');
+    const deleteForm = document.getElementById('delete-event-form');
+    if (deleteModal && deleteForm) {
+        deleteModal.addEventListener('show.bs.modal', (event) => {
+            const trigger = event.relatedTarget;
+            if (trigger && trigger.dataset.url) {
+                deleteForm.setAttribute('action', trigger.dataset.url);
+            }
+        });
+    }
+
     const anonymousCheckbox = document.getElementById('id_is_anonymous');
     if (anonymousCheckbox) {
         anonymousCheckbox.addEventListener('click', toggleContactInfo);

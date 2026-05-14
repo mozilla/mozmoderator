@@ -181,6 +181,7 @@ def moderate_event(request, slug, q_id=None, accepted=None):
 
 
 @login_required(login_url="/")
+@require_POST
 def delete_event(request, slug):
     """Delete an event."""
     user = request.user

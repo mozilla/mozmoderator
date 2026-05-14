@@ -1,5 +1,5 @@
 {% extends "base.jinja" %}
-{% from "includes/moderator_macros.html" import edit_event_container with context %}
+{% from "includes/moderator_macros.html" import edit_event_container, delete_event_modal with context %}
 
 {% block head %}
 <title>Mozilla Moderator - Events</title>
@@ -31,6 +31,8 @@
   {{ edit_event_container(event, request.user) }}
 </div>
 {% endfor %}
+
+{{ delete_event_modal() }}
 
 {% else %}
 <h3 class="text-center">Let your voice be heard.</h3>

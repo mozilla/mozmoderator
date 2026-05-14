@@ -36,8 +36,9 @@
       {% endif %}
     </div>
     <div class="delete-container">
-      <button class="btn btn-danger btn-sm" aria-label="Delete event" data-bs-toggle="modal" data-bs-target="#DeleteModal"
-        id="{{ event.slug }}">delete</button>
+      <button type="button" class="btn btn-danger btn-sm delete-button" aria-label="Delete event"
+        data-bs-toggle="modal" data-bs-target="#DeleteModal"
+        data-url="{{ url('delete_event', slug=event.slug) }}">delete</button>
     </div>
   </div>
   {% endif %}
@@ -45,8 +46,9 @@
     {{ event.event_date|date('F j, Y') }}
   </div>
 </div>
+{% endmacro %}
 
-<!-- Modal for Event Delete -->
+{% macro delete_event_modal() %}
 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" id="DeleteModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -60,7 +62,10 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No!</button>
-        <a href="{{ url('delete_event', slug=event.slug) }}" class="btn btn-danger btn-sm">Delete</a>
+        <form id="delete-event-form" method="post" action="" class="d-inline m-0">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
       </div>
 
     </div>
