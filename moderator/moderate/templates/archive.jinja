@@ -1,5 +1,5 @@
 {% extends "base.jinja" %}
-{% from "includes/moderator_macros.html" import edit_event_container with context %}
+{% from "includes/moderator_macros.html" import edit_event_container, delete_event_modal with context %}
 
 {% block head %}
 <title>Mozilla Moderator - Events archive</title>
@@ -20,6 +20,8 @@
   {{ edit_event_container(event, request.user) }}
 </div>
 {% endfor %}
+
+{{ delete_event_modal() }}
 
 {% if events %}
 {% set num_pages = events.paginator.num_pages %}
