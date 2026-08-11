@@ -47,7 +47,8 @@
       {% if user_can_edit %}
       {{ check(event_form.users_can_vote, "Allow users to vote on questions") }}
       {{ check(event_form.is_nda,
-               'Restrict to <a target="_blank" href="https://people.mozilla.org/a/nda">NDA Community members</a>') }}
+               'Allow <a target="_blank" href="https://people.mozilla.org/a/nda">NDA Community members</a>',
+               help=event_form.is_nda.help_text) }}
       {{ check(event_form.is_moderated, "Moderated event (questions need approval)") }}
       {% if event %}
       {{ check(event_form.archived, "Archive this event") }}

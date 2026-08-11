@@ -35,7 +35,7 @@ user_urls = [
 ]
 
 question_urls = [
-    path("<str:q_id>/upvote", moderate_views.upvote, name="upvote"),
+    path("<int:q_id>/upvote", moderate_views.upvote, name="upvote"),
 ]
 
 urlpatterns = [

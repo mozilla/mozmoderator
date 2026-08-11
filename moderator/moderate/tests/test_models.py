@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db.models import Count, Q
 
 from moderator.moderate.models import Event, MozillianProfile, Question, Vote
 
@@ -42,9 +43,7 @@ def test_question_full_clean_rejects_short_question():
 def test_question_full_clean_accepts_valid_length():
     user = User.objects.create_user(username="d", email="d@example.com")
     event = Event.objects.create(name="E", created_by=user)
-    q = Question(
-        asked_by=user, event=event, question="This is a valid question."
-    )
+    q = Question(asked_by=user, event=event, question="This is a valid question.")
     q.full_clean()
 
 
@@ -73,3 +72,49 @@ def test_event_questions_count_property():
         asked_by=user, event=event, question="Second valid question body."
     )
     assert event.questions_count == 2
+
+
+@pytest.mark.django_db
+def test_visible_to_returns_opted_in_and_moderated_events(make_user):
+    contributor = make_user("contributor")
+    community = Event.objects.create(name="Community", is_nda=True)
+    moderated = Event.objects.create(name="Moderated", is_nda=False)
+    moderated.moderators.set([contributor])
+    Event.objects.create(name="Staff Only", is_nda=False)
+
+    visible = Event.objects.visible_to(contributor)
+    assert set(visible.values_list("name", flat=True)) == {"Community", "Moderated"}
+    assert community in visible
+
+
+@pytest.mark.django_db
+def test_visible_to_returns_everything_for_employees_and_superusers(make_user):
+    Event.objects.create(name="Staff Only", is_nda=False)
+    Event.objects.create(name="Community", is_nda=True)
+
+    for user in [
+        make_user("staff", is_employee=True),
+        make_user("root", superuser=True),
+    ]:
+        assert Event.objects.visible_to(user).count() == 2
+
+
+@pytest.mark.django_db
+def test_visible_to_does_not_inflate_annotations(make_user):
+    """The moderator clause must not join and double the Count() annotations."""
+    contributor = make_user("contributor")
+    event = Event.objects.create(name="Staff Only", is_nda=False)
+    event.moderators.set([contributor, make_user("staff", is_employee=True)])
+    for i in range(3):
+        Question.objects.create(
+            event=event, question=f"Question number {i} body text.", is_accepted=True
+        )
+
+    annotated = (
+        Event.objects.visible_to(contributor)
+        .annotate(
+            approved_count=Count("questions", filter=Q(questions__is_accepted=True))
+        )
+        .get()
+    )
+    assert annotated.approved_count == 3

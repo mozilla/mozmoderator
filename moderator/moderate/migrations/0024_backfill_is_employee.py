@@ -1,0 +1,47 @@
+from django.db import migrations
+
+# Kept separate from the schema migration: MySQL cannot roll DDL back, so a
+# failure here would otherwise leave the column added and the migration
+# unrecorded.
+
+# Staff domains that do not carry the "mozilla" substring.
+EMPLOYEE_EMAIL_DOMAINS = frozenset({"thunderbird.net", "getpocket.com"})
+
+
+def is_employee_email(email):
+    """True if `email` looks like a staff address.
+
+    Deliberately duplicated here instead of imported from the app: migrations
+    have to keep working when application code moves on.
+    """
+    if not email:
+        return False
+    domain = email.rsplit("@", 1)[-1].lower()
+    return "mozilla" in domain or domain in EMPLOYEE_EMAIL_DOMAINS
+
+
+def backfill_is_employee(apps, schema_editor):
+    """Classify existing profiles by email domain.
+
+    Nothing recorded whether a profile belonged to staff before this migration,
+    so seed the flag from the address and let the OIDC claim correct it on each
+    user's next login.
+    """
+    MozillianProfile = apps.get_model("moderate", "MozillianProfile")
+    employees = []
+    for profile in MozillianProfile.objects.select_related("user").iterator():
+        if is_employee_email(profile.user.email):
+            profile.is_employee = True
+            employees.append(profile)
+    MozillianProfile.objects.bulk_update(employees, ["is_employee"], batch_size=500)
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ("moderate", "0023_mozillianprofile_is_employee"),
+    ]
+
+    operations = [
+        migrations.RunPython(backfill_is_employee, migrations.RunPython.noop),
+    ]

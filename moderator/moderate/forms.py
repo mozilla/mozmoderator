@@ -16,7 +16,9 @@ class TomSelectMultiple(forms.SelectMultiple):
     def __init__(self, autocomplete_url, attrs=None):
         merged = {
             "data-autocomplete-url": autocomplete_url,
-            "class": ((attrs or {}).get("class", "") + " tom-select form-control").strip(),
+            "class": (
+                (attrs or {}).get("class", "") + " tom-select form-control"
+            ).strip(),
         }
         merged.update({k: v for k, v in (attrs or {}).items() if k not in merged})
         super().__init__(attrs=merged)
@@ -134,17 +136,18 @@ class EventForm(forms.ModelForm):
         else:
             self.fields["moderators"].initial = User.objects.filter(id=self.user.pk)
             del self.fields["archived"]
+        if not self.user.userprofile.is_employee:
+            # An NDA community member would lose sight of their own event if it
+            # were not opted in to the NDA community.
+            self.fields["is_nda"].disabled = True
+            self.fields["is_nda"].initial = True
+            self.fields["is_nda"].help_text = (
+                "Only staff can change who an event is open to."
+            )
 
     def clean(self):
-        """
-        Clean method to check post data for nda events,
-        and moderated events with no moderators.
-        """
+        """Clean method to check for moderated events with no moderators."""
         cdata = super(EventForm, self).clean()
-        # Do not allow non-nda members to submit NDA events.
-        if not self.user.userprofile.is_nda_member and cdata["is_nda"]:
-            msg = "Only members of the NDA group can create NDA events."
-            raise forms.ValidationError(msg)
         # Don't allow non-superusers to modify moderation status or moderators
         if not cdata["moderators"]:
             msg = "An event should have at least one moderator."

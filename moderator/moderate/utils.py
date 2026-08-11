@@ -1,6 +1,7 @@
 import bisect
 from re import compile, escape
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.exceptions import ValidationError
@@ -37,7 +38,7 @@ def suggest_username(email):
     if existing_usernames:
         ids = []
         for existing in existing_usernames:
-            i = existing[len(username):]
+            i = existing[len(username) :]
             if i:
                 i = int(i)
                 bisect.insort(ids, i)
@@ -53,6 +54,15 @@ def suggest_username(email):
         username = "{}{}".format(username, i + 1)
 
     return username
+
+
+def is_employee_groups(groups):
+    """True if `groups` contains one of the staff groups.
+
+    Employees reach the site through their LDAP derived groups, while NDA
+    community members only ever carry a group from NDA_LOGIN_GROUPS.
+    """
+    return not set(groups).isdisjoint(settings.EMPLOYEE_LOGIN_GROUPS)
 
 
 def is_legacy_username(username):

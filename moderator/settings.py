@@ -248,8 +248,8 @@ OIDC_OP_JWKS_ENDPOINT = config("OIDC_OP_JWKS_ENDPOINT", default="")
 OIDC_RP_SCOPES = "openid email profile"
 OIDC_USE_NONCE = config("OIDC_USE_NONCE", default=True, cast=bool)
 
-# Allowed groups a user must have to login
-ALLOWED_LOGIN_GROUPS = [
+# LDAP derived groups that identify staff
+EMPLOYEE_LOGIN_GROUPS = [
     "team_moco",
     "team_mofo",
     "team_mozillaonline",
@@ -257,9 +257,16 @@ ALLOWED_LOGIN_GROUPS = [
     "team_mzla",
     "team_mzvc",
     "team_mzai",
+]
+
+# Groups that identify NDA community members
+NDA_LOGIN_GROUPS = [
     "mozilliansorg_nda",
     "mozilliansorg_contingentworkernda",
 ]
+
+# Allowed groups a user must have to login
+ALLOWED_LOGIN_GROUPS = EMPLOYEE_LOGIN_GROUPS + NDA_LOGIN_GROUPS
 
 # Django 3.2 Autofield
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

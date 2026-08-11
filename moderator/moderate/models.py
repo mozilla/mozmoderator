@@ -23,7 +23,7 @@ class MozillianProfile(models.Model):
     slug = models.SlugField(blank=True, max_length=100)
     username = models.CharField(max_length=40)
     avatar_url = models.URLField(max_length=400, default="", blank=True)
-    is_nda_member = models.BooleanField(default=False)
+    is_employee = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username
@@ -60,6 +60,23 @@ def create_user_profile(sender, instance, created, raw, **kwargs):
             )
 
 
+class EventQuerySet(models.QuerySet):
+    def visible_to(self, user):
+        """Restrict to the events `user` is allowed to see.
+
+        Employees and superusers see everything. NDA community members see the
+        events opted in to the NDA community plus the ones they moderate, so a
+        community moderator can still find their own event.
+        """
+        if user.is_superuser or user.userprofile.is_employee:
+            return self
+        # A subquery rather than a join on moderators: joining would duplicate
+        # rows and inflate the Count() annotations the listing views add.
+        return self.filter(
+            models.Q(is_nda=True) | models.Q(pk__in=user.events_moderated.values("pk"))
+        )
+
+
 class Event(models.Model):
     """Event model."""
 
@@ -81,6 +98,8 @@ class Event(models.Model):
     moderators = models.ManyToManyField(User, related_name="events_moderated")
     is_moderated = models.BooleanField(default=False)
     users_can_vote = models.BooleanField(default=True)
+
+    objects = EventQuerySet.as_manager()
 
     class Meta:
         ordering = ["-event_date"]
