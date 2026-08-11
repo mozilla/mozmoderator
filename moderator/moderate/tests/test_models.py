@@ -77,10 +77,10 @@ def test_event_questions_count_property():
 @pytest.mark.django_db
 def test_visible_to_returns_opted_in_and_moderated_events(make_user):
     contributor = make_user("contributor")
-    community = Event.objects.create(name="Community", is_nda=True)
-    moderated = Event.objects.create(name="Moderated", is_nda=False)
+    community = Event.objects.create(name="Community", allow_nda_community=True)
+    moderated = Event.objects.create(name="Moderated", allow_nda_community=False)
     moderated.moderators.set([contributor])
-    Event.objects.create(name="Staff Only", is_nda=False)
+    Event.objects.create(name="Staff Only", allow_nda_community=False)
 
     visible = Event.objects.visible_to(contributor)
     assert set(visible.values_list("name", flat=True)) == {"Community", "Moderated"}
@@ -89,8 +89,8 @@ def test_visible_to_returns_opted_in_and_moderated_events(make_user):
 
 @pytest.mark.django_db
 def test_visible_to_returns_everything_for_employees_and_superusers(make_user):
-    Event.objects.create(name="Staff Only", is_nda=False)
-    Event.objects.create(name="Community", is_nda=True)
+    Event.objects.create(name="Staff Only", allow_nda_community=False)
+    Event.objects.create(name="Community", allow_nda_community=True)
 
     for user in [
         make_user("staff", is_employee=True),
@@ -103,7 +103,7 @@ def test_visible_to_returns_everything_for_employees_and_superusers(make_user):
 def test_visible_to_does_not_inflate_annotations(make_user):
     """The moderator clause must not join and double the Count() annotations."""
     contributor = make_user("contributor")
-    event = Event.objects.create(name="Staff Only", is_nda=False)
+    event = Event.objects.create(name="Staff Only", allow_nda_community=False)
     event.moderators.set([contributor, make_user("staff", is_employee=True)])
     for i in range(3):
         Question.objects.create(

@@ -139,9 +139,9 @@ class EventForm(forms.ModelForm):
         if not self.user.userprofile.is_employee:
             # An NDA community member would lose sight of their own event if it
             # were not opted in to the NDA community.
-            self.fields["is_nda"].disabled = True
-            self.fields["is_nda"].initial = True
-            self.fields["is_nda"].help_text = (
+            self.fields["allow_nda_community"].disabled = True
+            self.fields["allow_nda_community"].initial = True
+            self.fields["allow_nda_community"].help_text = (
                 "Only staff can change who an event is open to."
             )
 
@@ -159,7 +159,7 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = [
             "name",
-            "is_nda",
+            "allow_nda_community",
             "body",
             "is_moderated",
             "moderators",
@@ -185,7 +185,9 @@ class EventForm(forms.ModelForm):
                     "placeholder": "Event date",
                 }
             ),
-            "is_nda": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "allow_nda_community": forms.CheckboxInput(
+                attrs={"class": "form-check-input"}
+            ),
             "is_moderated": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "users_can_vote": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "archived": forms.CheckboxInput(attrs={"class": "form-check-input"}),
