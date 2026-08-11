@@ -77,7 +77,7 @@ class EventAdmin(admin.ModelAdmin):
         "created_at",
         "event_date",
         "archived",
-        "is_nda",
+        "allow_nda_community",
     )
     actions = [export_questions_csv]
     date_hierarchy = "created_at"
@@ -89,7 +89,7 @@ class EventAdmin(admin.ModelAdmin):
         "moderators__last_name",
     ]
     ordering = ["-created_at"]
-    list_filter = ["archived", "is_nda"]
+    list_filter = ["archived", "allow_nda_community"]
     autocomplete_fields = ["moderators"]
 
 

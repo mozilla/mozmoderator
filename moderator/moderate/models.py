@@ -73,7 +73,8 @@ class EventQuerySet(models.QuerySet):
         # A subquery rather than a join on moderators: joining would duplicate
         # rows and inflate the Count() annotations the listing views add.
         return self.filter(
-            models.Q(is_nda=True) | models.Q(pk__in=user.events_moderated.values("pk"))
+            models.Q(allow_nda_community=True)
+            | models.Q(pk__in=user.events_moderated.values("pk"))
         )
 
 
@@ -91,7 +92,7 @@ class Event(models.Model):
     slug = models.SlugField(max_length=400, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     event_date = models.DateField(null=True, blank=True, default=default_date)
-    is_nda = models.BooleanField(default=False)
+    allow_nda_community = models.BooleanField(default=False)
     created_by = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL
     )

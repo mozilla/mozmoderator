@@ -34,9 +34,9 @@ def test_question_form_accepts_valid_text():
 def test_event_form_forces_nda_for_community_member(make_user):
     """A community member would lose sight of an event that is not opted in."""
     user = make_user("contributor")
-    form = EventForm(_event_data(user, is_nda=False), user=user)
+    form = EventForm(_event_data(user, allow_nda_community=False), user=user)
     assert form.is_valid(), form.errors
-    assert form.save().is_nda is True
+    assert form.save().allow_nda_community is True
 
 
 @pytest.mark.django_db
@@ -44,30 +44,32 @@ def test_event_form_forces_nda_when_community_member_omits_the_field(make_user):
     user = make_user("contributor")
     form = EventForm(_event_data(user), user=user)
     assert form.is_valid(), form.errors
-    assert form.save().is_nda is True
+    assert form.save().allow_nda_community is True
 
 
 @pytest.mark.django_db
 def test_event_form_lets_employee_opt_out(make_user):
     user = make_user("staff", is_employee=True)
-    form = EventForm(_event_data(user, is_nda=False), user=user)
+    form = EventForm(_event_data(user, allow_nda_community=False), user=user)
     assert form.is_valid(), form.errors
-    assert form.save().is_nda is False
+    assert form.save().allow_nda_community is False
 
 
 @pytest.mark.django_db
 def test_event_form_lets_employee_opt_in(make_user):
     user = make_user("staff", is_employee=True)
-    form = EventForm(_event_data(user, is_nda=True), user=user)
+    form = EventForm(_event_data(user, allow_nda_community=True), user=user)
     assert form.is_valid(), form.errors
-    assert form.save().is_nda is True
+    assert form.save().allow_nda_community is True
 
 
 @pytest.mark.django_db
 def test_event_form_community_moderator_cannot_change_existing_value(make_user):
     staff = make_user("staff", is_employee=True)
     contributor = make_user("contributor")
-    event = Event.objects.create(name="Staff only", is_nda=False, created_by=staff)
+    event = Event.objects.create(
+        name="Staff only", allow_nda_community=False, created_by=staff
+    )
     event.moderators.set([staff, contributor])
 
     form = EventForm(
@@ -75,18 +77,18 @@ def test_event_form_community_moderator_cannot_change_existing_value(make_user):
             contributor,
             name="Staff only",
             moderators=[staff.pk, contributor.pk],
-            is_nda=True,
+            allow_nda_community=True,
         ),
         instance=event,
         user=contributor,
     )
     assert form.is_valid(), form.errors
-    assert form.save().is_nda is False
+    assert form.save().allow_nda_community is False
 
 
 @pytest.mark.django_db
 def test_event_form_no_longer_blocks_community_member_from_nda_events(make_user):
     """The old "only NDA members can create NDA events" rule is gone."""
     user = make_user("contributor")
-    form = EventForm(_event_data(user, is_nda=True), user=user)
+    form = EventForm(_event_data(user, allow_nda_community=True), user=user)
     assert form.is_valid(), form.errors

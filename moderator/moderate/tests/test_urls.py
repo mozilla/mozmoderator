@@ -158,10 +158,10 @@ def test_archive_event_rejects_future_event():
 
 def _make_events(archived=False):
     staff_only = Event.objects.create(
-        name="Staff Only Event", is_nda=False, archived=archived
+        name="Staff Only Event", allow_nda_community=False, archived=archived
     )
     community = Event.objects.create(
-        name="Community Welcome Event", is_nda=True, archived=archived
+        name="Community Welcome Event", allow_nda_community=True, archived=archived
     )
     return staff_only, community
 
@@ -341,7 +341,9 @@ def test_upvote_404s_for_non_numeric_question_id(make_user):
 @pytest.mark.django_db
 def test_upvote_respects_voting_switch_on_nda_event(make_user):
     """Opting an event in to the NDA community must not re-enable voting."""
-    event = Event.objects.create(name="No Voting", is_nda=True, users_can_vote=False)
+    event = Event.objects.create(
+        name="No Voting", allow_nda_community=True, users_can_vote=False
+    )
     question = Question.objects.create(
         event=event, question="A question with enough text.", is_accepted=True
     )
