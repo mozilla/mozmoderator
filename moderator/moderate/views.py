@@ -4,7 +4,6 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Q
@@ -19,7 +18,7 @@ from mozilla_django_oidc.views import OIDCAuthenticationCallbackView
 
 from moderator.moderate.forms import EventForm, QuestionForm
 from moderator.moderate.models import Event, Question, Vote
-from moderator.moderate.templatetags.helpers import can_moderate_event
+from moderator.moderate.templatetags.helpers import can_access_event, can_moderate_event
 
 SUBJECT = "Question moderation update"
 
@@ -42,6 +41,7 @@ def main(request):
     if user.is_authenticated:
         events = (
             Event.objects.filter(archived=False)
+            .visible_to(user)
             .prefetch_related("moderators")
             .annotate(
                 approved_count=Count(
@@ -54,9 +54,6 @@ def main(request):
             )
             .order_by("-event_date")
         )
-
-        if not user.userprofile.is_nda_member:
-            events = events.exclude(is_nda=True)
         return render(request, "index.jinja", {"events": events, "user": user})
     return render(request, "index.jinja", {"user": user})
 
@@ -64,14 +61,9 @@ def main(request):
 @login_required(login_url="/")
 def archive(request):
     """List of all archived events."""
-    q_args = {
-        "archived": True,
-    }
-    # Filter out NDA events for non-NDA users
-    if not request.user.userprofile.is_nda_member and not request.user.is_superuser:
-        q_args["is_nda"] = False
     events_list = (
-        Event.objects.filter(**q_args)
+        Event.objects.filter(archived=True)
+        .visible_to(request.user)
         .annotate(
             approved_count=Count("questions", filter=Q(questions__is_accepted=True))
         )
@@ -146,10 +138,7 @@ def moderate_event(request, slug, q_id=None, accepted=None):
 
     # Update the question if it's accepted or rejected
     if q_id:
-        try:
-            question = Question.objects.get(id=q_id)
-        except Question.DoesNotExist:
-            raise ValidationError("This question is not valid")
+        question = get_object_or_404(Question, id=q_id, event=event)
         question.is_accepted = accepted
         question.save()
 
@@ -224,12 +213,11 @@ def show_event(request, e_slug, q_id=None):
     question = None
     user = request.user
 
-    # Do not display NDA events to non NDA members or non employees.
-    if event.is_nda and not user.userprofile.is_nda_member:
+    if not can_access_event(event, user):
         raise Http404
 
     if q_id:
-        question = Question.objects.get(id=q_id)
+        question = get_object_or_404(Question, id=q_id, event=event)
 
     questions_q = Question.objects.filter(event=event, is_accepted=True).annotate(
         vote_count=Count("votes")
@@ -286,14 +274,15 @@ def show_event(request, e_slug, q_id=None):
 def upvote(request, q_id):
     """Upvote question"""
 
-    question = Question.objects.get(pk=q_id)
+    question = get_object_or_404(Question, pk=q_id)
     event = question.event
     user = request.user
-    if not (
-        user_can_vote := (
-            event.users_can_vote or (event.is_nda and user.userprofile.is_nda_member)
-        )
-    ):
+
+    if not can_access_event(event, user):
+        raise Http404
+
+    user_can_vote = event.users_can_vote
+    if not user_can_vote:
         msg = "Voting is not allowed for this event."
         messages.warning(request, msg)
 

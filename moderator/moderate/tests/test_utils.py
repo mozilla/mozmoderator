@@ -1,7 +1,10 @@
 import pytest
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.test import override_settings
 
 from moderator.moderate.utils import (
+    is_employee_groups,
     is_legacy_username,
     normalize_username,
     suggest_username,
@@ -94,3 +97,41 @@ def test_is_legacy_username_accepts_with_suffix():
 def test_is_legacy_username_accepts_with_special_chars():
     # ., @, +, -, _ are all allowed by UnicodeUsernameValidator.
     assert is_legacy_username("user.name+tag-1_2") is False
+
+
+def test_is_employee_groups_accepts_staff_group():
+    assert is_employee_groups(["team_moco"]) is True
+
+
+def test_is_employee_groups_rejects_nda_only():
+    assert is_employee_groups(["mozilliansorg_nda"]) is False
+
+
+def test_is_employee_groups_rejects_contingent_worker_nda():
+    assert is_employee_groups(["mozilliansorg_contingentworkernda"]) is False
+
+
+def test_is_employee_groups_accepts_staff_who_is_also_nda():
+    assert is_employee_groups(["mozilliansorg_nda", "team_mzla"]) is True
+
+
+def test_is_employee_groups_ignores_unknown_groups():
+    """A group outside the configured groups must not confer staff status."""
+    assert is_employee_groups(["mozilliansorg_random_community_group"]) is False
+
+
+def test_is_employee_groups_rejects_empty():
+    assert is_employee_groups([]) is False
+
+
+@override_settings(EMPLOYEE_LOGIN_GROUPS=["team_standards"])
+def test_is_employee_groups_matches_names_exactly():
+    """A staff group whose name happens to contain "nda" is still staff."""
+    assert is_employee_groups(["team_standards"]) is True
+
+
+def test_employee_and_nda_groups_are_disjoint():
+    assert set(settings.EMPLOYEE_LOGIN_GROUPS).isdisjoint(settings.NDA_LOGIN_GROUPS)
+    assert set(settings.ALLOWED_LOGIN_GROUPS) == set(
+        settings.EMPLOYEE_LOGIN_GROUPS
+    ) | set(settings.NDA_LOGIN_GROUPS)

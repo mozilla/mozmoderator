@@ -25,7 +25,7 @@
       {{ event.event_date|date('F j, Y') }}
     </time>
     {% endif %}
-    {% if event.is_nda %}<span class="badge bg-warning-subtle text-warning-emphasis">NDA</span>{% endif %}
+    {% if event.is_nda %}<span class="badge bg-success-subtle text-success-emphasis">NDA Community</span>{% endif %}
     {% if event.is_moderated %}<span class="badge bg-info-subtle text-info-emphasis">Moderated</span>{% endif %}
     {% if event.archived %}<span class="badge bg-secondary-subtle text-secondary-emphasis">Archived</span>{% endif %}
   </div>

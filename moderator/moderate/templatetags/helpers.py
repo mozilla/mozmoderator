@@ -4,6 +4,8 @@ import markdown
 from django.utils.safestring import mark_safe
 from django_jinja import library
 
+from moderator.moderate.models import Event
+
 
 @library.global_function
 def user_voted(question, user):
@@ -22,6 +24,16 @@ def to_markdown(text):
 def can_moderate_event(event, user):
     """Check if a user can moderate an event."""
     return user.is_superuser or event.moderators.filter(id=user.id).exists()
+
+
+@library.global_function
+def can_access_event(event, user):
+    """Check if a user can see an event.
+
+    Delegates to the queryset so the object level and the list level rules
+    cannot drift apart.
+    """
+    return Event.objects.filter(pk=event.pk).visible_to(user).exists()
 
 
 @library.global_function

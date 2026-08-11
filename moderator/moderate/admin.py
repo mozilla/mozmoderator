@@ -43,15 +43,15 @@ class UserAdmin(UserAdmin):
         "email",
         "first_name",
         "last_name",
-        "is_nda_member",
+        "is_employee",
         "is_staff",
     )
     search_fields = ["email", "first_name", "last_name"]
 
-    def is_nda_member(self, obj):
-        return obj.userprofile.is_nda_member
+    def is_employee(self, obj):
+        return obj.userprofile.is_employee
 
-    is_nda_member.boolean = True
+    is_employee.boolean = True
 
 
 class QuestionInline(admin.StackedInline):
